@@ -1,41 +1,55 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Button, Chip } from "@heroui/react";
+import {
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+  Button,
+  Chip
+} from "@heroui/react";
 import { Pencil, Trash } from 'lucide-react';
 
 export function UsersTable({ users, onEditUser, onDeleteUser }) {
   const t = useTranslations("users");
 
   return (
-    <section className="shadow overflow-hidden">
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="bg-green-800 text-white text-left">
-            <th className="py-2 px-3">{t("name")}</th>
-            <th className="py-2 px-3">{t("role")}</th>
-            <th className="py-2 px-3">{t("email")}</th>
-            <th className="py-2 px-3">{t("phone")}</th>
-            <th className="py-2 px-3 text-right">{t("actions")}</th>
-          </tr>
-        </thead>
-        <tbody>
+    <section>
+      <Table removeWrapper>
+        <TableHeader>
+          <TableColumn className="py-2 px-3">{t("name")}</TableColumn>
+          <TableColumn className="py-2 px-3">{t("role")}</TableColumn>
+          <TableColumn className="py-2 px-3">{t("email")}</TableColumn>
+          <TableColumn className="py-2 px-3">{t("phone")}</TableColumn>
+          <TableColumn className="py-2 px-3">{t("status")}</TableColumn>
+          <TableColumn className="py-2 px-3 text-right">{t("actions")}</TableColumn>
+        </TableHeader>
+        <TableBody>
           {users.map((user, idx) => (
-            <tr
+            <TableRow
               key={user.id}
-              className={idx % 2 === 0 ? "bg-green-50" : "bg-green-100"}
             >
-              <td className="py-2 px-3">{user.name}</td>
-              <td className="py-2 px-3">
+              <TableCell>{user.name}</TableCell>
+              <TableCell>
                 <Chip
                   className="bg-green-200 text-xs text-green-800 border border-green-300"
                 >
                   {user.role}
                 </Chip>
-              </td>
-              <td className="py-2 px-3">{user.email}</td>
-              <td className="py-2 px-3">{user.phone}</td>
-              <td className="flex justify-end space-x-4 py-2 px-3">
+              </TableCell>
+              <TableCell>{user.email}</TableCell>
+              <TableCell>{user.phone}</TableCell>
+              <TableCell>
+                <Chip
+                  className="bg-green-200 text-xs text-green-800 border border-green-300"
+                >
+                  {user.status}
+                </Chip>
+              </TableCell>
+              <TableCell className="flex justify-end space-x-4 py-2 px-3">
                 <Button
                   aria-label="Edit User"
                   isIconOnly
@@ -53,11 +67,11 @@ export function UsersTable({ users, onEditUser, onDeleteUser }) {
                 >
                   <Trash />
                 </Button>
-              </td>
-            </tr>
+              </TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     </section>
   );
 }
