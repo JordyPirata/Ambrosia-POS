@@ -47,6 +47,18 @@ const store_en = {
       deleteButton: "Delete",
     },
   },
+  products: {
+    title: "Products",
+    subtitle: "Manage your store products.",
+    addProduct: "Add Product",
+    image: "Image",
+    name: "Name",
+    category: "Category",
+    sku: "SKU",
+    price: "Price",
+    stock: "Stock",
+    actions: "Actions"
+  }
 };
 
 export default store_en;

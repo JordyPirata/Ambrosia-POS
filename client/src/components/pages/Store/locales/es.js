@@ -47,6 +47,18 @@ const store_es = {
       deleteButton: "Eliminar",
     },
   },
+  products: {
+    title: "Productos",
+    subtitle: "Gestiona tu catálogo de productos e inventario",
+    addProduct: "Agregar Producto",
+    image: "Imagen",
+    name: "Nombre",
+    category: "Categoría",
+    sku: "SKU",
+    price: "Precio",
+    stock: "Almacen",
+    actions: "Acciones"
+  }
 };
 
 export default store_es;
