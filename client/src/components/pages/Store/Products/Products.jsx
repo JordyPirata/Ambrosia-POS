@@ -36,7 +36,7 @@ const PRODUCTS = [
 const formatCurrency = (v) =>
   `$ ${v.toLocaleString("es-MX", { minimumFractionDigits: 2 })}`;
 
-export default function ProductsPage() {
+export function Products() {
   const [showModal, setShowModal] = useState(false);
 
   return (

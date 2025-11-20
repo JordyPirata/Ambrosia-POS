@@ -222,12 +222,32 @@ export const modules = {
         types: ["store"],
         default: true,
       },
+      {
+        path: "/store/products",
+        component: "Products",
+        requiresAuth: true,
+        requiresAdmin: false,
+        types: ["store"],
+        default: true,
+      },
     ],
     navItems: [
       {
+        path: "/store",
+        label: "Inicio Store",
+        icon: "store",
+        showInNavbar: true,
+      },
+      {
         path: "/store/users",
-        label: "users",
+        label: "Users",
         icon: "users",
+        showInNavbar: true,
+      },
+      {
+        path: "/store/products",
+        label: "Products",
+        icon: "box",
         showInNavbar: true,
       },
     ],
