@@ -14,7 +14,7 @@ import {
 } from "@heroui/react";
 import { Pencil, Trash } from 'lucide-react';
 
-export function ProductsTable({ products, onEditProduct }) {
+export function ProductsTable({ products, onEditProduct, onDeleteProduct }) {
   const formatCurrency = (v) =>
   `$ ${v.toLocaleString("es-MX", { minimumFractionDigits: 2 })}`;
   const t = useTranslations("products");
@@ -24,6 +24,7 @@ export function ProductsTable({ products, onEditProduct }) {
           <TableHeader>
             <TableColumn className="py-2 px-3">{t("image")}</TableColumn>
             <TableColumn className="py-2 px-3">{t("name")}</TableColumn>
+            <TableColumn className="py-2 px-3">{t("description")}</TableColumn>
             <TableColumn className="py-2 px-3">{t("category")}</TableColumn>
             <TableColumn className="py-2 px-3">{t("sku")}</TableColumn>
             <TableColumn className="py-2 px-3">{t("price")}</TableColumn>
@@ -37,6 +38,11 @@ export function ProductsTable({ products, onEditProduct }) {
                   <Image src={product.image} width={75}/>
                 </TableCell>
                 <TableCell>{product.name}</TableCell>
+                <TableCell>
+                  <div className="truncate w-48">
+                    {product.description}
+                  </div>
+                </TableCell>
                 <TableCell>
                   <Chip
                     className="bg-green-200 text-xs text-green-800 border border-green-300"

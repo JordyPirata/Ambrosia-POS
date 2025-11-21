@@ -53,6 +53,7 @@ const store_en = {
     addProduct: "Add Product",
     image: "Image",
     name: "Name",
+    description: "Description",
     category: "Category",
     sku: "SKU",
     price: "Price",
@@ -60,6 +61,10 @@ const store_en = {
     actions: "Actions",
     modal: {
       titleAdd: "Add Product",
+      titleEdit: "Edit Product",
+      titleDelete: "Delete Product",
+      subtitleDelete: "Are you sure you want to delete",
+      warningDelete: "This action cannot be undone.",
       productNameLabel: "Product Name",
       productNamePlaceholder: "Orange Pi",
       productDescriptionLabel: "Product Description",
@@ -76,7 +81,9 @@ const store_en = {
       productImageUpload: "Upload an Image",
       productImageUploadMessage: "PNG, JPG or GIF (máx. 5MB)",
       submitButton: "Add",
-      cancelButton: "Cancel"
+      cancelButton: "Cancel",
+      editButton: "Save",
+      deleteButton: "Delete"
     }
   }
 };

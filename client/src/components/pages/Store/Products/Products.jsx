@@ -7,6 +7,7 @@ import { StoreLayout } from "../StoreLayout";
 import { ProductsTable } from "./ProductsTable";
 import { AddProductsModal } from "./AddProductsModal";
 import { EditProductsModal } from "./EditProductsModal";
+import { DeleteProductsModal } from "./DeleteProductsModal";
 
 const PRODUCTS = [
   {
@@ -22,7 +23,7 @@ const PRODUCTS = [
   {
     id: 2,
     name: "Jade Plus",
-    description: "Blockstream hardware wallet",
+    description: "Introducing Jade Plus, the ultimate Bitcoin hardware wallet for long-term HODLing from Blockstream. Jade Plus is designed to deliver unmatched security and an elevated user experience for Bitcoin enthusiasts at every level. With its state-of-the-art open-source technology and sleek new look, Jade Plus sets a new standard in secure, user-friendly offline bitcoin storage. ",
     category: "Hardware Wallet",
     sku: "jade-plus-wallet",
     price: 4000,
@@ -44,6 +45,7 @@ const PRODUCTS = [
 export function Products() {
   const [addProductsShowModal, setAddProductsShowModal] = useState(false);
   const [editProductsShowModal, setEditProductsShowModal] = useState(false);
+  const [deleteProductsShowModal, setDeleteProductsShowModal] = useState(false);
   const [data, setData] = useState({
     productName: "",
     productDescription: "",
@@ -54,6 +56,7 @@ export function Products() {
     productImage: ""
   });
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [productToDelete, setProductToDelete] = useState(null)
 
   const handleDataChange = (newData) => {
     setData((prev) => ({ ...prev, ...newData }))
@@ -73,6 +76,11 @@ export function Products() {
     });
 
     setEditProductsShowModal(true);
+  };
+
+  const handleDeleteProduct = (product) => {
+    setProductToDelete(product);
+    setDeleteProductsShowModal(true);
   };
 
   const t = useTranslations("products");
@@ -98,6 +106,7 @@ export function Products() {
         <ProductsTable
           products={PRODUCTS}
           onEditProduct={handleEditProduct}
+          onDeleteProduct={handleDeleteProduct }
         />
       </div>
 
@@ -119,6 +128,17 @@ export function Products() {
           onChange={handleDataChange}
           editProductsShowModal={editProductsShowModal}
           setEditProductsShowModal={setEditProductsShowModal}
+        />
+      )}
+
+      {deleteProductsShowModal && (
+        <DeleteProductsModal
+          product={productToDelete}
+          deleteProductsShowModal={deleteProductsShowModal}
+          setDeleteProductsShowModal={setDeleteProductsShowModal}
+          onConfirm={() => {
+            setDeleteProductsShowModal(false);
+          }}
         />
       )}
     </StoreLayout>

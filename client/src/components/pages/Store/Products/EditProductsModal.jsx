@@ -47,22 +47,34 @@ export function EditProductsModal({
     e.preventDefault();
     console.log(data);
 
-    setAddProductsShowModal(false);
+    setEditProductsShowModal(false);
   };
 
-  console.log(data)
+  const handleOnCloseModal = () => {
+    setData({
+      productName: "",
+      productDescription: "",
+      productCategory: "",
+      productSKU: "",
+      productPrice: "",
+      productStock: "",
+      productImage: ""
+    });
+
+    setEditProductsShowModal(false);
+  }
 
   return (
     <Modal
       isOpen={editProductsShowModal}
-      onOpenChange={setEditProductsShowModal}
+      onOpenChange={handleOnCloseModal}
       backdrop="blur"
       classNames={{
         backdrop: "backdrop-blur-xs bg-white/10",
       }}
     >
       <ModalContent>
-        <ModalHeader>{t("modal.titleAdd")}</ModalHeader>
+        <ModalHeader>{t("modal.titleEdit")}</ModalHeader>
 
         <ModalBody>
           <form className="space-y-4" onSubmit={handleSubmit}>
@@ -177,13 +189,13 @@ export function EditProductsModal({
               <Button
                 variant="bordered"
                 type="button"
-                onPress={() => setEditProductsShowModal(false)}
+                onPress={() => handleOnCloseModal()}
               >
                 {t("modal.cancelButton")}
               </Button>
 
               <Button color="primary" className="bg-green-800" type="submit">
-                {t("modal.submitButton")}
+                {t("modal.editButton")}
               </Button>
             </ModalFooter>
           </form>
