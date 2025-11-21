@@ -9,11 +9,12 @@ import {
   TableRow,
   TableCell,
   Button,
-  Chip
+  Chip,
+  Image
 } from "@heroui/react";
 import { Pencil, Trash } from 'lucide-react';
 
-export function ProductsTable({ products }) {
+export function ProductsTable({ products, onEditProduct }) {
   const formatCurrency = (v) =>
   `$ ${v.toLocaleString("es-MX", { minimumFractionDigits: 2 })}`;
   const t = useTranslations("products");
@@ -33,7 +34,7 @@ export function ProductsTable({ products }) {
             {products.map((product) => (
               <TableRow key={product.sku}>
                 <TableCell>
-                  <div className="h-8 w-8 rounded bg-gray-200" />
+                  <Image src={product.image} width={75}/>
                 </TableCell>
                 <TableCell>{product.name}</TableCell>
                 <TableCell>
@@ -49,27 +50,29 @@ export function ProductsTable({ products }) {
                   <Chip
                     className="bg-green-200 text-xs text-green-800 border border-green-300"
                   >
-                    {product.stockLabel}
+                    {product.stock}
                   </Chip>
                 </TableCell>
-                <TableCell className="flex justify-end space-x-4 py-2 px-3">
-                  <Button
-                    aria-label="Edit Product"
-                    isIconOnly
-                    className="text-xs text-white bg-blue-500"
-                    onPress={() => onEditProduct(product)}
-                  >
-                    <Pencil />
-                  </Button>
-                  <Button
-                    aria-label="Delete Product"
-                    isIconOnly
-                    color="danger"
-                    className="text-xs text-white"
-                    onPress={() => onDeleteProduct(product)}
-                  >
-                    <Trash />
-                  </Button>
+                <TableCell>
+                  <div className="flex justify-end space-x-4 py-2 px-3">
+                    <Button
+                      aria-label="Edit Product"
+                      isIconOnly
+                      className="text-xs text-white bg-blue-500"
+                      onPress={() => onEditProduct(product)}
+                    >
+                      <Pencil />
+                    </Button>
+                    <Button
+                      aria-label="Delete Product"
+                      isIconOnly
+                      color="danger"
+                      className="text-xs text-white"
+                      onPress={() => onDeleteProduct(product)}
+                    >
+                      <Trash />
+                    </Button>
+                  </div>
                 </TableCell>
               </TableRow>
             ))}

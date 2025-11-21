@@ -15,12 +15,12 @@ import {
 } from "@heroui/react";
 import { Upload, X } from "lucide-react";
 
-export function AddProductsModal({
+export function EditProductsModal({
   data,
   setData,
   onChange,
-  addProductsShowModal,
-  setAddProductsShowModal,
+  editProductsShowModal,
+  setEditProductsShowModal,
 }) {
   const t = useTranslations("products");
   const fileInputRef = useRef(null);
@@ -46,23 +46,16 @@ export function AddProductsModal({
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(data);
-    setData({
-      productName: "",
-      productDescription: "",
-      productCategory: "",
-      productSKU: "",
-      productPrice: "",
-      productStock: "",
-      productImage: ""
-    });
 
     setAddProductsShowModal(false);
   };
 
+  console.log(data)
+
   return (
     <Modal
-      isOpen={addProductsShowModal}
-      onOpenChange={setAddProductsShowModal}
+      isOpen={editProductsShowModal}
+      onOpenChange={setEditProductsShowModal}
       backdrop="blur"
       classNames={{
         backdrop: "backdrop-blur-xs bg-white/10",
@@ -184,7 +177,7 @@ export function AddProductsModal({
               <Button
                 variant="bordered"
                 type="button"
-                onPress={() => setAddProductsShowModal(false)}
+                onPress={() => setEditProductsShowModal(false)}
               >
                 {t("modal.cancelButton")}
               </Button>
