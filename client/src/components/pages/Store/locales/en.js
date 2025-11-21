@@ -57,7 +57,27 @@ const store_en = {
     sku: "SKU",
     price: "Price",
     stock: "Stock",
-    actions: "Actions"
+    actions: "Actions",
+    modal: {
+      titleAdd: "Add Product",
+      productNameLabel: "Product Name",
+      productNamePlaceholder: "Orange Pi",
+      productDescriptionLabel: "Product Description",
+      productDescriptionPlaceholder: "My awesome product",
+      productCategoryLabel: "Product Category",
+      productCategoryPlaceholder: "Electronics",
+      productSKULabel: "SKU",
+      productSKUPlaceholder: "OrangePi3Zero",
+      productPriceLabel: "Product Price",
+      productPricePlaceholder: "0.00",
+      productStockLabel: "Stock",
+      productStockPlaceholder: "0",
+      productImage: "Product Image",
+      productImageUpload: "Upload an Image",
+      productImageUploadMessage: "PNG, JPG or GIF (máx. 5MB)",
+      submitButton: "Add",
+      cancelButton: "Cancel"
+    }
   }
 };
 
