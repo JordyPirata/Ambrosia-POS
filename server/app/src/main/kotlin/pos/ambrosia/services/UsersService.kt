@@ -3,6 +3,7 @@ package pos.ambrosia.services
 import io.ktor.server.application.ApplicationEnvironment
 import pos.ambrosia.logger
 import pos.ambrosia.models.AuthResponse
+import pos.ambrosia.models.UpdateUserRequest
 import pos.ambrosia.models.User
 import pos.ambrosia.utils.SecurePinProcessor
 import java.sql.Connection
@@ -19,7 +20,7 @@ class UsersService(
 
     private const val GET_USERS =
       """
-            SELECT u.id, u.name, u.refresh_token, u.pin, u.role_id, u.email, u.phone
+            SELECT u.id, u.name, u.refresh_token, u.pin, r.role, u.role_id, u.email, u.phone
             FROM users u
             JOIN roles r ON u.role_id = r.id
             WHERE u.is_deleted = 0
@@ -35,7 +36,7 @@ class UsersService(
 
     private const val GET_USER_BY_ID =
       """
-            SELECT u.id, u.name, u.refresh_token, u.pin, u.email, u,phone, r.role, r.isAdmin
+            SELECT u.id, u.name, u.refresh_token, u.pin, u.email, u.phone, r.role, r.isAdmin
             FROM users u
             JOIN roles r ON u.role_id = r.id
             WHERE u.id = ? AND u.is_deleted = 0
@@ -101,11 +102,21 @@ class UsersService(
     while (resultSet.next()) {
       val id = resultSet.getString("id")
       val name = resultSet.getString("name")
-      val role = resultSet.getString("role_id")
+      val role = resultSet.getString("role")
+      val role_id = resultSet.getString("role_id")
       val email = resultSet.getString("email")
       val phone = resultSet.getString("phone")
       users.add(
-        User(id = id, name = name, pin = "****", refreshToken = "****", role = role, email = email, phone = phone),
+        User(
+          id = id,
+          name = name,
+          pin = "****",
+          refreshToken = "****",
+          role = role,
+          role_id = role_id,
+          email = email,
+          phone = phone
+        ),
       )
     }
     return users
@@ -149,25 +160,52 @@ class UsersService(
 
   suspend fun updateUser(
     id: String?,
-    updatedUser: User,
+    updatedUser: UpdateUserRequest,
   ): Boolean {
     if (id == null) return false
 
-    if (updatedUser.role == null || !roleExists(updatedUser.role)) {
-      logger.error("Role does not exist: ${updatedUser.role}")
+    val fields = mutableListOf<Pair<String, (java.sql.PreparedStatement, Int) -> Unit>>()
+
+    updatedUser.name?.let { name ->
+      fields += "name = ?" to { statement, idx -> statement.setString(idx, name) }
+    }
+
+    updatedUser.pin?.takeIf { it.isNotBlank() }?.let { pin ->
+      val encryptedPin = SecurePinProcessor.hashPinForStorage(pin.toCharArray(), id, env)
+      val hashedPin = SecurePinProcessor.byteArrayToBase64(encryptedPin)
+      fields += "pin = ?" to { statement, idx -> statement.setString(idx, hashedPin) }
+    }
+
+    updatedUser.refreshToken?.let { token ->
+      fields += "refresh_token = ?" to { statement, idx -> statement.setString(idx, token) }
+    }
+
+    updatedUser.role_id?.let { roleId ->
+      if (!roleExists(roleId)) {
+        logger.error("Role does not exist: $roleId")
+        return false
+      }
+      fields += "role_id = ?" to { statement, idx -> statement.setString(idx, roleId) }
+    }
+
+    updatedUser.email?.let { email ->
+      fields += "email = ?" to { statement, idx -> statement.setString(idx, email) }
+    }
+
+    updatedUser.phone?.let { phone ->
+      fields += "phone = ?" to { statement, idx -> statement.setString(idx, phone) }
+    }
+
+    if (fields.isEmpty()) {
+      logger.info("No fields to update for user $id")
       return false
     }
 
-    val statement = connection.prepareStatement(UPDATE_USER)
-    statement.setString(1, updatedUser.name)
+    val sql = "UPDATE users SET ${fields.joinToString(", ") { it.first }} WHERE id = ?"
+    val statement = connection.prepareStatement(sql)
 
-    val encryptedPin = SecurePinProcessor.hashPinForStorage(updatedUser.pin.toCharArray(), id, env)
-    statement.setString(2, SecurePinProcessor.byteArrayToBase64(encryptedPin))
-    statement.setString(3, updatedUser.refreshToken)
-    statement.setString(4, updatedUser.role)
-    statement.setString(5, id)
-    statement.setString(6, updatedUser.email)
-    statement.setString(7, updatedUser.phone)
+    fields.forEachIndexed { index, setter -> setter.second(statement, index + 1) }
+    statement.setString(fields.size + 1, id)
 
     val rowsUpdated = statement.executeUpdate()
     return rowsUpdated > 0

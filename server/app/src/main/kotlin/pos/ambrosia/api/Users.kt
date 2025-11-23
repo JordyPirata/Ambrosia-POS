@@ -15,6 +15,7 @@ import pos.ambrosia.logger
 import pos.ambrosia.models.User
 import pos.ambrosia.models.UserMeResponse
 import pos.ambrosia.models.UserResponse
+import pos.ambrosia.models.UpdateUserRequest
 import pos.ambrosia.services.PermissionsService
 import pos.ambrosia.services.TokenService
 import pos.ambrosia.services.UsersService
@@ -124,7 +125,19 @@ fun Route.users(
         return@put
       }
 
-      val updatedUser = call.receive<User>()
+      val updatedUser = call.receive<UpdateUserRequest>()
+      if (
+        updatedUser.name == null &&
+        updatedUser.pin == null &&
+        updatedUser.role_id == null &&
+        updatedUser.email == null &&
+        updatedUser.phone == null &&
+        updatedUser.refreshToken == null
+      ) {
+        call.respond(HttpStatusCode.BadRequest, "No fields provided to update")
+        return@put
+      }
+
       val isUpdated = userService.updateUser(id, updatedUser)
       logger.info(isUpdated.toString())
 

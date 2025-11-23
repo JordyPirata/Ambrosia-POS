@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@heroui/react";
 import { StoreLayout } from "../StoreLayout";
@@ -8,33 +8,9 @@ import { UsersTable } from "./UsersTable";
 import { AddUsersModal } from "./AddUsersModal";
 import { EditUsersModal } from "./EditUsersModal";
 import { DeleteUsersModal } from "./DeleteUsersModal";
+import { useUsers } from "./../hooks/useUsers";
+import { useRoles } from "./../hooks/useRoles";
 
-const USERS = [
-  {
-    id: 1,
-    name: "Jordano Anaya",
-    role: "Cajero",
-    email: "jordipirata@ambrosia.dev",
-    phone: "4431342288",
-    status: "Activo",
-  },
-  {
-    id: 2,
-    name: "Alberto Vidarte",
-    role: "Almacen",
-    email: "betornillo@ambrosia.dev",
-    phone: "4431236969",
-    status: "Activo",
-  },
-  {
-    id: 3,
-    name: "Carlos Ruz",
-    role: "Supervisor",
-    email: "carlosruz@ambrosia.dev",
-    phone: "4431342288",
-    status: "Activo",
-  },
-];
 
 export function Users() {
 
@@ -43,24 +19,28 @@ export function Users() {
   const [deleteUsersShowModal, setDeleteUsersShowModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [userToDelete, setUserToDelete] = useState(null);
+  const { users, updateUser, addUser, deleteUser } = useUsers();
+  const { roles } = useRoles();
 
   const [data, setData] = useState({
+    userId: "",
     userName: "",
     userPin: "",
     userPhone: "",
     userEmail: "",
-    userRole: "Vendedor",
+    userRole: "",
   })
 
   const handleEditUser = (user) => {
     setSelectedUser(user);
 
     setData({
-      userName: user.name,
+      userId: user.id,
+      userName: user.name ?? "",
       userPin: "",
-      userPhone: user.phone,
-      userEmail: user.email,
-      userRole: user.role,
+      userPhone: user.phone ?? "",
+      userEmail: user.email ?? "",
+      userRole: user.role_id ?? "",
     });
 
     setEditUsersShowModal(true);
@@ -74,13 +54,14 @@ export function Users() {
   const handleDataChange = (newData) => {
     setData((prev) => ({ ...prev, ...newData }))
   }
-  const ROLES = [
-    "Vendedor",
-    "Cajero",
-    "Supervisor",
-    "Almacén",
-  ];
+
   const t = useTranslations("users");
+
+  useEffect(() => {
+    if (!data.userRole && roles.length > 0) {
+      setData((prev) => ({ ...prev, userRole: roles[0].id }));
+    }
+  }, [roles]);
 
   return (
     <StoreLayout>
@@ -94,14 +75,24 @@ export function Users() {
         <Button
           color="primary"
           className="bg-green-800"
-          onPress={() => setAddUsersShowModal(true)}
+          onPress={() => {
+            setData({
+              userId: "",
+              userName: "",
+              userPin: "",
+              userPhone: "",
+              userEmail: "",
+              userRole: roles?.[0]?.id || "",
+            });
+            setAddUsersShowModal(true)
+          }}
         >
           {t("addUser")}
         </Button>
       </header>
       <div className="bg-white rounded-lg shadow-lg p-8">
         <UsersTable
-          users={USERS}
+          users={users}
           onEditUser={handleEditUser}
           onDeleteUser={handleDeleteUser}
         />
@@ -110,7 +101,8 @@ export function Users() {
         <AddUsersModal
           data={data}
           setData={setData}
-          roles={ROLES}
+          roles={roles}
+          addUser={addUser}
           onChange={handleDataChange}
           addUsersShowModal={addUsersShowModal}
           setAddUsersShowModal={setAddUsersShowModal}
@@ -120,8 +112,9 @@ export function Users() {
         <EditUsersModal
           data={data}
           setData={setData}
-          roles={ROLES}
+          roles={roles}
           user={selectedUser}
+          updateUser={updateUser}
           onChange={handleDataChange}
           editUsersShowModal={editUsersShowModal}
           setEditUsersShowModal={setEditUsersShowModal}
@@ -132,7 +125,10 @@ export function Users() {
           user={userToDelete}
           deleteUsersShowModal={deleteUsersShowModal}
           setDeleteUsersShowModal={setDeleteUsersShowModal}
-          onConfirm={() => {
+          onConfirm={async () => {
+            if (userToDelete?.id) {
+              await deleteUser(userToDelete.id);
+            }
             setDeleteUsersShowModal(false);
           }}
         />

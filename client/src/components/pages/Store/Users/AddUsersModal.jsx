@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { Eye, EyeOff } from 'lucide-react';
 import { Button, Input, Select, SelectItem, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, } from "@heroui/react";
 
-export function AddUsersModal({ data, setData, roles, onChange, addUsersShowModal, setAddUsersShowModal }) {
+export function AddUsersModal({ data, setData, roles, onChange, addUsersShowModal, setAddUsersShowModal, addUser }) {
   const t = useTranslations("users");
   const [showPin, setShowPin] = useState(false)
   return (
@@ -24,9 +24,9 @@ export function AddUsersModal({ data, setData, roles, onChange, addUsersShowModa
         <ModalBody>
           <form
             className="space-y-4"
-            onSubmit={(e) => {
+            onSubmit={async (e) => {
               e.preventDefault();
-              console.log("User data to submit:", data);
+              await addUser(data);
               setData({
                 userName: "",
                 userPin: "",
@@ -41,14 +41,14 @@ export function AddUsersModal({ data, setData, roles, onChange, addUsersShowModa
               label={t("modal.userNameLabel")}
               type="text"
               placeholder={t("modal.userNamePlaceholder")}
-              value={data.userName}
+              value={data.userName ?? ""}
               onChange={(e) => onChange({ ...data, userName: e.target.value })}
             />
             <Input
               label={t("modal.userEmailLabel")}
               type="email"
               placeholder={t("modal.userEmailPlaceholder")}
-              value={data.userEmail}
+              value={data.userEmail ?? ""}
               onChange={(e) => onChange({ ...data, userEmail: e.target.value })}
             />
             <Input
@@ -56,7 +56,7 @@ export function AddUsersModal({ data, setData, roles, onChange, addUsersShowModa
               type="tel"
               placeholder={t("modal.userPhonePlaceholder")}
               maxLength={10}
-              value={data.userPhone}
+              value={data.userPhone ?? ""}
               onChange={(e) => {
                 const onlyNumbers = e.target.value.replace(/\D/g, "");
                 onChange({ ...data, userPhone: onlyNumbers });
@@ -67,7 +67,7 @@ export function AddUsersModal({ data, setData, roles, onChange, addUsersShowModa
               type={showPin ? "text" : "password"}
               placeholder={t("modal.userPinPlaceholder")}
               maxLength={4}
-              value={data.userPin}
+              value={data.userPin ?? ""}
               onChange={(e) => {
                 const onlyNumbers = e.target.value.replace(/\D/g, "");
                 onChange({ ...data, userPin: onlyNumbers });
@@ -84,13 +84,13 @@ export function AddUsersModal({ data, setData, roles, onChange, addUsersShowModa
             />
             <Select
               label={t("modal.userRoleLabel")}
-              defaultSelectedKeys={[data.userRole]}
-              value={data.userRole}
+              defaultSelectedKeys={[data.userRole || roles?.[0]?.id || ""]}
+              value={data.userRole || roles?.[0]?.id || ""}
               onChange={(e) => onChange({ ...data, userRole: e.target.value })}
             >
               {roles.map((role) => (
-                <SelectItem key={role}>
-                  {role}
+                <SelectItem key={role.id} value={role.id}>
+                  {role.role}
                 </SelectItem>
               ))}
             </Select>
