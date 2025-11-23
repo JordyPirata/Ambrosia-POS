@@ -6,6 +6,8 @@ export function storedAssetUrl(url) {
     const parsed = new URL(url);
     const idx = parsed.pathname.indexOf("/uploads");
     if (idx !== -1) return parsed.pathname.slice(idx);
-  } catch (_) { }
+  } catch (error) {
+    console.error(error);
+  }
   return url;
 }

@@ -17,7 +17,7 @@ export function useUpload() {
       });
       if (!res.ok) throw new Error(`Upload failed: ${res.status}`);
       const data = await res.json();
-      return data.uploads; // [{ path, url }]
+      return data.uploads;
     } catch (e) {
       setError(e);
       throw e;

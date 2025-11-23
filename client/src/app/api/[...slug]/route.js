@@ -7,13 +7,11 @@ export async function GET(request, { params }) {
   const { search } = new URL(request.url);
   const url = `${apiUrl}/${resolvedParams.slug.join("/")}${search}`;
 
-  // Copiar headers del request original incluyendo cookies
   const headers = {};
   request.headers.forEach((value, key) => {
     headers[key] = value;
   });
 
-  // Asegurar que las cookies se pasen al backend
   const cookies = request.headers.get("cookie");
   if (cookies) {
     headers["cookie"] = cookies;
@@ -29,15 +27,13 @@ export async function GET(request, { params }) {
     console.log("Response status:", response.status);
     console.log(
       "Response headers:",
-      Object.fromEntries(response.headers.entries())
+      Object.fromEntries(response.headers.entries()),
     );
 
-    // Para status 204 (No Content), no intentar parsear body
     let data;
     if (response.status === 204) {
       data = null;
     } else {
-      // Verificar si la respuesta es JSON
       const contentType = response.headers.get("content-type");
       if (contentType && contentType.includes("application/json")) {
         data = await response.json();
@@ -46,27 +42,22 @@ export async function GET(request, { params }) {
       }
     }
 
-    // Copiar cookies de la respuesta
     const responseHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type, Authorization",
     };
 
-    // Pasar todas las cookies si las hay
     const setCookieHeaders = response.headers.getSetCookie?.() || [];
     if (setCookieHeaders.length > 0) {
-      // Para múltiples cookies, usar array
       responseHeaders["Set-Cookie"] = setCookieHeaders;
     } else {
-      // Fallback para un solo set-cookie
       const setCookieHeader = response.headers.get("set-cookie");
       if (setCookieHeader) {
         responseHeaders["Set-Cookie"] = setCookieHeader;
       }
     }
 
-    // Para status 204, no enviar body
     if (response.status === 204) {
       return new Response(null, {
         status: 204,
@@ -82,7 +73,7 @@ export async function GET(request, { params }) {
     console.error("Error:", error);
     return Response.json(
       { error: "Failed to fetch", details: error.message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -92,14 +83,12 @@ export async function POST(request, { params }) {
   const { search } = new URL(request.url);
   const url = `${apiUrl}/${resolvedParams.slug.join("/")}${search}`;
 
-  // Copiar headers del request original incluyendo cookies
   const headers = new Headers();
   request.headers.forEach((value, key) => {
     if (key.toLowerCase() === "content-length") return;
     headers.set(key, value);
   });
 
-  // Asegurar que las cookies se pasen al backend
   const cookies = request.headers.get("cookie");
   if (cookies) {
     headers.set("cookie", cookies);
@@ -113,22 +102,20 @@ export async function POST(request, { params }) {
     const response = await fetch(url, {
       method: "POST",
       headers,
-      body: request.body, // stream multipart/form-data or JSON as-is
+      body: request.body,
       duplex: "half",
     });
 
     console.log("Response status:", response.status);
     console.log(
       "Response headers:",
-      Object.fromEntries(response.headers.entries())
+      Object.fromEntries(response.headers.entries()),
     );
 
-    // Para status 204 (No Content), no intentar parsear body
     let data;
     if (response.status === 204) {
       data = null;
     } else {
-      // Verificar si la respuesta es JSON
       const contentType = response.headers.get("content-type");
       if (contentType && contentType.includes("application/json")) {
         data = await response.json();
@@ -137,27 +124,22 @@ export async function POST(request, { params }) {
       }
     }
 
-    // Copiar cookies de la respuesta
     const responseHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type, Authorization",
     };
 
-    // Pasar todas las cookies si las hay
     const setCookieHeaders = response.headers.getSetCookie?.() || [];
     if (setCookieHeaders.length > 0) {
-      // Para múltiples cookies, usar array
       responseHeaders["Set-Cookie"] = setCookieHeaders;
     } else {
-      // Fallback para un solo set-cookie
       const setCookieHeader = response.headers.get("set-cookie");
       if (setCookieHeader) {
         responseHeaders["Set-Cookie"] = setCookieHeader;
       }
     }
 
-    // Para status 204, no enviar body
     if (response.status === 204) {
       return new Response(null, {
         status: 204,
@@ -173,7 +155,7 @@ export async function POST(request, { params }) {
     console.error("Error:", error);
     return Response.json(
       { error: "Failed to fetch", details: error.message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -184,13 +166,11 @@ export async function PUT(request, { params }) {
   const url = `${apiUrl}/${resolvedParams.slug.join("/")}${search}`;
   const body = await request.text();
 
-  // Copiar headers del request original incluyendo cookies
   const headers = {};
   request.headers.forEach((value, key) => {
     headers[key] = value;
   });
 
-  // Asegurar que las cookies se pasen al backend
   const cookies = request.headers.get("cookie");
   if (cookies) {
     headers["cookie"] = cookies;
@@ -208,15 +188,13 @@ export async function PUT(request, { params }) {
     console.log("Response status:", response.status);
     console.log(
       "Response headers:",
-      Object.fromEntries(response.headers.entries())
+      Object.fromEntries(response.headers.entries()),
     );
 
-    // Para status 204 (No Content), no intentar parsear body
     let data;
     if (response.status === 204) {
       data = null;
     } else {
-      // Verificar si la respuesta es JSON
       const contentType = response.headers.get("content-type");
       if (contentType && contentType.includes("application/json")) {
         data = await response.json();
@@ -225,27 +203,22 @@ export async function PUT(request, { params }) {
       }
     }
 
-    // Copiar cookies de la respuesta
     const responseHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type, Authorization",
     };
 
-    // Pasar todas las cookies si las hay
     const setCookieHeaders = response.headers.getSetCookie?.() || [];
     if (setCookieHeaders.length > 0) {
-      // Para múltiples cookies, usar array
       responseHeaders["Set-Cookie"] = setCookieHeaders;
     } else {
-      // Fallback para un solo set-cookie
       const setCookieHeader = response.headers.get("set-cookie");
       if (setCookieHeader) {
         responseHeaders["Set-Cookie"] = setCookieHeader;
       }
     }
 
-    // Para status 204, no enviar body
     if (response.status === 204) {
       return new Response(null, {
         status: 204,
@@ -261,7 +234,7 @@ export async function PUT(request, { params }) {
     console.error("Error:", error);
     return Response.json(
       { error: "Failed to fetch", details: error.message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -271,13 +244,11 @@ export async function DELETE(request, { params }) {
   const { search } = new URL(request.url);
   const url = `${apiUrl}/${resolvedParams.slug.join("/")}${search}`;
 
-  // Copiar headers del request original incluyendo cookies
   const headers = {};
   request.headers.forEach((value, key) => {
     headers[key] = value;
   });
 
-  // Asegurar que las cookies se pasen al backend
   const cookies = request.headers.get("cookie");
   if (cookies) {
     headers["cookie"] = cookies;
@@ -294,15 +265,13 @@ export async function DELETE(request, { params }) {
     console.log("Response status:", response.status);
     console.log(
       "Response headers:",
-      Object.fromEntries(response.headers.entries())
+      Object.fromEntries(response.headers.entries()),
     );
 
-    // Para status 204 (No Content), no intentar parsear body
     let data;
     if (response.status === 204) {
       data = null;
     } else {
-      // Verificar si la respuesta es JSON
       const contentType = response.headers.get("content-type");
       if (contentType && contentType.includes("application/json")) {
         data = await response.json();
@@ -311,27 +280,22 @@ export async function DELETE(request, { params }) {
       }
     }
 
-    // Copiar cookies de la respuesta
     const responseHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type, Authorization",
     };
 
-    // Pasar todas las cookies si las hay
     const setCookieHeaders = response.headers.getSetCookie?.() || [];
     if (setCookieHeaders.length > 0) {
-      // Para múltiples cookies, usar array
       responseHeaders["Set-Cookie"] = setCookieHeaders;
     } else {
-      // Fallback para un solo set-cookie
       const setCookieHeader = response.headers.get("set-cookie");
       if (setCookieHeader) {
         responseHeaders["Set-Cookie"] = setCookieHeader;
       }
     }
 
-    // Para status 204, no enviar body
     if (response.status === 204) {
       return new Response(null, {
         status: 204,
@@ -347,7 +311,7 @@ export async function DELETE(request, { params }) {
     console.error("Error:", error);
     return Response.json(
       { error: "Failed to fetch", details: error.message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
