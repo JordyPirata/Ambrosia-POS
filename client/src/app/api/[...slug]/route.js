@@ -91,18 +91,18 @@ export async function POST(request, { params }) {
   const resolvedParams = await params;
   const { search } = new URL(request.url);
   const url = `${apiUrl}/${resolvedParams.slug.join("/")}${search}`;
-  const body = await request.text();
 
   // Copiar headers del request original incluyendo cookies
-  const headers = {};
+  const headers = new Headers();
   request.headers.forEach((value, key) => {
-    headers[key] = value;
+    if (key.toLowerCase() === "content-length") return;
+    headers.set(key, value);
   });
 
   // Asegurar que las cookies se pasen al backend
   const cookies = request.headers.get("cookie");
   if (cookies) {
-    headers["cookie"] = cookies;
+    headers.set("cookie", cookies);
     console.log("Sending cookies to backend");
   } else {
     console.log("No cookies found in request");
@@ -113,7 +113,8 @@ export async function POST(request, { params }) {
     const response = await fetch(url, {
       method: "POST",
       headers,
-      body,
+      body: request.body, // stream multipart/form-data or JSON as-is
+      duplex: "half",
     });
 
     console.log("Response status:", response.status);
