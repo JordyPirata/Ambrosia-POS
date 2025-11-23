@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getUsers } from "./authService";
-import { ChefHat, Delete, LogIn, Users, Trash2 } from "lucide-react";
+import { Delete, LogIn, Users, Trash2 } from "lucide-react";
 import {
   addToast,
   Avatar,
@@ -10,12 +10,15 @@ import {
   Card,
   CardBody,
   CardHeader,
+  Image,
   Input,
   Select,
   SelectItem,
 } from "@heroui/react";
 import { useAuth } from "./useAuth";
 import { useRouter } from "next/navigation";
+import { useConfigurations } from "../../providers/configurations/configurationsProvider";
+
 export default function PinLoginNew() {
   const [pin, setPin] = useState("");
   const [selectedUser, setSelectedUser] = useState("");
@@ -32,6 +35,8 @@ export default function PinLoginNew() {
   ]);
   const router = useRouter();
   const { login } = useAuth();
+  const { config } = useConfigurations();
+
 
   useEffect(() => {
     async function getUsersFromService() {
@@ -123,11 +128,11 @@ export default function PinLoginNew() {
         <CardHeader className="text-center space-y-3 pb-4 flex flex-col items-center justify-center">
           <div className="flex flex-col items-center justify-center">
             <div className="mx-auto w-16 h-16 bg-mint rounded-full flex items-center justify-center shadow-lg">
-              <ChefHat className="w-8 h-8 text-forest" />
+              <Image className="w-8 h-8 text-forest" src={config?.businessLogoUrl} />
             </div>
             <div className="flex flex-col items-center justify-center">
               <h1 className="text-2xl font-bold text-deep">
-                Restaurante Verde
+                {config?.businessName}
               </h1>
               <p className="text-forest mt-2 text-base text-center">
                 Ingresa tu PIN para acceder al sistema
