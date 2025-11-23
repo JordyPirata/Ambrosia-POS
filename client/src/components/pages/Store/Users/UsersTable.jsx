@@ -16,7 +16,6 @@ export function UsersTable({ users, onEditUser, onDeleteUser }) {
             <th className="py-2 px-3">{t("role")}</th>
             <th className="py-2 px-3">{t("email")}</th>
             <th className="py-2 px-3">{t("phone")}</th>
-            <th className="py-2 px-3">{t("status")}</th>
             <th className="py-2 px-3 text-right">{t("actions")}</th>
           </tr>
         </thead>
@@ -36,13 +35,6 @@ export function UsersTable({ users, onEditUser, onDeleteUser }) {
               </td>
               <td className="py-2 px-3">{user.email}</td>
               <td className="py-2 px-3">{user.phone}</td>
-              <td className="py-2 px-3">
-                <Chip
-                  className="bg-green-200 text-xs text-green-800 border border-green-300"
-                >
-                  {user.status}
-                </Chip>
-              </td>
               <td className="flex justify-end space-x-4 py-2 px-3">
                 <Button
                   aria-label="Edit User"
