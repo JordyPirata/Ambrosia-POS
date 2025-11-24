@@ -65,6 +65,16 @@ data class User(
 )
 
 @Serializable
+data class UpdateUserRequest(
+  val name: String? = null,
+  val pin: String? = null,
+  val refreshToken: String? = null,
+  val role_id: String? = null,
+  val email: String? = null,
+  val phone: String? = null,
+)
+
+@Serializable
 data class Role(
   val id: String? = null,
   val role: String,
