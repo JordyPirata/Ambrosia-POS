@@ -233,20 +233,14 @@ export const modules = {
     ],
     navItems: [
       {
-        path: "/store",
-        label: "Inicio Store",
-        icon: "store",
-        showInNavbar: true,
-      },
-      {
         path: "/store/users",
-        label: "Users",
+        label: "users",
         icon: "users",
         showInNavbar: true,
       },
       {
         path: "/store/products",
-        label: "Products",
+        label: "products",
         icon: "box",
         showInNavbar: true,
       },

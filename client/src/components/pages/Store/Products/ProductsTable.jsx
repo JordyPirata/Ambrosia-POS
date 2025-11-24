@@ -15,8 +15,6 @@ import {
 import { Pencil, Trash } from 'lucide-react';
 
 export function ProductsTable({ products, onEditProduct, onDeleteProduct }) {
-  const formatCurrency = (v) =>
-  `$ ${v.toLocaleString("es-MX", { minimumFractionDigits: 2 })}`;
   const t = useTranslations("products");
   return(
     <section>
@@ -35,7 +33,7 @@ export function ProductsTable({ products, onEditProduct, onDeleteProduct }) {
             {products.map((product) => (
               <TableRow key={product.sku}>
                 <TableCell>
-                  <Image src={product.image} width={75}/>
+                  <Image src={product.image} width={75} alt={product.name}/>
                 </TableCell>
                 <TableCell>{product.name}</TableCell>
                 <TableCell>
