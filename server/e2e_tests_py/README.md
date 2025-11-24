@@ -168,10 +168,27 @@ The tests require:
 - Ensure Gradle can build the Kotlin server
 - Check server logs in test output for errors
 
-### Tests timing out
+### Tests timing out or "Server did not start within 30 seconds"
 
-- Increase `STARTUP_TIMEOUT` in `test_server.py`
-- Check server logs for errors
+- **Rebuild the server first**: If the server code has been updated, you need to rebuild before running tests
+  ```bash
+  cd server
+  ./gradlew build
+  # Or if you have build issues:
+  ./gradlew clean build
+  ```
+- Check if port 9154 is already in use by a previous test run:
+  ```bash
+  lsof -i :9154
+  # If something is running, kill it:
+  kill <PID>
+  ```
+- Kill any hanging Gradle processes from previous test runs:
+  ```bash
+  pkill -f "gradle.*run"
+  ```
+- Increase `STARTUP_TIMEOUT` in `test_server.py` if your system is slow
+- Check server logs in test output for errors
 - Verify Phoenix connection
 
 ### Import errors
