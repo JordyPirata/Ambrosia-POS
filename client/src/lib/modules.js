@@ -220,7 +220,7 @@ export const modules = {
         requiresAuth: true,
         requiresAdmin: false,
         types: ["store"],
-        default: true,
+        default: false,
       },
       {
         path: "/store/products",
@@ -228,7 +228,7 @@ export const modules = {
         requiresAuth: true,
         requiresAdmin: false,
         types: ["store"],
-        default: true,
+        default: false,
       },
     ],
     navItems: [
