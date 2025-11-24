@@ -6,6 +6,7 @@ const store_es = {
     wallet: "Billetera",
     settings: "Configuración",
     logout: "Cerrar sesión",
+    cart: "Caja"
   },
   dashboard: {
     title: "Panel de control",

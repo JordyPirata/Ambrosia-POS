@@ -50,7 +50,7 @@ export function StoreLayout({ children }) {
   return (
     <div className="flex min-h-screen">
       <aside className="w-64 bg-primary-500 relative">
-        <div className="p-4 border-b border-green-300">
+        <div className="flex flex-col items-center p-4 border-b border-green-300">
           <Link href="/">
             <Image
               src={logoSrc || ambrosia}

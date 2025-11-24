@@ -6,6 +6,7 @@ const store_en = {
     wallet: "Wallet",
     settings: "Settings",
     logout: "Log Out",
+    cart: "Cart"
   },
   dashboard: {
     title: "Dashboard",

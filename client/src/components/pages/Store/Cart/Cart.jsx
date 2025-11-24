@@ -72,7 +72,7 @@ const CART_ITEMS = [
 
 const formatCurrency = (v) => `$ ${v.toLocaleString("es-MX", { minimumFractionDigits: 2 })}`;
 
-export default function CartPage() {
+export function Cart() {
   const subtotal = CART_ITEMS.reduce((sum, item) => sum + item.total, 0);
   const discount = 0;
   const total = subtotal - discount;
