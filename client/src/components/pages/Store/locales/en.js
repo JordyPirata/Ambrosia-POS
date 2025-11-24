@@ -47,6 +47,45 @@ const store_en = {
       deleteButton: "Delete",
     },
   },
+  products: {
+    title: "Products",
+    subtitle: "Manage your store products.",
+    addProduct: "Add Product",
+    image: "Image",
+    name: "Name",
+    description: "Description",
+    category: "Category",
+    sku: "SKU",
+    price: "Price",
+    stock: "Stock",
+    actions: "Actions",
+    modal: {
+      titleAdd: "Add Product",
+      titleEdit: "Edit Product",
+      titleDelete: "Delete Product",
+      subtitleDelete: "Are you sure you want to delete",
+      warningDelete: "This action cannot be undone.",
+      productNameLabel: "Product Name",
+      productNamePlaceholder: "Orange Pi",
+      productDescriptionLabel: "Product Description",
+      productDescriptionPlaceholder: "My awesome product",
+      productCategoryLabel: "Product Category",
+      productCategoryPlaceholder: "Electronics",
+      productSKULabel: "SKU",
+      productSKUPlaceholder: "OrangePi3Zero",
+      productPriceLabel: "Product Price",
+      productPricePlaceholder: "0.00",
+      productStockLabel: "Stock",
+      productStockPlaceholder: "0",
+      productImage: "Product Image",
+      productImageUpload: "Upload an Image",
+      productImageUploadMessage: "PNG, JPG or GIF (máx. 5MB)",
+      submitButton: "Add",
+      cancelButton: "Cancel",
+      editButton: "Save",
+      deleteButton: "Delete"
+    }
+  }
 };
 
 export default store_en;

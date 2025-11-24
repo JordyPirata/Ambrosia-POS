@@ -47,6 +47,45 @@ const store_es = {
       deleteButton: "Eliminar",
     },
   },
+  products: {
+    title: "Productos",
+    subtitle: "Gestiona tu catálogo de productos e inventario",
+    addProduct: "Agregar Producto",
+    image: "Imagen",
+    name: "Nombre",
+    description: "Descripción",
+    category: "Categoría",
+    sku: "SKU",
+    price: "Precio",
+    stock: "Almacen",
+    actions: "Acciones",
+    modal: {
+      titleAdd: "Agregar Producto",
+      titleEdit: "Editar Producto",
+      titleDelete: "Eliminar Producto",
+      subtitleDelete: "Estás seguro que deseas eliminar",
+      warningDelete: "Esta acción no se puede deshacer.",
+      productNameLabel: "Nombre del Producto",
+      productNamePlaceholder: "Orange Pi",
+      productDescriptionLabel: "Descripción del Producto",
+      productDescriptionPlaceholder: "Mi excelente producto",
+      productCategoryLabel: "Categoría del Producto",
+      productCategoryPlaceholder: "Electronica",
+      productSKULabel: "SKU",
+      productSKUPlaceholder: "OrangePi3Zero",
+      productPriceLabel: "Precio",
+      productPricePlaceholder: "0.00",
+      productStockLabel: "En Almacen",
+      productStockPlaceholder: "0",
+      productImage: "Imagen del Producto",
+      productImageUpload: "Sube una Imagen",
+      productImageUploadMessage: "PNG, JPG o GIF (máx. 5MB)",
+      submitButton: "Agregar",
+      cancelButton: "Cancelar",
+      editButton: "Guardar",
+      deleteButton: "Eliminar"
+    }
+  }
 };
 
 export default store_es;
