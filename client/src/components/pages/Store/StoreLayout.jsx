@@ -9,6 +9,7 @@ import ambrosia from "../../../../public/ambrosia.svg";
 import { useConfigurations } from "../../../providers/configurations/configurationsProvider";
 import { useModules } from "../../../hooks/useModules";
 import * as LucideIcons from "lucide-react"
+import { storedAssetUrl } from "../../utils/storedAssetUrl";
 
 function Icon({ name, className = "w-5 h-5" }) {
   const formatIconName = (iconName) => {
@@ -44,13 +45,20 @@ export function StoreLayout({ children }) {
   const { config } = useConfigurations();
   const { availableNavigation, isAuth, logout } =
     useModules();
+  const logoSrc = storedAssetUrl(config?.businessLogoUrl);
 
   return (
     <div className="flex min-h-screen">
       <aside className="w-64 bg-primary-500 relative">
         <div className="p-4 border-b border-green-300">
           <Link href="/">
-            <Image src={ambrosia} alt="ambrosia" />
+            <Image
+              src={logoSrc || ambrosia}
+              alt="ambrosia"
+              width={160}
+              height={48}
+              className="object-contain"
+            />
           </Link>
           <p className=" text-slate-100 text-center mt-4">{config?.businessName ? config.businessName : ""}</p>
         </div>

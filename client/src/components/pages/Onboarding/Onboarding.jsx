@@ -9,6 +9,7 @@ import { BusinessDetailsStep } from "./AddBusinessData";
 import { WizardSummary } from "./StepsSummary";
 import { submitInitialSetup } from "../../../services/initialSetupService";
 import { useRouter } from "next/navigation";
+import { useUpload } from "../../hooks/useUpload";
 
 export function Onboarding() {
   const t = useTranslations();
@@ -27,6 +28,7 @@ export function Onboarding() {
     businessLogo: null,
   })
   const router = useRouter();
+  const { upload } = useUpload();
 
   function isPasswordStrong(password) {
     return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(password);
@@ -58,7 +60,18 @@ export function Onboarding() {
 
   const handleComplete = async () => {
     try {
-      await submitInitialSetup(data);
+      let logoUrl = null;
+      if (data.storeLogo) {
+        const [uploaded] = await upload([data.storeLogo]);
+        logoUrl = uploaded?.url ?? uploaded?.path;
+      }
+
+      await submitInitialSetup({
+        ...data,
+        businessLogoUrl: logoUrl,
+        storeLogo: undefined,
+        businessLogo: undefined,
+      });
       addToast({
         title: t("submitOnboardingToast.title"),
         description: t("submitOnboardingToast.description"),
