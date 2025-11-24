@@ -15,20 +15,12 @@ export async function GET(request, { params }) {
   const cookies = request.headers.get("cookie");
   if (cookies) {
     headers["cookie"] = cookies;
-    console.log("GET - Sending cookies to backend");
   }
 
   try {
-    console.log("GET request to:", url);
     const response = await fetch(url, {
       headers,
     });
-
-    console.log("Response status:", response.status);
-    console.log(
-      "Response headers:",
-      Object.fromEntries(response.headers.entries()),
-    );
 
     let data;
     if (response.status === 204) {
@@ -92,25 +84,15 @@ export async function POST(request, { params }) {
   const cookies = request.headers.get("cookie");
   if (cookies) {
     headers.set("cookie", cookies);
-    console.log("Sending cookies to backend");
-  } else {
-    console.log("No cookies found in request");
   }
 
   try {
-    console.log("POST request to:", url);
     const response = await fetch(url, {
       method: "POST",
       headers,
       body: request.body,
       duplex: "half",
     });
-
-    console.log("Response status:", response.status);
-    console.log(
-      "Response headers:",
-      Object.fromEntries(response.headers.entries()),
-    );
 
     let data;
     if (response.status === 204) {
@@ -174,22 +156,14 @@ export async function PUT(request, { params }) {
   const cookies = request.headers.get("cookie");
   if (cookies) {
     headers["cookie"] = cookies;
-    console.log("PUT - Sending cookies to backend");
   }
 
   try {
-    console.log("PUT request to:", url);
     const response = await fetch(url, {
       method: "PUT",
       headers,
       body,
     });
-
-    console.log("Response status:", response.status);
-    console.log(
-      "Response headers:",
-      Object.fromEntries(response.headers.entries()),
-    );
 
     let data;
     if (response.status === 204) {
@@ -252,21 +226,13 @@ export async function DELETE(request, { params }) {
   const cookies = request.headers.get("cookie");
   if (cookies) {
     headers["cookie"] = cookies;
-    console.log("DELETE - Sending cookies to backend");
   }
 
   try {
-    console.log("DELETE request to:", url);
     const response = await fetch(url, {
       method: "DELETE",
       headers,
     });
-
-    console.log("Response status:", response.status);
-    console.log(
-      "Response headers:",
-      Object.fromEntries(response.headers.entries()),
-    );
 
     let data;
     if (response.status === 204) {
