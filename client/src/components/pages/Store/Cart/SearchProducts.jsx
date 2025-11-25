@@ -1,9 +1,23 @@
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Input, Button } from "@heroui/react";
 import { Search } from "lucide-react";
+import { ProductList } from "./ProductList";
 
-export function SearchProducts() {
+export function SearchProducts({ products, onAddProduct }) {
   const t = useTranslations("cart");
+
+  const [search, setSearch] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState(null);
+
+  const categories = Array.from(new Set(products.map((product) => product.category)))
+
+  const filteredProducts = products.filter((product) => {
+    const searchMatch = product.name.toLowerCase().includes(search.toLowerCase())
+    const categoryMatch = !categoryFilter || product.category === categoryFilter;
+    return searchMatch && categoryMatch && product.stock > 0
+  });
+
   return (
     <div className="flex flex-col">
       <Input
@@ -14,6 +28,8 @@ export function SearchProducts() {
         startContent={
           <Search width={20} height={20} />
         }
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
       />
 
       <div className="mb-4 flex flex-wrap gap-2">
@@ -21,31 +37,25 @@ export function SearchProducts() {
           color="primary"
           radius="full"
           size="sm"
+          onPress={() => setCategoryFilter(null)}
         >
           {t("search.filterAll")}
         </Button>
-        <Button
-          className="bg-slate-100"
-          radius="full"
-          size="sm"
-        >
-          Electronica
-        </Button>
-        <Button
-          className="bg-slate-100"
-          radius="full"
-          size="sm"
-        >
-          Accesorios
-        </Button>
-        <Button
-          className="bg-slate-100"
-          radius="full"
-          size="sm"
-        >
-          Hardware Wallet
-        </Button>
+        { categories.map((category) => (
+          <Button
+            key={category}
+            onPress={() => setCategoryFilter(category)}
+            className="bg-slate-100"
+            radius="full"
+            size="sm"
+          >
+            {category}
+          </Button>
+        ))
+
+        }
       </div>
+      <ProductList products={filteredProducts} onAddProduct={onAddProduct}/>
     </div>
   );
 };

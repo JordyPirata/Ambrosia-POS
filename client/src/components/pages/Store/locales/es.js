@@ -108,6 +108,7 @@ const store_es = {
       total: "Total",
       subtotal: "Subtotal",
       discount: "Descuento",
+      quantity: "Cantidad",
       pay: "Pagar"
     }
   }

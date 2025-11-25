@@ -108,6 +108,7 @@ const store_en = {
       total: "Total",
       subtotal: "Subtotal",
       discount: "Discount",
+      quantity: "Quantity",
       pay: "Pay"
     }
   }
