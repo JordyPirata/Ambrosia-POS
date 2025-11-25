@@ -85,6 +85,8 @@ class Ambrosia : CliktCommand() {
         val value = AppConfig.getPhoenixProperty("http-password") ?: throw Exception("phoenixd http-password on found in phoenix.conf, please provide it with --phoenixd-password or in the phoenix.conf file")
         value
       }
+    val jwtAccessTokenExpirationSeconds by
+      option("--jwt-access-token-expiration", help = "Access token expiration in seconds (default: 60)").default("60")
     val phoenixdWebhookSecret by
       option("--phoenixd-webhook-secret", help = "webhook-secret for phoenixd webhooks").defaultLazy {
         AppConfig.loadConfig()
@@ -134,6 +136,7 @@ class Ambrosia : CliktCommand() {
             applicationEnvironment {
               config =
                 MapApplicationConfig().apply {
+                  put("jwt.accessTokenExpirationSeconds", options.jwtAccessTokenExpirationSeconds)
                   put("jwt.issuer", "ambrosia-pos")
                   put("jwt.audience", "ambrosia-pos-users")
                   put("secret", options.secret)
