@@ -8,55 +8,33 @@ import { ProductsTable } from "./ProductsTable";
 import { AddProductsModal } from "./AddProductsModal";
 import { EditProductsModal } from "./EditProductsModal";
 import { DeleteProductsModal } from "./DeleteProductsModal";
-
-const PRODUCTS = [
-  {
-    id: 1,
-    name: "Jade Wallet",
-    description: "Blockstream hardware wallet",
-    category: "Hardware Wallet",
-    sku: "jade-wallet",
-    price: 1600,
-    stock: 20,
-    image: "https://store.blockstream.com/cdn/shop/files/Jade_Bitcoin_Hardware_Wallet_-_Green_-_Front.png",
-  },
-  {
-    id: 2,
-    name: "Jade Plus",
-    description: "Introducing Jade Plus, the ultimate Bitcoin hardware wallet for long-term HODLing from Blockstream. Jade Plus is designed to deliver unmatched security and an elevated user experience for Bitcoin enthusiasts at every level. With its state-of-the-art open-source technology and sleek new look, Jade Plus sets a new standard in secure, user-friendly offline bitcoin storage. ",
-    category: "Hardware Wallet",
-    sku: "jade-plus-wallet",
-    price: 4000,
-    stock: 10,
-    image: "https://store.blockstream.com/cdn/shop/files/Blockstream_Jade_Plus_Bitcoin_Wallet_Angled_Back_Grey.jpg",
-  },
-  {
-    id: 3,
-    name: "M5 Stickplus2",
-    description: "Electronic device",
-    category: "Electronica",
-    sku: "m5-stickplus-2",
-    price: 600,
-    stock: 5,
-    image: "https://m.media-amazon.com/images/I/51-SwqSQHNL._AC_SL1500_.jpg",
-  },
-];
+import { useProducts } from "../hooks/useProducts";
+import { useCategories } from "../hooks/useCategories";
 
 export function Products() {
   const [addProductsShowModal, setAddProductsShowModal] = useState(false);
   const [editProductsShowModal, setEditProductsShowModal] = useState(false);
   const [deleteProductsShowModal, setDeleteProductsShowModal] = useState(false);
   const [data, setData] = useState({
+    productId: "",
     productName: "",
     productDescription: "",
     productCategory: "",
     productSKU: "",
     productPrice: "",
     productStock: "",
-    productImage: ""
+    productImage: "",
+    storeImage: null,
   });
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [productToDelete, setProductToDelete] = useState(null)
+  const { products, addProduct, updateProduct, isUploading, refetch: refetchProducts } = useProducts();
+  const {
+    categories,
+    loading: categoriesLoading,
+    createCategory,
+    refetch: refetchCategories
+  } = useCategories("product");
 
   const handleDataChange = (newData) => {
     setData((prev) => ({ ...prev, ...newData }))
@@ -66,13 +44,15 @@ export function Products() {
     setSelectedProduct(product);
 
     setData({
+      productId: product.id,
       productName: product.name,
       productDescription: product.description,
-      productCategory: product.category,
-      productSKU: product.sku,
-      productPrice: product.price,
-      productStock: product.stock,
-      productImage: product.image
+      productCategory: product.category_id,
+      productSKU: product.SKU,
+      productPrice: product.price_cents ? product.price_cents / 100 : "",
+      productStock: product.quantity,
+      productImage: product.image_url,
+      storeImage: null,
     });
 
     setEditProductsShowModal(true);
@@ -81,6 +61,10 @@ export function Products() {
   const handleDeleteProduct = (product) => {
     setProductToDelete(product);
     setDeleteProductsShowModal(true);
+  };
+
+  const handleRefreshData = async () => {
+    await Promise.all([refetchProducts(), refetchCategories()]);
   };
 
   const t = useTranslations("products");
@@ -104,9 +88,10 @@ export function Products() {
       </header>
       <div className="bg-white rounded-lg shadow-lg p-8">
         <ProductsTable
-          products={PRODUCTS}
+          products={products}
+          categories={categories}
           onEditProduct={handleEditProduct}
-          onDeleteProduct={handleDeleteProduct }
+          onDeleteProduct={handleDeleteProduct}
         />
       </div>
 
@@ -116,7 +101,13 @@ export function Products() {
           setAddProductsShowModal={setAddProductsShowModal}
           data={data}
           setData={setData}
+          addProduct={addProduct}
+          isUploading={isUploading}
+          categories={categories}
+          categoriesLoading={categoriesLoading}
+          createCategory={createCategory}
           onChange={handleDataChange}
+          onProductCreated={handleRefreshData}
         />
       )}
 
@@ -126,6 +117,12 @@ export function Products() {
           setData={setData}
           product={selectedProduct}
           onChange={handleDataChange}
+          updateProduct={updateProduct}
+          isUploading={isUploading}
+          onProductUpdated={handleRefreshData}
+          categories={categories}
+          categoriesLoading={categoriesLoading}
+          createCategory={createCategory}
           editProductsShowModal={editProductsShowModal}
           setEditProductsShowModal={setEditProductsShowModal}
         />

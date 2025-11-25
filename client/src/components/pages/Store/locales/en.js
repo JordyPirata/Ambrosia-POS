@@ -83,7 +83,11 @@ const store_en = {
       submitButton: "Add",
       cancelButton: "Cancel",
       editButton: "Save",
-      deleteButton: "Delete"
+      deleteButton: "Delete",
+      categorySelectPlaceholder: "Choose a category",
+      createCategoryLabel: "Create a new category",
+      createCategoryPlaceholder: "Electronics",
+      createCategoryButton: "Add category"
     }
   }
 };
