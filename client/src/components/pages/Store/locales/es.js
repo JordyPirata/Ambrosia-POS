@@ -102,6 +102,13 @@ const store_es = {
     card: {
       add: "Agregar",
       stock: "en almacén"
+    },
+    summary: {
+      title: "Resumen",
+      total: "Total",
+      subtotal: "Subtotal",
+      discount: "Descuento",
+      pay: "Pagar"
     }
   }
 };

@@ -50,7 +50,7 @@ const store_en = {
   },
   products: {
     title: "Products",
-    subtitle: "Manage your store products.",
+    subtitle: "Manage your store products",
     addProduct: "Add Product",
     image: "Image",
     name: "Name",
@@ -102,6 +102,13 @@ const store_en = {
     card: {
       add: "Add",
       stock: "in stock"
+    },
+    summary: {
+      title: "Summary",
+      total: "Total",
+      subtotal: "Subtotal",
+      discount: "Discount",
+      pay: "Pay"
     }
   }
 };

@@ -1,6 +1,8 @@
+import { useTranslations } from "next-intl";
 import { Button, Card, CardBody, CardFooter, CardHeader, Chip } from "@heroui/react";
 
 export function ProductCard({ products }) {
+  const t = useTranslations("cart");
   const formatCurrency = (v) => `$ ${v.toLocaleString("es-MX", { minimumFractionDigits: 2 })}`;
 
   return (
@@ -27,7 +29,7 @@ export function ProductCard({ products }) {
               color="secondary"
               size="sm"
             >
-              {product.stock} en stock
+              {product.stock} {t("card.stock")}
             </Chip>
             <Button
               color="primary"
