@@ -98,6 +98,10 @@ const store_es = {
       label: "Buscar",
       placeholder: "Buscar producto...",
       filterAll: "Todos"
+    },
+    card: {
+      add: "Agregar",
+      stock: "en almacén"
     }
   }
 };

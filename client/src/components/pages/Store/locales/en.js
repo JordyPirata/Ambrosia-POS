@@ -98,6 +98,10 @@ const store_en = {
       label: "Search",
       placeholder: "Type to search...",
       filterAll: "All"
+    },
+    card: {
+      add: "Add",
+      stock: "in stock"
     }
   }
 };

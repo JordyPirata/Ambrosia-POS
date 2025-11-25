@@ -2,6 +2,7 @@
 import { useTranslations } from "next-intl";
 import { StoreLayout } from "../StoreLayout";
 import { SearchProducts } from "./SearchProducts";
+import { ProductCard } from "./ProductCard";
 
 const PRODUCTS = [
   {
@@ -94,36 +95,7 @@ export function Cart() {
         <section className="lg:col-span-2">
           <SearchProducts />
 
-          {/* Product cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-            {PRODUCTS.map((p) => (
-              <article
-                key={p.id}
-                className="rounded-lg bg-[#f5ffe9] border border-green-200 shadow-sm p-4 flex flex-col justify-between"
-              >
-                <div>
-                  <h3 className="text-sm font-semibold text-green-900">
-                    {p.name}
-                  </h3>
-                  <p className="text-xs text-gray-600">{p.category}</p>
-                  <p className="mt-2 text-lg font-bold text-green-800">
-                    {formatCurrency(p.price)}
-                  </p>
-                  <p className="mt-1 text-xs text-gray-600">
-                    SKU: <span className="text-gray-800">{p.sku}</span>
-                  </p>
-                </div>
-                <div className="mt-3 flex items-center justify-between">
-                  <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-medium text-green-700">
-                    {p.stock} en stock
-                  </span>
-                  <button className="rounded bg-green-600 px-3 py-1 text-xs font-semibold text-white hover:bg-green-700">
-                    Agregar
-                  </button>
-                </div>
-              </article>
-            ))}
-          </div>
+          <ProductCard products={PRODUCTS} />
         </section>
 
         {/* Right: resumen */}

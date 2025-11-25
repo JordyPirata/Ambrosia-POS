@@ -7,6 +7,7 @@ export function SearchProducts() {
   return (
     <div className="flex flex-col">
       <Input
+        isClearable
         className="mb-4"
         label={t("search.label")}
         placeholder={t("search.placeholder")}
