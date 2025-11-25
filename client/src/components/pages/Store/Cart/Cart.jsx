@@ -1,6 +1,7 @@
 "use client";
-
+import { useTranslations } from "next-intl";
 import { StoreLayout } from "../StoreLayout";
+import { SearchProducts } from "./SearchProducts";
 
 const PRODUCTS = [
   {
@@ -73,68 +74,25 @@ const CART_ITEMS = [
 const formatCurrency = (v) => `$ ${v.toLocaleString("es-MX", { minimumFractionDigits: 2 })}`;
 
 export function Cart() {
+  const t = useTranslations("cart");
   const subtotal = CART_ITEMS.reduce((sum, item) => sum + item.total, 0);
   const discount = 0;
   const total = subtotal - discount;
 
   return (
     <StoreLayout>
-      {/* Header */}
       <header className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-semibold text-green-900">Caja</h1>
-          <p className="text-sm text-gray-700">Sistema de cobro</p>
-          <div className="mt-2 flex space-x-4 text-sm text-green-900">
-            <button className="border-b-2 border-green-700 pb-1 font-semibold">
-              Caja
-            </button>
-            <button className="pb-1 text-gray-500 hover:text-gray-700">
-              Historial
-            </button>
-          </div>
-        </div>
-        {/* Top-right controls (language + new) */}
-        <div className="flex items-center space-x-3">
-          <button className="rounded-full border px-3 py-1 text-xs text-gray-700 bg-white">
-            Cambiar a Español
-          </button>
-          <button className="rounded bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700">
-            Agregar Espacio
-          </button>
+          <h1 className="text-4xl font-semibold text-green-800">{t("title")}</h1>
+          <p className=" text-gray-800 mt-4">
+            {t("subtitle")}
+          </p>
         </div>
       </header>
 
-      {/* Main content: products grid + summary */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left: search + filters + product grid (2 cols on large screens) */}
         <section className="lg:col-span-2">
-          {/* Search */}
-          <div className="mb-4">
-            <div className="flex items-center rounded-full bg-white px-4 py-2 shadow-sm">
-              <span className="mr-2 text-gray-400">🔍</span>
-              <input
-                type="text"
-                placeholder="Buscar Productos"
-                className="w-full border-none bg-transparent text-sm outline-none"
-              />
-            </div>
-          </div>
-
-          {/* Filters */}
-          <div className="mb-4 flex flex-wrap gap-2">
-            <button className="rounded-full bg-green-600 px-3 py-1 text-xs font-medium text-white">
-              Todos
-            </button>
-            <button className="rounded-full bg-white px-3 py-1 text-xs font-medium text-gray-700 border border-green-200">
-              Electronica
-            </button>
-            <button className="rounded-full bg-white px-3 py-1 text-xs font-medium text-gray-700 border border-green-200">
-              Accesorios
-            </button>
-            <button className="rounded-full bg-white px-3 py-1 text-xs font-medium text-gray-700 border border-green-200">
-              Hardware Wallet
-            </button>
-          </div>
+          <SearchProducts />
 
           {/* Product cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">

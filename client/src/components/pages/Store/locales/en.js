@@ -90,6 +90,15 @@ const store_en = {
       createCategoryPlaceholder: "Electronics",
       createCategoryButton: "Add category"
     }
+  },
+  cart: {
+    title: "Cart",
+    subtitle: "Product payment system",
+    search: {
+      label: "Search",
+      placeholder: "Type to search...",
+      filterAll: "All"
+    }
   }
 };
 

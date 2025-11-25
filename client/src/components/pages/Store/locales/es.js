@@ -90,6 +90,15 @@ const store_es = {
       createCategoryPlaceholder: "Electrónica",
       createCategoryButton: "Agregar categoría"
     }
+  },
+  cart: {
+    title: "Caja",
+    subtitle: "Sistema de pago de productos",
+    search: {
+      label: "Buscar",
+      placeholder: "Buscar producto...",
+      filterAll: "Todos"
+    }
   }
 };
 
