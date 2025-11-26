@@ -6,6 +6,7 @@ const store_es = {
     wallet: "Billetera",
     settings: "Configuración",
     logout: "Cerrar sesión",
+    cart: "Caja"
   },
   dashboard: {
     title: "Panel de control",
@@ -88,6 +89,27 @@ const store_es = {
       createCategoryLabel: "Crear nueva categoría",
       createCategoryPlaceholder: "Electrónica",
       createCategoryButton: "Agregar categoría"
+    }
+  },
+  cart: {
+    title: "Caja",
+    subtitle: "Sistema de pago de productos",
+    search: {
+      label: "Buscar",
+      placeholder: "Buscar producto...",
+      filterAll: "Todos"
+    },
+    card: {
+      add: "Agregar",
+      stock: "en almacén"
+    },
+    summary: {
+      title: "Resumen",
+      total: "Total",
+      subtotal: "Subtotal",
+      discount: "Descuento",
+      quantity: "Cantidad",
+      pay: "Pagar"
     }
   }
 };

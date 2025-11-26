@@ -55,8 +55,8 @@ describe("Step 3 Business Details", () => {
 
   it("calls onChange when currency changes", () => {
     remderBusinessDetails();
-    const select = screen.getByLabelText("step3.fields.businessCurrency");
-    fireEvent.change(select, { target: { value: "USD" } });
+    const select = screen.getAllByLabelText("step3.fields.businessCurrency");
+    fireEvent.change(select[0], { target: { value: "USD" } });
     expect(mockChange).toHaveBeenCalledWith(
       expect.objectContaining({ businessCurrency: "USD" })
     );
