@@ -83,7 +83,11 @@ const store_es = {
       submitButton: "Agregar",
       cancelButton: "Cancelar",
       editButton: "Guardar",
-      deleteButton: "Eliminar"
+      deleteButton: "Eliminar",
+      categorySelectPlaceholder: "Elige una categoría",
+      createCategoryLabel: "Crear nueva categoría",
+      createCategoryPlaceholder: "Electrónica",
+      createCategoryButton: "Agregar categoría"
     }
   }
 };

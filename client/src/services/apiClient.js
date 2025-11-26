@@ -26,7 +26,8 @@ export async function apiClient(
   const makeRequest = async () => {
     try {
       const requestHeaders = { ...headers };
-      if (body && !requestHeaders["Content-Type"]) {
+      const isFormData = typeof FormData !== "undefined" && body instanceof FormData;
+      if (body && !requestHeaders["Content-Type"] && !isFormData) {
         requestHeaders["Content-Type"] = "application/json";
       }
 
