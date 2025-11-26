@@ -11,7 +11,7 @@ Utilizado para enviar una solicitud de impresión.
 data class PrintRequest(
     val templateName: String, // Nombre de la plantilla a utilizar
     val ticketData: TicketData, // Datos del ticket a imprimir
-    val type: TicketType // Tipo de ticket (KITCHEN o CUSTOMER)
+    val printer: Printer // (KITCHEN , CUSTOMER, BAR)
 )
 ```
 
@@ -22,7 +22,7 @@ Utilizado para asignar una impresora a un tipo de ticket.
 ```kotlin
 @Serializable
 data class SetPrinterRequest(
-    val type: TicketType, // KITCHEN o CUSTOMER
+    val printer: Printer, // KITCHEN, CUSTOMER, BAR
     val printerName: String // Nombre de la impresora
 )
 ```

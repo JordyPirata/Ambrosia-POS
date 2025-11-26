@@ -6,17 +6,21 @@ import kotlinx.serialization.Serializable
 data class PrintRequest(
     val templateName: String,
     val ticketData: TicketData,
-    val type: TicketType
+    val printerType: PrinterType
 )
 
 @Serializable
 data class TicketTemplate(
+    val id: String,
     val name: String,
     val elements: List<TicketElement>
 )
 
 @Serializable
 data class TicketElement(
+    val id: String,
+    val templateId: String,
+    val order: Int,
     val type: ElementType,
     val value: String, // Can be a literal string or a placeholder like {{ticket.total}}
     val style: ElementStyle? = null

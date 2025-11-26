@@ -10,42 +10,42 @@ import pos.ambrosia.db.DatabaseConnection
 import pos.ambrosia.models.PrintRequest
 import pos.ambrosia.models.SetPrinterRequest
 import pos.ambrosia.services.ConfigService
-import pos.ambrosia.services.PrinterManager
+import pos.ambrosia.services.PrintService
+import pos.ambrosia.services.TicketTemplateService
 
 fun Application.configurePrinter() {
-
-  routing { route("/printers") { printer() } }
+  val connection = DatabaseConnection.getConnection()
+  val ticketTemplateService = TicketTemplateService(connection)
+  val printService = PrintService(ticketTemplateService)
+  val configService = ConfigService(connection)
+  routing { route("/printers") { printer(printService, configService) } }
 }
 
-fun Route.printer() {
+fun Route.printer(printService: PrintService, configService: ConfigService) {
   authenticate("auth-jwt") {
-    get { call.respond(PrinterManager.getAvailablePrinters()) }
+    get { call.respond(printService.getAvailablePrinters()) }
     post("/set") {
       val request = call.receive<SetPrinterRequest>()
 
-      PrinterManager.setPrinter(request.type, request.printerName)
+      printService.setPrinter(request.printerType, request.printerName)
       call.respondText(
-              "Printer ${request.printerName} set for ${request.type}",
+              "Printer ${request.printerName} set for ${request.printerType}",
               status = HttpStatusCode.OK
       )
     }
     post("/print") {
       val request = call.receive<PrintRequest>()
-      val template = ticketTemplates[request.templateName]
-      if (template == null) {
-        call.respond(HttpStatusCode.NotFound, "Template '${request.templateName}' not found")
-        return@post
-      }
 
       try {
-        val configService = ConfigService(DatabaseConnection.getConnection())
-        PrinterManager.printTicket(request.ticketData, template, request.type, configService)
+        val config = configService.getConfig()
+        printService.printTicket(
+            request.ticketData,
+            request.templateName,
+            request.printerType,
+            config)
         call.respondText("Print job sent", status = HttpStatusCode.OK)
       } catch (e: Exception) {
-        call.respondText(
-                "Error printing: ${e.message}",
-                status = HttpStatusCode.InternalServerError
-        )
+        throw pos.ambrosia.utils.PrintTicketException(e.message ?: "An unknown error occurred during printing.")
       }
     }
   }

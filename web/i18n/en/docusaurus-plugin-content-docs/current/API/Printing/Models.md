@@ -11,7 +11,7 @@ Used to send a print request.
 data class PrintRequest(
     val templateName: String, // Name of the template to use
     val ticketData: TicketData, // Data of the ticket to print
-    val type: TicketType // Type of ticket (KITCHEN or CUSTOMER)
+    val printer: Printer // (KITCHEN or CUSTOMER)
 )
 ```
 

@@ -24,7 +24,7 @@ Endpoints for managing ticket printers.
   - **Request Body:**
   ```json
   {
-    "type": "KITCHEN" | "CUSTOMER",
+    "type": "KITCHEN" | "CUSTOMER" | "BAR",
     "printerName": "string"
   }
   ```
