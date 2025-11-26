@@ -1,17 +1,19 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { StoreLayout } from "../StoreLayout";
 
-export default function SettingsPage() {
+export function Settings() {
+  const t = useTranslations("settings");
   return (
     <StoreLayout>
       {/* Header */}
       <header className="mb-6">
-        <h1 className="text-3xl font-semibold text-green-900">
-          Configuración
+        <h1 className="text-4xl font-semibold text-green-900">
+          {t("title")}
         </h1>
-        <p className="text-sm text-gray-700">
-          Administra los datos y permisos de tu tienda
+        <p className="text-gray-800 mt-4">
+          {t("subtitle")}
         </p>
       </header>
 

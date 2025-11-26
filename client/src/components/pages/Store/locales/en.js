@@ -111,9 +111,13 @@ const store_en = {
       subtotal: "Subtotal",
       discount: "Discount",
       quantity: "Quantity",
-      pay: "Pay",
-    },
+      pay: "Pay"
+    }
   },
+  settings: {
+    title: "Settings",
+    subtitle: "Manage your store"
+  }
 };
 
 export default store_en;

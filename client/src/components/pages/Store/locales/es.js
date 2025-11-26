@@ -113,6 +113,10 @@ const store_es = {
       quantity: "Cantidad",
       pay: "Pagar"
     }
+  },
+  settings: {
+    title: "Configuración",
+    subtitle: "Administra tu tienda"
   }
 };
 
