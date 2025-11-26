@@ -55,7 +55,7 @@ export function SearchProducts({ products, onAddProduct }) {
 
         }
       </div>
-      <ProductList products={filteredProducts} onAddProduct={onAddProduct}/>
+      <ProductList products={filteredProducts} onAddProduct={onAddProduct} />
     </div>
   );
 };

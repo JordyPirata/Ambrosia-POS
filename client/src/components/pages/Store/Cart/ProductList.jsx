@@ -34,7 +34,7 @@ export function ProductList({ products, onAddProduct }) {
             <Button
               color="primary"
               size="sm"
-              onPress={() => onAddProduct(product.id)}
+              onPress={() => onAddProduct(product)}
             >
               {t("card.add")}
             </Button>
