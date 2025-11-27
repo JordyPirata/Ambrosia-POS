@@ -111,6 +111,8 @@ export function AddProductsModal({
             <Input
               label={t("modal.productNameLabel")}
               placeholder={t("modal.productNamePlaceholder")}
+              isRequired
+              errorMessage={t("modal.errorMsgInputFieldEmpty")}
               value={data.productName}
               onChange={(e) =>
                 onChange({ productName: e.target.value })
@@ -121,16 +123,20 @@ export function AddProductsModal({
               label={t("modal.productDescriptionLabel")}
               placeholder={t("modal.productDescriptionPlaceholder")}
               value={data.productDescription}
+              isRequired
+              errorMessage={t("modal.errorMsgInputFieldEmpty")}
               onChange={(e) =>
                 onChange({ productDescription: e.target.value })
               }
             />
 
-            <div className="space-y-2">
+            <div className="space-y-4">
               <Select
                 label={t("modal.productCategoryLabel")}
                 placeholder={t("modal.categorySelectPlaceholder")}
                 selectedKeys={data.productCategory ? [data.productCategory] : []}
+                isRequired
+                errorMessage={t("modal.errorMsgInputFieldEmpty")}
                 onChange={(e) =>
                   onChange({ productCategory: e.target.value })
                 }
@@ -152,7 +158,7 @@ export function AddProductsModal({
                 />
                 <Button
                   color="primary"
-                  className="bg-green-800"
+                  className="bg-green-800 h-full"
                   onPress={handleCreateCategory}
                   isLoading={isCreatingCategory}
                 >
@@ -164,6 +170,8 @@ export function AddProductsModal({
             <Input
               label={t("modal.productSKULabel")}
               placeholder={t("modal.productSKUPlaceholder")}
+              isRequired
+              errorMessage={t("modal.errorMsgInputFieldEmpty")}
               value={data.productSKU}
               onChange={(e) =>
                 onChange({ productSKU: e.target.value })
@@ -174,6 +182,8 @@ export function AddProductsModal({
               <NumberInput
                 label={t("modal.productPriceLabel")}
                 placeholder={t("modal.productPricePlaceholder")}
+                isRequired
+                errorMessage={t("modal.errorMsgInputFieldEmpty")}
                 startContent={
                   <span className="text-default-400 text-small">
                     {currency?.acronym || "$"}
@@ -192,6 +202,8 @@ export function AddProductsModal({
                 label={t("modal.productStockLabel")}
                 placeholder={t("modal.productStockPlaceholder")}
                 value={data.productStock}
+                isRequired
+                errorMessage={t("modal.errorMsgInputFieldEmpty")}
                 onValueChange={(value) => {
                   const numeric = value === null ? "" : Number(value);
                   onChange({ productStock: numeric });

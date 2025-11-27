@@ -88,8 +88,11 @@ const store_en = {
       categorySelectPlaceholder: "Choose a category",
       createCategoryLabel: "Create a new category",
       createCategoryPlaceholder: "Electronics",
-      createCategoryButton: "Add category"
-    }
+      createCategoryButton: "Add category",
+      cancelCreateCategory: "Cancel new category",
+      errorMsgInputFieldEmpty: "Please fill out this field.",
+      errorMsgSelectEmpty: "Please select an item in the list.",
+    },
   },
   cart: {
     title: "Cart",

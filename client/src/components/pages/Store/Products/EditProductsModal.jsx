@@ -103,6 +103,8 @@ export function EditProductsModal({
             <Input
               label={t("modal.productNameLabel")}
               placeholder={t("modal.productNamePlaceholder")}
+              isRequired
+              errorMessage={t("modal.errorMsgInputFieldEmpty")}
               value={data.productName}
               onChange={(e) =>
                 onChange({ productName: e.target.value })
@@ -112,6 +114,8 @@ export function EditProductsModal({
             <Textarea
               label={t("modal.productDescriptionLabel")}
               placeholder={t("modal.productDescriptionPlaceholder")}
+              isRequired
+              errorMessage={t("modal.errorMsgInputFieldEmpty")}
               value={data.productDescription}
               onChange={(e) =>
                 onChange({ productDescription: e.target.value })
@@ -122,6 +126,8 @@ export function EditProductsModal({
               <Select
                 label={t("modal.productCategoryLabel")}
                 placeholder={t("modal.categorySelectPlaceholder")}
+                isRequired
+                errorMessage={t("modal.errorMsgSelectEmpty")}
                 selectedKeys={data.productCategory ? [data.productCategory] : []}
                 onChange={(e) =>
                   onChange({ productCategory: e.target.value })
@@ -168,6 +174,8 @@ export function EditProductsModal({
             <Input
               label={t("modal.productSKULabel")}
               placeholder={t("modal.productSKUPlaceholder")}
+              isRequired
+              errorMessage={t("modal.errorMsgInputFieldEmpty")}
               value={data.productSKU}
               onChange={(e) =>
                 onChange({ productSKU: e.target.value })
@@ -178,6 +186,8 @@ export function EditProductsModal({
               <NumberInput
                 label={t("modal.productPriceLabel")}
                 placeholder={t("modal.productPricePlaceholder")}
+                isRequired
+                errorMessage={t("modal.errorMsgInputFieldEmpty")}
                 startContent={
                   <span className="text-default-400 text-small">
                     {currency?.acronym || "$"}
@@ -195,6 +205,8 @@ export function EditProductsModal({
               <NumberInput
                 label={t("modal.productStockLabel")}
                 placeholder={t("modal.productStockPlaceholder")}
+                isRequired
+                errorMessage={t("modal.errorMsgInputFieldEmpty")}
                 value={data.productStock}
                 onValueChange={(value) => {
                   const numeric = value === null ? "" : Number(value);
