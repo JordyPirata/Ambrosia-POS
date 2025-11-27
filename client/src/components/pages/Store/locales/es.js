@@ -88,8 +88,10 @@ const store_es = {
       categorySelectPlaceholder: "Elige una categoría",
       createCategoryLabel: "Crear nueva categoría",
       createCategoryPlaceholder: "Electrónica",
-      createCategoryButton: "Agregar categoría"
-    }
+      createCategoryButton: "Agregar categoría",
+      errorMsgInputFieldEmpty: "Por favor, complete este campo.",
+      errorMsgSelectEmpty: "Por favor, seleccione un elemento de la lista.",
+    },
   },
   cart: {
     title: "Caja",
