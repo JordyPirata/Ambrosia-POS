@@ -116,7 +116,36 @@ const store_en = {
   },
   settings: {
     title: "Settings",
-    subtitle: "Manage your store"
+    subtitle: "Manage your store",
+    cardInfo: {
+      title: "Main information",
+      subtitle: "Store information",
+      name: "Name",
+      rfc: "RFC",
+      address: "Address",
+      email: "Email",
+      phone: "Phone",
+      description: "Description",
+      logo: "Logo",
+      edit: "Edit"
+    },
+    modal: {
+      title: "Store info",
+      name: "Name",
+      namePlaceholder: "Name",
+      description: "Description",
+      rfc: "RFC",
+      rfcPlaceholder: "RFC",
+      descriptionPlaceholder: "My awesome store",
+      email: "Email",
+      emailPlaceholder: "email@email.com",
+      address: "Address",
+      addressPlaceholder: "Address",
+      phone: "Phone",
+      phonePlaceholder: "3312312311",
+      cancelButton: "Cancel",
+      editButton: "Edit"
+    }
   }
 };
 

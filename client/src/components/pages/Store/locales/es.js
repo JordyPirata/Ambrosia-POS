@@ -116,7 +116,19 @@ const store_es = {
   },
   settings: {
     title: "Configuración",
-    subtitle: "Administra tu tienda"
+    subtitle: "Administra tu tienda",
+    cardInfo: {
+      title: "Información principal",
+      subtitle: "Datos básicos de la tienda",
+      name: "Nombre",
+      rfc: "RFC",
+      address: "Dirección",
+      email: "Correo Electrónico",
+      phone: "Teléfono",
+      description: "Descripción",
+      logo: "Logo",
+      edit: "Editar"
+    }
   }
 };
 
