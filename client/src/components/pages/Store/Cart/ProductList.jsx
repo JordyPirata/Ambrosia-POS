@@ -1,9 +1,15 @@
 import { useTranslations } from "next-intl";
 import { Button, Card, CardBody, CardFooter, CardHeader, Chip } from "@heroui/react";
+import { useCurrency } from "@/components/hooks/useCurrency";
 
-export function ProductList({ products, onAddProduct }) {
+export function ProductList({ products, onAddProduct, categories }) {
   const t = useTranslations("cart");
-  const formatCurrency = (v) => `$ ${v.toLocaleString("es-MX", { minimumFractionDigits: 2 })}`;
+  const { formatAmount } = useCurrency();
+
+  const getCategoryName = (categoryId) => {
+    const category = categories.find(category => category.id === categoryId);
+    return category ? category.name : 'Categoría Desconocida';
+  };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -14,14 +20,14 @@ export function ProductList({ products, onAddProduct }) {
         >
           <CardHeader className="flex flex-col items-start">
             <h2 className="text-lg">{product.name}</h2>
-            <p className="text-xs">{product.category}</p>
+            <p className="text-xs">{getCategoryName(product.category_id)}</p>
           </CardHeader>
           <CardBody>
             <h2 className="text-2xl font-bold text-green-800">
-              {formatCurrency(product.price)}
+              {formatAmount(product.price_cents)}
             </h2>
             <p className="text-xs">
-              SKU: <span className="text-gray-800">{product.sku}</span>
+              SKU: <span className="text-gray-800">{product.SKU}</span>
             </p>
           </CardBody>
           <CardFooter className="flex justify-between">
@@ -29,7 +35,7 @@ export function ProductList({ products, onAddProduct }) {
               color="secondary"
               size="sm"
             >
-              {product.stock} {t("card.stock")}
+              {product.quantity} {t("card.stock")}
             </Chip>
             <Button
               color="primary"

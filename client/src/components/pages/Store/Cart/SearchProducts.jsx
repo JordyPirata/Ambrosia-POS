@@ -4,18 +4,21 @@ import { Input, Button } from "@heroui/react";
 import { Search } from "lucide-react";
 import { ProductList } from "./ProductList";
 
-export function SearchProducts({ products, onAddProduct }) {
+export function SearchProducts({ products, onAddProduct, categories }) {
   const t = useTranslations("cart");
 
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState(null);
 
-  const categories = Array.from(new Set(products.map((product) => product.category)))
-
   const filteredProducts = products.filter((product) => {
+    const categoryObject = categories.find(cat => cat.id === product.category_id);
+    const categoryName = categoryObject ? categoryObject.name : '';
+
     const searchMatch = product.name.toLowerCase().includes(search.toLowerCase())
-    const categoryMatch = !categoryFilter || product.category === categoryFilter;
-    return searchMatch && categoryMatch && product.stock > 0
+      || product.SKU.toLowerCase().includes(search.toLowerCase())
+      || categoryName.toLowerCase().includes(search.toLowerCase());
+    const categoryMatch = !categoryFilter || product.category_id === categoryFilter;
+    return searchMatch && categoryMatch && product.quantity > 0
   });
 
   return (
@@ -41,21 +44,21 @@ export function SearchProducts({ products, onAddProduct }) {
         >
           {t("search.filterAll")}
         </Button>
-        { categories.map((category) => (
+        {categories.map((category) => (
           <Button
-            key={category}
-            onPress={() => setCategoryFilter(category)}
+            key={category.id}
+            onPress={() => setCategoryFilter(category.id)}
             className="bg-slate-100"
             radius="full"
             size="sm"
           >
-            {category}
+            {category.name}
           </Button>
         ))
 
         }
       </div>
-      <ProductList products={filteredProducts} onAddProduct={onAddProduct} />
+      <ProductList products={filteredProducts} categories={categories} onAddProduct={onAddProduct} />
     </div>
   );
 };
