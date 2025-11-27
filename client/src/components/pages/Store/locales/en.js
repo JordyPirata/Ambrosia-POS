@@ -6,7 +6,7 @@ const store_en = {
     wallet: "Wallet",
     settings: "Settings",
     logout: "Log Out",
-    cart: "Cart"
+    cart: "Cart",
   },
   dashboard: {
     title: "Dashboard",
@@ -89,7 +89,6 @@ const store_en = {
       createCategoryLabel: "Create a new category",
       createCategoryPlaceholder: "Electronics",
       createCategoryButton: "Add category",
-      cancelCreateCategory: "Cancel new category",
       errorMsgInputFieldEmpty: "Please fill out this field.",
       errorMsgSelectEmpty: "Please select an item in the list.",
     },
@@ -100,11 +99,11 @@ const store_en = {
     search: {
       label: "Search",
       placeholder: "Type to search...",
-      filterAll: "All"
+      filterAll: "All",
     },
     card: {
       add: "Add",
-      stock: "in stock"
+      stock: "in stock",
     },
     summary: {
       title: "Summary",
@@ -112,9 +111,9 @@ const store_en = {
       subtotal: "Subtotal",
       discount: "Discount",
       quantity: "Quantity",
-      pay: "Pay"
-    }
-  }
+      pay: "Pay",
+    },
+  },
 };
 
 export default store_en;
