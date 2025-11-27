@@ -3,7 +3,7 @@ import { I18nProvider } from "../../../../../i18n/I18nProvider";
 import * as useModulesHook from "../../../../../hooks/useModules";
 import * as configurationsProvider from "../../../../../providers/configurations/configurationsProvider";
 import { Cart } from "../Cart";
-import { PRODUCTS, CART_ITEMS } from "./mocks";
+import { PRODUCTS, CART_ITEMS } from "./__mocks__/mocks";
 
 function renderCart() {
   return render(
