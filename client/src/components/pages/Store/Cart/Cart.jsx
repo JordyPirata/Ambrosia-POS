@@ -6,6 +6,7 @@ import { SearchProducts } from "./SearchProducts";
 import { Summary } from "./Summary";
 import { useProducts } from "../hooks/useProducts.jsx"
 import { useCategories } from "../hooks/useCategories.jsx"
+import { useCartPayment } from "./hooks/useCartPayment";
 
 export function Cart() {
   const t = useTranslations("cart");
@@ -13,6 +14,26 @@ export function Cart() {
   const [discount, setDiscount] = useState(0);
   const { products } = useProducts();
   const { categories } = useCategories();
+  const resetCartState = () => {
+    setCart([]);
+    setDiscount(0);
+  };
+
+  const {
+    handlePay,
+    isPaying,
+    paymentError,
+    clearPaymentError,
+    btcPaymentConfig,
+    handleBtcInvoiceReady,
+    handleBtcComplete,
+    clearBtcPaymentConfig,
+    cashPaymentConfig,
+    handleCashComplete,
+    clearCashPaymentConfig,
+  } = useCartPayment({
+    onResetCart: resetCartState,
+  });
 
   const addProduct = (product) => {
     const itemExist = cart.find((item) => item.id === product.id);
@@ -83,10 +104,19 @@ export function Cart() {
         <Summary
           cartItems={cart}
           discount={discount}
-          setDiscount={setDiscount}
-          setCart={setCart}
           onRemoveProduct={removeProduct}
           onUpdateQuantity={updateQuantity}
+          onPay={handlePay}
+          isPaying={isPaying}
+          paymentError={paymentError}
+          onClearPaymentError={clearPaymentError}
+          btcPaymentConfig={btcPaymentConfig}
+          onInvoiceReady={handleBtcInvoiceReady}
+          onBtcComplete={handleBtcComplete}
+          onCloseBtcPayment={clearBtcPaymentConfig}
+          cashPaymentConfig={cashPaymentConfig}
+          onCashComplete={handleCashComplete}
+          onCloseCashPayment={clearCashPaymentConfig}
         />
       </div>
     </StoreLayout>

@@ -6,7 +6,7 @@ const store_es = {
     wallet: "Billetera",
     settings: "Configuración",
     logout: "Cerrar sesión",
-    cart: "Caja"
+    cart: "Caja",
   },
   dashboard: {
     title: "Panel de control",
@@ -99,11 +99,11 @@ const store_es = {
     search: {
       label: "Buscar",
       placeholder: "Buscar producto...",
-      filterAll: "Todos"
+      filterAll: "Todos",
     },
     card: {
       add: "Agregar",
-      stock: "en almacén"
+      stock: "en almacén",
     },
     summary: {
       title: "Resumen",
@@ -111,8 +111,54 @@ const store_es = {
       subtotal: "Subtotal",
       discount: "Descuento",
       quantity: "Cantidad",
-      pay: "Pagar"
-    }
+      paymentMethodLabel: "Metodo de pago",
+      paymentMethodSelectPlaceholder: "Elige un metodo de pago",
+      errorMsgSelectEmpty: "Por favor, seleccione un elemento de la lista.",
+      pay: "Pagar",
+    },
+    payment: {
+      errors: {
+        selectMethod: "Por favor, selecciona un método de pago.",
+        emptyCart: "Agrega productos antes de cobrar.",
+        noUser: "No hay usuario autenticado para registrar la venta.",
+        noCurrency: "No se pudo obtener la moneda base.",
+        createOrder: "No se pudo crear la orden",
+        createTicket: "No se pudo generar el ticket",
+        createPayment: "No se pudo registrar el pago",
+        process: "Error al procesar el pago",
+        btcComplete: "Error al completar el pago BTC",
+        cashComplete: "Error al completar el pago en efectivo",
+      },
+      success: {
+        paid: "Pago registrado correctamente",
+        btcPaid: "Pago con Bitcoin marcado como completado",
+        cashPaid: "Pago en efectivo registrado correctamente",
+      },
+    },
+    paymentModal: {
+      bitcoin: {
+        title: "Pago con Bitcoin",
+        subtitle: "Pídele al cliente que escanee el QR para completar el pago",
+        generating: "Generando invoice...",
+        retry: "Reintentar",
+        totalLabel: "Total",
+        cancel: "Cancelar",
+        complete: "Pago recibido",
+      },
+      cash: {
+        title: "Pago en Efectivo",
+        subtitle: "Ingresa el efectivo recibido para calcular el cambio.",
+        totalLabel: "Total a cobrar",
+        receivedLabel: "Efectivo recibido",
+        changeLabel: "Cambio",
+        cash: "Efectivo",
+        cancel: "Cancelar",
+        confirm: "Confirmar pago",
+        errors: {
+          insufficient: "El efectivo recibido es insuficiente.",
+        },
+      },
+    },
   },
   settings: {
     title: "Configuración",

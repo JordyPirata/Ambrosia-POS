@@ -26,7 +26,7 @@ export function Settings() {
     setData((prev) => ({ ...prev, ...newData }))
   }
 
-  const srcLogo = storedAssetUrl(data.businessLogoUrl);
+  const srcLogo = storedAssetUrl(data?.businessLogoUrl);
 
   useEffect(() => {
     if (locale === "en") {
@@ -108,12 +108,13 @@ export function Settings() {
 
             <div className="w-1/2">
               <div className="font-semibold text-gray-600 mb-2">{t("cardInfo.logo")}</div>
-              <Image
-                src={srcLogo}
-                width={200}
-                height={0}
-                alt="Logo"
-              />
+              {srcLogo &&
+                <Image
+                  src={srcLogo}
+                  width={200}
+                  height={0}
+                  alt="Logo"
+                />}
             </div>
           </div>
         </CardBody>
@@ -149,10 +150,10 @@ export function Settings() {
                 onChange={(e) => handleDataChange({ ...data, businessCurrency: e.target.value })}
               >
                 {CURRENCIES.map((currency) => (
-                    <SelectItem key={currency.name}>
-                      {currency.name}
-                    </SelectItem>
-                  ))}
+                  <SelectItem key={currency.name}>
+                    {currency.name}
+                  </SelectItem>
+                ))}
               </Select>
 
             </div>
@@ -184,7 +185,7 @@ export function Settings() {
         </CardBody>
       </Card>
 
-      { editSettingsShowModal &&
+      {editSettingsShowModal &&
         <EditSettingsModal
           data={data}
           setData={setData}
