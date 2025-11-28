@@ -5,24 +5,21 @@ import { useTranslations } from "next-intl";
 import { Button, Card, CardBody, CardFooter, CardHeader } from "@heroui/react";
 import { StoreLayout } from "../StoreLayout";
 import { EditSettingsModal } from "./EditSettingsModal";
-
-const settings = {
-  businessName: "LSS Restaurant",
-  businessRFC: "GASE23432",
-  businessDescription: "Restaurante de comida típica mexicana.",
-  businessAddress: "Galeana #286",
-  businessEmail: "contacto@lssrestaurant.com",
-  businessPhone: "44313244566"
-}
+import { useConfigurations } from "../../../../providers/configurations/configurationsProvider";
+import Image from "next/image";
+import { storedAssetUrl } from "../../../utils/storedAssetUrl";
 
 export function Settings() {
-  const [data, setData] = useState(settings);
+  const { config } = useConfigurations();
+  const [data, setData] = useState(config);
   const [editSettingsShowModal, setEditSettingsModal] = useState(false);
   const t = useTranslations("settings");
 
   const handleDataChange = (newData) => {
     setData((prev) => ({ ...prev, ...newData }))
   }
+
+  const srcLogo = storedAssetUrl(data.businessLogoUrl)
 
   return (
     <StoreLayout>
@@ -40,14 +37,11 @@ export function Settings() {
           <h2 className="text-2xl font-semibold text-green-900">
             {t("cardInfo.title")}
           </h2>
-          <p className="text-gray-600">
-            {t("cardInfo.subtitle")}
-          </p>
         </CardHeader>
 
         <CardBody>
           <div className="flex flex-col max-w-2xl ">
-            <div className="flex items-center justify-between my-2">
+            <div className="flex items-start justify-between my-2">
               <div className="w-1/2">
                 <div className="font-semibold text-gray-600">{t("cardInfo.name")}</div>
                 <div className="text-xl mt-0.5 font-medium text-green-800">{data.businessName}</div>
@@ -55,18 +49,18 @@ export function Settings() {
 
               <div className="w-1/2">
                 <div className="font-semibold text-gray-600">{t("cardInfo.rfc")}</div>
-                <div className="text-xl mt-0.5 font-medium text-green-800">{data.businessRFC}</div>
+                <div className="text-xl mt-0.5 font-medium text-green-800">{data.businessTaxId}</div>
               </div>
 
             </div>
 
-            <div className="flex items-center justify-between my-2">
+            <div className="flex items-start justify-between my-2">
               <div className="w-1/2">
                 <div className="font-semibold text-gray-600">
                   {t("cardInfo.description")}
                 </div>
                 <div className="text-xl mt-0.5 font-medium text-green-800">
-                  {data.businessDescription}
+                  {data.businessDescription ? data.businessDescription : 'Agrega la descripcion de tu negocio en editar.'}
                 </div>
               </div>
 
@@ -76,7 +70,7 @@ export function Settings() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between my-2">
+            <div className="flex items-start justify-between my-2">
               <div className="w-1/2">
                 <div className="font-semibold text-gray-600">{t("cardInfo.email")}</div>
                 <div className="text-xl mt-0.5 font-medium text-green-800">
@@ -88,6 +82,16 @@ export function Settings() {
                 <div className="font-semibold text-gray-600">{t("cardInfo.phone")}</div>
                 <div className="text-xl mt-0.5 font-medium text-green-800">{data.businessPhone}</div>
               </div>
+            </div>
+
+            <div className="w-1/2">
+              <div className="font-semibold text-gray-600 mb-2">{t("cardInfo.logo")}</div>
+              <Image
+                src={srcLogo}
+                width={200}
+                height={0}
+                alt="Logo"
+              />
             </div>
           </div>
         </CardBody>

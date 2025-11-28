@@ -118,8 +118,7 @@ const store_es = {
     title: "Configuración",
     subtitle: "Administra tu tienda",
     cardInfo: {
-      title: "Información principal",
-      subtitle: "Datos básicos de la tienda",
+      title: "Información de la tienda",
       name: "Nombre",
       rfc: "RFC",
       address: "Dirección",
@@ -128,6 +127,26 @@ const store_es = {
       description: "Descripción",
       logo: "Logo",
       edit: "Editar"
+    },
+    modal: {
+      title: "Información de la tienda",
+      name: "Nombre",
+      namePlaceholder: "Nombre",
+      description: "Descripción",
+      rfc: "RFC",
+      rfcPlaceholder: "RFC",
+      descriptionPlaceholder: "Mi grandiosa tienda",
+      email: "Correo Electrónico",
+      emailPlaceholder: "email@email.com",
+      address: "Dirección",
+      addressPlaceholder: "Dirección",
+      phone: "Teléfono",
+      phonePlaceholder: "3312312311",
+      cancelButton: "Cancelar",
+      editButton: "Editar",
+      logo: "Logo",
+      logoUpload: "Sube tu logo",
+      logoUploadMessage: "PNG, JPG o GIF (máx. 5MB)",
     }
   }
 };

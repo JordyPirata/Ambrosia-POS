@@ -1,17 +1,38 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useTranslations } from "next-intl";
-import { Eye, EyeOff } from 'lucide-react';
-import { Button, Input, Select, SelectItem, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, } from "@heroui/react";
+import { Upload, X } from "lucide-react";
+import { Button, Input, Select, SelectItem, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Textarea, } from "@heroui/react";
 
 export function EditSettingsModal({ data, setData, onChange, editSettingsShowModal, setEditSettingsShowModal }) {
   const t = useTranslations("settings");
   const [rfcError, setRfcError] = useState("");
+  const fileInputRef = useRef(null);
+
   const handleOnCloseModal = () => {
     setData(data);
     setEditSettingsShowModal(false);
   }
+
+  const [imagePreview, setImagePreview] = useState(data.businessLogoUrl);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    onChange({ storeImage: file, productImage: "" });
+
+    const reader = new FileReader();
+    reader.onloadend = () => setImagePreview(reader.result);
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveImage = () => {
+    onChange({ storeImage: null, productImage: "" });
+    setImagePreview(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
 
   const validateRFC = (value) => {
     const upperValue = value.toUpperCase();
@@ -25,7 +46,7 @@ export function EditSettingsModal({ data, setData, onChange, editSettingsShowMod
       setRfcError("");
     }
 
-    onChange({ ...data, businessRFC: upperValue });
+    onChange({ ...data, businessTaxID: upperValue });
   };
 
   return (
@@ -57,7 +78,7 @@ export function EditSettingsModal({ data, setData, onChange, editSettingsShowMod
               value={data.businessName ?? ""}
               onChange={(e) => onChange({ ...data, businessName: e.target.value })}
             />
-            <Input
+            <Textarea
               label={t("modal.description")}
               type="text"
               placeholder={t("modal.descriptionPlaceholder")}
@@ -69,7 +90,7 @@ export function EditSettingsModal({ data, setData, onChange, editSettingsShowMod
               type="text"
               placeholder="RFC"
               maxLength={13}
-              value={data.businessRFC}
+              value={data.businessTaxId}
               onChange={(e) => validateRFC(e.target.value)}
               isInvalid={!!rfcError}
               errorMessage={rfcError}
@@ -99,6 +120,51 @@ export function EditSettingsModal({ data, setData, onChange, editSettingsShowMod
                 onChange({ ...data, businesshone: onlyNumbers });
               }}
             />
+
+            <div>
+              <p className="text-xs font-semibold text-green-900 mb-4">
+                {t("modal.logo")}
+              </p>
+              {imagePreview ? (
+                <div className="relative w-32 h-32 rounded-lg border border-border overflow-hidden bg-muted">
+                  <img
+                    src={imagePreview}
+                    alt="Logo preview"
+                    className="w-full h-full object-cover"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={handleRemoveImage}
+                    className="absolute top-1 right-1 p-1 bg-destructive text-destructive-foreground rounded hover:opacity-90 cursor-pointer"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full p-8 rounded-lg border-2 border-dashed border-border hover:border-primary hover:bg-primary/5 transition-colors flex flex-col items-center justify-center cursor-pointer"
+                >
+                  <Upload className="w-8 h-8 text-muted-foreground mb-2" />
+                  <p className="text-sm font-medium">
+                    {t("modal.logoUpload")}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {t("modal.logoUploadMessage")}
+                  </p>
+                </button>
+              )}
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="hidden"
+              />
+            </div>
 
             <ModalFooter className="flex justify-between p-0 my-4">
               <Button

@@ -118,8 +118,7 @@ const store_en = {
     title: "Settings",
     subtitle: "Manage your store",
     cardInfo: {
-      title: "Main information",
-      subtitle: "Store information",
+      title: "Store information",
       name: "Name",
       rfc: "RFC",
       address: "Address",
@@ -144,7 +143,10 @@ const store_en = {
       phone: "Phone",
       phonePlaceholder: "3312312311",
       cancelButton: "Cancel",
-      editButton: "Edit"
+      editButton: "Edit",
+      logo: "Logo",
+      logoUpload: "Upload your logo",
+      logoUploadMessage: "PNG, JPG or GIF (máx. 5MB)",
     }
   }
 };
