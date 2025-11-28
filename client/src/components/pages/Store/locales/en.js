@@ -128,6 +128,12 @@ const store_en = {
       logo: "Logo",
       edit: "Edit"
     },
+    cardCurrency: {
+      title: "Currency",
+    },
+    cardLanguage: {
+      title: "Language"
+    },
     modal: {
       title: "Store info",
       name: "Name",

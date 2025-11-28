@@ -1,25 +1,47 @@
 "use client";
 
-import { useState } from "react";
-import { useTranslations } from "next-intl";
-import { Button, Card, CardBody, CardFooter, CardHeader } from "@heroui/react";
+import { useState, useEffect } from "react";
+import { useTranslations, useLocale } from "next-intl";
+import { Button, Card, CardBody, CardFooter, CardHeader, Select, SelectItem } from "@heroui/react";
 import { StoreLayout } from "../StoreLayout";
 import { EditSettingsModal } from "./EditSettingsModal";
 import { useConfigurations } from "../../../../providers/configurations/configurationsProvider";
 import Image from "next/image";
 import { storedAssetUrl } from "../../../utils/storedAssetUrl";
+import { useCurrency } from "../../../hooks/useCurrency";
+import { CURRENCIES_ES } from "../../Onboarding/utils/currencies_es";
+import { CURRENCIES_EN } from "../../Onboarding/utils/currencies_en";
+import { LanguageSwitcher } from "../../../../i18n/I18nProvider";
 
 export function Settings() {
   const { config } = useConfigurations();
   const [data, setData] = useState(config);
+  const [CURRENCIES, setCURRENCIES] = useState(CURRENCIES_ES);
   const [editSettingsShowModal, setEditSettingsModal] = useState(false);
   const t = useTranslations("settings");
+  const locale = useLocale();
+  const { currency } = useCurrency();
 
   const handleDataChange = (newData) => {
     setData((prev) => ({ ...prev, ...newData }))
   }
 
-  const srcLogo = storedAssetUrl(data.businessLogoUrl)
+  const srcLogo = storedAssetUrl(data.businessLogoUrl);
+
+  useEffect(() => {
+    if (locale === "en") {
+      setCURRENCIES(CURRENCIES_EN);
+    } else {
+      setCURRENCIES(CURRENCIES_ES);
+    }
+  }, [locale]);
+
+  const getCurrentCurrency = () => {
+    const currentCurrency = CURRENCIES.find((el) => el.code === currency.acronym);
+    return currentCurrency.name;
+  };
+
+  console.log(locale);
 
   return (
     <StoreLayout>
@@ -32,7 +54,7 @@ export function Settings() {
         </p>
       </header>
 
-      <Card className="rounded-lg">
+      <Card className="rounded-lg mb-6 p-6">
         <CardHeader className="flex flex-col items-start">
           <h2 className="text-2xl font-semibold text-green-900">
             {t("cardInfo.title")}
@@ -104,6 +126,64 @@ export function Settings() {
           </Button>
         </CardFooter>
       </Card>
+
+      <Card className="rounded-lg mb-6 p-6">
+        <CardHeader className="flex flex-col items-start">
+          <h2 className="text-2xl font-semibold text-green-900">
+            {t("cardCurrency.title")}
+          </h2>
+        </CardHeader>
+
+        <CardBody>
+          <div className="flex flex-col max-w-2xl max-w-2x">
+            <div className="flex items-start justify-between my-2">
+              <div className="w-1/2">
+                <div className="font-semibold text-gray-600">{t("cardInfo.name")}</div>
+                <div className="text-xl mt-0.5 font-medium text-green-800">{currency.acronym}</div>
+              </div>
+
+              <Select
+                label={t("cardCurrency.title")}
+                defaultSelectedKeys={[getCurrentCurrency()]}
+                value={data.businessCurrency}
+                onChange={(e) => handleDataChange({ ...data, businessCurrency: e.target.value })}
+              >
+                {CURRENCIES.map((currency) => (
+                    <SelectItem key={currency.name}>
+                      {currency.name}
+                    </SelectItem>
+                  ))}
+              </Select>
+
+            </div>
+
+          </div>
+        </CardBody>
+      </Card>
+
+      <Card className="rounded-lg mb-6 p-6">
+        <CardHeader className="flex flex-col items-start">
+          <h2 className="text-2xl font-semibold text-green-900">
+            {t("cardLanguage.title")}
+          </h2>
+        </CardHeader>
+
+        <CardBody>
+          <div className="flex flex-col max-w-2xl max-w-2x">
+            <div className="flex items-start justify-between my-2">
+              <div className="w-1/2">
+                <div className="font-semibold text-gray-600">{t("cardInfo.name")}</div>
+                <div className="text-xl mt-0.5 font-medium text-green-800">{locale}</div>
+              </div>
+
+              <LanguageSwitcher />
+
+            </div>
+
+          </div>
+        </CardBody>
+      </Card>
+
       { editSettingsShowModal &&
         <EditSettingsModal
           data={data}
