@@ -143,7 +143,7 @@ export function Settings() {
               </div>
 
               <Select
-                label={t("cardCurrency.title")}
+                label={t("cardCurrency.currencyLabel")}
                 defaultSelectedKeys={[getCurrentCurrency()]}
                 value={data.businessCurrency}
                 onChange={(e) => handleDataChange({ ...data, businessCurrency: e.target.value })}

@@ -130,6 +130,7 @@ const store_es = {
     },
     cardCurrency: {
       title: "Moneda",
+      currencyLabel: "Moneda"
     },
     cardLanguage: {
       title: "Idioma"
