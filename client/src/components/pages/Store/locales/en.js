@@ -111,9 +111,51 @@ const store_en = {
       subtotal: "Subtotal",
       discount: "Discount",
       quantity: "Quantity",
-      pay: "Pay",
-    },
+      pay: "Pay"
+    }
   },
+  settings: {
+    title: "Settings",
+    subtitle: "Manage your store",
+    cardInfo: {
+      title: "Store information",
+      name: "Name",
+      rfc: "RFC",
+      address: "Address",
+      email: "Email",
+      phone: "Phone",
+      description: "Description",
+      logo: "Logo",
+      edit: "Edit"
+    },
+    cardCurrency: {
+      title: "Currency",
+      currencyLabel: "Currency"
+    },
+    cardLanguage: {
+      title: "Language"
+    },
+    modal: {
+      title: "Store info",
+      name: "Name",
+      namePlaceholder: "Name",
+      description: "Description",
+      rfc: "RFC",
+      rfcPlaceholder: "RFC",
+      descriptionPlaceholder: "My awesome store",
+      email: "Email",
+      emailPlaceholder: "email@email.com",
+      address: "Address",
+      addressPlaceholder: "Address",
+      phone: "Phone",
+      phonePlaceholder: "3312312311",
+      cancelButton: "Cancel",
+      editButton: "Edit",
+      logo: "Logo",
+      logoUpload: "Upload your logo",
+      logoUploadMessage: "PNG, JPG or GIF (máx. 5MB)",
+    }
+  }
 };
 
 export default store_en;

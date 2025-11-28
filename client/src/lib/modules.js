@@ -238,6 +238,14 @@ export const modules = {
         types: ["store"],
         default: false,
       },
+      {
+        path: "/store/settings",
+        component: "Settings",
+        requiresAuth: true,
+        requiresAdmin: true,
+        types: ["store"],
+        default: false,
+      },
     ],
     navItems: [
       {
@@ -256,6 +264,12 @@ export const modules = {
         path: "/store/cart",
         label: "cart",
         icon: "shopping-cart",
+        showInNavbar: true,
+      },
+      {
+        path: "/store/settings",
+        label: "settings",
+        icon: "settings",
         showInNavbar: true,
       },
     ],

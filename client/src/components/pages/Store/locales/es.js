@@ -113,6 +113,48 @@ const store_es = {
       quantity: "Cantidad",
       pay: "Pagar"
     }
+  },
+  settings: {
+    title: "Configuración",
+    subtitle: "Administra tu tienda",
+    cardInfo: {
+      title: "Información de la tienda",
+      name: "Nombre",
+      rfc: "RFC",
+      address: "Dirección",
+      email: "Correo Electrónico",
+      phone: "Teléfono",
+      description: "Descripción",
+      logo: "Logo",
+      edit: "Editar"
+    },
+    cardCurrency: {
+      title: "Moneda",
+      currencyLabel: "Moneda"
+    },
+    cardLanguage: {
+      title: "Idioma"
+    },
+    modal: {
+      title: "Información de la tienda",
+      name: "Nombre",
+      namePlaceholder: "Nombre",
+      description: "Descripción",
+      rfc: "RFC",
+      rfcPlaceholder: "RFC",
+      descriptionPlaceholder: "Mi grandiosa tienda",
+      email: "Correo Electrónico",
+      emailPlaceholder: "email@email.com",
+      address: "Dirección",
+      addressPlaceholder: "Dirección",
+      phone: "Teléfono",
+      phonePlaceholder: "3312312311",
+      cancelButton: "Cancelar",
+      editButton: "Editar",
+      logo: "Logo",
+      logoUpload: "Sube tu logo",
+      logoUploadMessage: "PNG, JPG o GIF (máx. 5MB)",
+    }
   }
 };
 
