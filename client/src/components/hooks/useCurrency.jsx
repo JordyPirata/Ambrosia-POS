@@ -4,8 +4,9 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { apiClient } from "@/services/apiClient";
 
 const DEFAULT_CURRENCY = {
-  acronym: "USD",
-  locale: "en-US",
+  id: null,
+  acronym: "MXN",
+  locale: "es-MX",
 };
 
 function deriveLocale(countryCode) {
@@ -26,6 +27,7 @@ export function useCurrency() {
 
       if (base?.acronym) {
         setCurrency({
+          id: base?.currency_id || base?.id || null,
           acronym: base.acronym,
           locale:
             deriveLocale(base.country_code) ||
@@ -45,6 +47,7 @@ export function useCurrency() {
       const found = Array.isArray(list) ? list.find((c) => c.id === currencyId) : null;
 
       setCurrency({
+        id: found?.id || currencyId || null,
         acronym: found?.acronym || DEFAULT_CURRENCY.acronym,
         locale:
           deriveLocale(found?.country_code) ||

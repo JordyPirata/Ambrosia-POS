@@ -1,6 +1,7 @@
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import { I18nProvider } from "../../../../../i18n/I18nProvider";
 import * as useModulesHook from "../../../../../hooks/useModules";
+import * as useAuthHook from "../../../../../modules/auth/useAuth";
 import * as configurationsProvider from "../../../../../providers/configurations/configurationsProvider";
 import { Cart } from "../Cart";
 import { PRODUCTS, CART_ITEMS } from "./__mocks__/mocks";
@@ -60,6 +61,14 @@ beforeEach(() => {
     refreshConfig: jest.fn(),
     setConfig: jest.fn(),
   });
+
+  jest.spyOn(useAuthHook, "useAuth").mockReturnValue({
+    isAuth: true,
+    isLoading: false,
+    user: { user_id: "user-1", name: "Tester" },
+    permissions: [],
+    logout: jest.fn(),
+  });
 });
 
 afterEach(() => {
@@ -73,7 +82,7 @@ describe("Cart page", () => {
     });
     expect(screen.getByText("title")).toBeInTheDocument();
     expect(screen.getByText("search.label")).toBeInTheDocument();
-    expect(screen.getAllByText("card.add")).toHaveLength(3);
+    expect(screen.getAllByText("card.add")).toHaveLength(2);
     expect(screen.getByText("summary.title")).toBeInTheDocument();
   });
 
@@ -96,7 +105,7 @@ describe("Cart page", () => {
     await act(async () => {
       fireEvent.click(btn);
     });
-    expect(screen.getAllByText("card.add")).toHaveLength(3);
+    expect(screen.getAllByText("card.add")).toHaveLength(2);
   });
 
   it("Add a product to summary", async () => {
@@ -105,9 +114,9 @@ describe("Cart page", () => {
     });
     const btn = screen.getAllByText("card.add");
     await act(async () => {
-      fireEvent.click(btn[2]);
+      fireEvent.click(btn[0]);
     });
-    expect(screen.getAllByText("Jade Plus")).toHaveLength(2)
+    expect(screen.getAllByLabelText("Remove Product")).toHaveLength(1);
   });
 
 });

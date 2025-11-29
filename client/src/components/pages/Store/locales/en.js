@@ -111,8 +111,54 @@ const store_en = {
       subtotal: "Subtotal",
       discount: "Discount",
       quantity: "Quantity",
-      pay: "Pay"
-    }
+      paymentMethodLabel: "Payment Method",
+      paymentMethodSelectPlaceholder: "Choose a payment method",
+      errorMsgSelectEmpty: "Please select an item in the list.",
+      pay: "Pay",
+    },
+    payment: {
+      errors: {
+        selectMethod: "Please select a payment method.",
+        emptyCart: "Add products before charging.",
+        noUser: "No authenticated user to register the sale.",
+        noCurrency: "Could not fetch the base currency.",
+        createOrder: "Could not create the order",
+        createTicket: "Could not create the ticket",
+        createPayment: "Could not register the payment",
+        process: "Error processing the payment",
+        btcComplete: "Error completing the BTC payment",
+        cashComplete: "Error completing the cash payment",
+      },
+      success: {
+        paid: "Payment registered successfully",
+        btcPaid: "Bitcoin payment marked as completed",
+        cashPaid: "Cash payment registered successfully",
+      },
+    },
+    paymentModal: {
+      bitcoin: {
+        title: "Pay with Bitcoin",
+        subtitle: "Ask the customer to scan the QR to complete the payment",
+        generating: "Generating invoice...",
+        retry: "Retry",
+        totalLabel: "Total",
+        cancel: "Cancel",
+        complete: "Payment received",
+      },
+      cash: {
+        title: "Cash Payment",
+        subtitle: "Enter the cash received to calculate change.",
+        totalLabel: "Total due",
+        receivedLabel: "Cash received",
+        changeLabel: "Change",
+        cash: "Cash",
+        cancel: "Cancel",
+        confirm: "Confirm payment",
+        errors: {
+          insufficient: "Cash received is insufficient.",
+        },
+      },
+    },
   },
   settings: {
     title: "Settings",
