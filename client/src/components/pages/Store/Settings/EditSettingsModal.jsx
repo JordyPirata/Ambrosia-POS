@@ -3,9 +3,9 @@
 import { useState, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { Upload, X } from "lucide-react";
-import { Button, Input, Select, SelectItem, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Textarea, } from "@heroui/react";
+import { Button, Input, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@heroui/react";
 
-export function EditSettingsModal({ data, setData, onChange, editSettingsShowModal, setEditSettingsShowModal }) {
+export function EditSettingsModal({ data, setData, onChange, onSubmit, editSettingsShowModal, setEditSettingsShowModal }) {
   const t = useTranslations("settings");
   const [rfcError, setRfcError] = useState("");
   const fileInputRef = useRef(null);
@@ -65,11 +65,7 @@ export function EditSettingsModal({ data, setData, onChange, editSettingsShowMod
         <ModalBody>
           <form
             className="space-y-4"
-            onSubmit={(e) => {
-              e.preventDefault();
-              console.log("Settings data to submit:", data);
-              setEditSettingsShowModal(false);
-            }}
+            onSubmit={onSubmit}
           >
             <Input
               label={t("modal.name")}
@@ -77,13 +73,6 @@ export function EditSettingsModal({ data, setData, onChange, editSettingsShowMod
               placeholder={t("modal.namePlaceholder")}
               value={data.businessName ?? ""}
               onChange={(e) => onChange({ ...data, businessName: e.target.value })}
-            />
-            <Textarea
-              label={t("modal.description")}
-              type="text"
-              placeholder={t("modal.descriptionPlaceholder")}
-              value={data.businessDescription ?? ""}
-              onChange={(e) => onChange({ ...data, businessDescription: e.target.value })}
             />
             <Input
               label={t("modal.rfc")}

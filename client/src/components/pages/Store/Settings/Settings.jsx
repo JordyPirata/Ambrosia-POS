@@ -14,16 +14,17 @@ import { CURRENCIES_EN } from "../../Onboarding/utils/currencies_en";
 import { LanguageSwitcher } from "../../../../i18n/I18nProvider";
 
 export function Settings() {
-  const { config } = useConfigurations();
+  const { config, updateConfig } = useConfigurations();
   const [data, setData] = useState(config);
   const [CURRENCIES, setCURRENCIES] = useState(CURRENCIES_ES);
-  const [editSettingsShowModal, setEditSettingsModal] = useState(false);
+  const [editSettingsShowModal, setEditSettingsShowModal] = useState(false);
   const t = useTranslations("settings");
   const locale = useLocale();
-  const { currency } = useCurrency();
+  const { currency, updateCurrency } = useCurrency();
 
   const handleDataChange = (newData) => {
     setData((prev) => ({ ...prev, ...newData }))
+
   }
 
   const srcLogo = storedAssetUrl(data?.businessLogoUrl);
@@ -41,7 +42,16 @@ export function Settings() {
     return currentCurrency.name;
   };
 
-  console.log(locale);
+  const handleEditSumbit = (e) => {
+    e.preventDefault()
+    updateConfig(data)
+    setEditSettingsShowModal(false);
+  }
+
+  const handleCurrencyChange = (e) => {
+    if (!e.target.value) { return }
+    updateCurrency({ acronym: e.target.value });
+  }
 
   return (
     <StoreLayout>
@@ -77,14 +87,6 @@ export function Settings() {
             </div>
 
             <div className="flex items-start justify-between my-2">
-              <div className="w-1/2">
-                <div className="font-semibold text-gray-600">
-                  {t("cardInfo.description")}
-                </div>
-                <div className="text-xl mt-0.5 font-medium text-green-800">
-                  {data.businessDescription ? data.businessDescription : 'Agrega la descripcion de tu negocio en editar.'}
-                </div>
-              </div>
 
               <div className="w-1/2">
                 <div className="font-semibold text-gray-600">{t("cardInfo.address")}</div>
@@ -121,7 +123,7 @@ export function Settings() {
         <CardFooter>
           <Button
             color="primary"
-            onPress={() => setEditSettingsModal(true)}
+            onPress={() => setEditSettingsShowModal(true)}
           >
             Editar Información
           </Button>
@@ -147,10 +149,10 @@ export function Settings() {
                 label={t("cardCurrency.currencyLabel")}
                 defaultSelectedKeys={[getCurrentCurrency()]}
                 value={data.businessCurrency}
-                onChange={(e) => handleDataChange({ ...data, businessCurrency: e.target.value })}
+                onChange={handleCurrencyChange}
               >
                 {CURRENCIES.map((currency) => (
-                  <SelectItem key={currency.name}>
+                  <SelectItem key={currency.code}>
                     {currency.name}
                   </SelectItem>
                 ))}
@@ -190,8 +192,9 @@ export function Settings() {
           data={data}
           setData={setData}
           onChange={handleDataChange}
+          onSubmit={handleEditSumbit}
           editSettingsShowModal={editSettingsShowModal}
-          setEditSettingsShowModal={setEditSettingsModal}
+          setEditSettingsShowModal={setEditSettingsShowModal}
         />
       }
     </StoreLayout>

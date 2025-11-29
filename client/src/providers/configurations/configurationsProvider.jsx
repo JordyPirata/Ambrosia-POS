@@ -2,12 +2,14 @@
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { apiClient } from "../../services/apiClient";
+import { useUpload } from "../../components/hooks/useUpload";
 
 export const ConfigurationsContext = createContext();
 
 export function ConfigurationsProvider({ children }) {
   const [config, setConfig] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { upload } = useUpload();
 
   const readBusinessTypeFromCookie = () => {
     if (typeof document === "undefined") return null;
@@ -42,8 +44,41 @@ export function ConfigurationsProvider({ children }) {
     fetchConfig();
   }, []);
 
+
+
+
+  const updateConfig = async (data) => {
+    let logoUrl = null;
+    if (data.storeImage) {
+      const [uploaded] = await upload([data.storeImage]);
+      logoUrl = uploaded?.url ?? uploaded?.path;
+    }
+
+    const configDataToSend = { ...data };
+    delete configDataToSend.storeImage;
+    delete configDataToSend.productImage;
+    delete configDataToSend.businessCurrency;
+
+
+    try {
+      const updateConfigResponse = await apiClient(`/config`, {
+        method: "PUT",
+        body: {
+          ...configDataToSend,
+          ...(logoUrl && { businessLogoUrl: logoUrl }),
+        },
+      });
+
+      await fetchConfig();
+      return updateConfigResponse;
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   const value = {
     config,
+    updateConfig,
     isLoading,
     businessType,
     refreshConfig: fetchConfig,

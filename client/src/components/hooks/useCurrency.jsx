@@ -95,9 +95,20 @@ export function useCurrency() {
     [currency],
   );
 
+  const updateCurrency = async (acronym) => {
+    const updateConfigResponse = await apiClient(`/base-currency`, {
+      method: "PUT",
+      body: acronym,
+    });
+
+    fetchCurrency();
+    return updateConfigResponse
+  }
+
   return useMemo(
     () => ({
       currency,
+      updateCurrency,
       loading,
       error,
       formatAmount,
