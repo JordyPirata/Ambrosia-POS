@@ -7,6 +7,7 @@ const store_en = {
     settings: "Settings",
     logout: "Log Out",
     cart: "Cart",
+    orders: "Orders",
   },
   dashboard: {
     title: "Dashboard",
@@ -172,14 +173,14 @@ const store_en = {
       phone: "Phone",
       description: "Description",
       logo: "Logo",
-      edit: "Edit"
+      edit: "Edit",
     },
     cardCurrency: {
       title: "Currency",
-      currencyLabel: "Currency"
+      currencyLabel: "Currency",
     },
     cardLanguage: {
-      title: "Language"
+      title: "Language",
     },
     modal: {
       title: "Store info",
@@ -200,7 +201,7 @@ const store_en = {
       logo: "Logo",
       logoUpload: "Upload your logo",
       logoUploadMessage: "PNG, JPG or GIF (máx. 5MB)",
-    }
+    },
   },
   wallet: {
     title: "Wallet",
@@ -217,7 +218,7 @@ const store_en = {
       sats: "sats",
       balanceSat: "Balance Sat",
       capacitySat: "Total Capacity:",
-      inboundLiquidity: "Inbound Liquidity:"
+      inboundLiquidity: "Inbound Liquidity:",
     },
     payments: {
       receive: {
@@ -226,7 +227,7 @@ const store_en = {
         invoiceDescriptionLabel: "Description (optional)",
         invoiceDescriptionPlaceholder: "Payment concept",
         invoiceLightningButton: "Create Lightning Invoice",
-        invoiceLightningLoading: "Creating Invoice..."
+        invoiceLightningLoading: "Creating Invoice...",
       },
       send: {
         tabTitle: "Send",
@@ -237,7 +238,7 @@ const store_en = {
         amountSent: "Amount Sent:",
         routingFee: "Routing Fee:",
         paymentHash: "Payment Hash:",
-        copyButton: "Copy"
+        copyButton: "Copy",
       },
       history: {
         tabTitle: "History",
@@ -245,18 +246,63 @@ const store_en = {
         received: "Received",
         sent: "Sent",
         noTx: "There is no transactions yet",
-        noTxMessage: "Transactions will appear here once you'll starting to use the wallet",
+        noTxMessage:
+          "Transactions will appear here once you'll starting to use the wallet",
         sent: "Sent",
-        received: "Received"
-      }
+        received: "Received",
+      },
     },
     invoiceModal: {
       title: "Factura Lightning Generada",
       invoice: "Factura BOLT11:",
       paymentHash: "Payment Hash:",
-      closeButton: "Close"
-    }
-  }
+      closeButton: "Close",
+    },
+  },
+  orders: {
+    title: "Orders",
+    subtitle: "Manage your orders",
+    header: {
+      paid: "Paid Orders ({count})",
+    },
+    filter: {
+      searchPlaceholder: "Search by ID or user...",
+      rowsPerPage: "Rows per page",
+      rowsOption: "{count} rows",
+      tabPaid: "Paid",
+    },
+    table: {
+      id: "ID",
+      waiter: "Waiter",
+      status: "Status",
+      total: "Total",
+      date: "Date",
+      actions: "Actions",
+      view: "Details",
+    },
+    status: {
+      open: "Open",
+      closed: "Closed",
+      paid: "Paid",
+    },
+    empty: {
+      titlePaid: "No paid orders",
+      titleInProgress: "No orders in progress",
+      subtitleSearch: "No orders matched your search",
+      subtitlePaid: "Completed orders will appear here",
+      subtitleInProgress: "Active orders will appear here",
+    },
+    details: {
+      title: "Order details",
+      id: "Order ID",
+      waiter: "Waiter",
+      status: "Status",
+      total: "Total",
+      createdAt: "Created at",
+      close: "Close",
+      unassigned: "Unassigned",
+    },
+  },
 };
 
 export default store_en;
