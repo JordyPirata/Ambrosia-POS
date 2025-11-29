@@ -99,12 +99,6 @@ export const modules = {
         showInNavbar: false,
       },
       {
-        path: "/wallet",
-        label: "wallet",
-        icon: "wallet",
-        showInNavbar: true,
-      },
-      {
         path: "/reports",
         label: "Reportes",
         icon: "chart-line",
@@ -239,6 +233,14 @@ export const modules = {
         default: false,
       },
       {
+        path: "/store/wallet",
+        component: "Wallet",
+        requiresAuth: true,
+        requiresAdmin: false,
+        types: ["store"],
+        default: false,
+      },
+      {
         path: "/store/settings",
         component: "Settings",
         requiresAuth: true,
@@ -264,6 +266,12 @@ export const modules = {
         path: "/store/cart",
         label: "cart",
         icon: "shopping-cart",
+        showInNavbar: true,
+      },
+      {
+        path: "/store/wallet",
+        label: "wallet",
+        icon: "wallet",
         showInNavbar: true,
       },
       {

@@ -201,6 +201,61 @@ const store_es = {
       logoUpload: "Sube tu logo",
       logoUploadMessage: "PNG, JPG o GIF (máx. 5MB)",
     }
+  },
+  wallet: {
+    title: "Wallet",
+    subtitle: "Supervisa tu saldo y tus transacciones en BTC",
+    loadingMessage: "Cargando información de la wallet...",
+    nodeInfo: {
+      title: "Información del Nodo",
+      totalBalance: "Balance Total",
+      network: "Red",
+      channels: "Canales",
+      block: "Bloque",
+      subtitle: "Canales Lightning",
+      channel: "Canal #",
+      sats: "sats",
+      balanceSat: "Balance Local",
+      capacitySat: "Capacidad Total:",
+      inboundLiquidity: "Liquidez Entrante:"
+    },
+    payments: {
+      receive: {
+        tabTitle: "Recibir",
+        invoiceAmountLabel: "Monto en satoshis",
+        invoiceDescriptionLabel: "Descripción (opcional)",
+        invoiceDescriptionPlaceholder: "Concepto del pago",
+        invoiceLightningButton: "Crear Factura Lightning",
+        invoiceLightningLoading: "Creando Factura..."
+      },
+      send: {
+        tabTitle: "Enviar",
+        payInvoiceLabel: "Factura BOLT11",
+        payLightningButton: "Enviar Pago Lightning",
+        payLightningLoading: "Procesando Pago...",
+        paymentDone: "Pago Realizado",
+        amountSent: "Monto enviado:",
+        routingFee: "Tarifa de enrutamiento:",
+        paymentHash: "Payment Hash:",
+        copyButton: "Copiar"
+      },
+      history: {
+        tabTitle: "Historial",
+        all: "Todos",
+        received: "Recibidos",
+        sent: "Enviados",
+        noTx: "No hay transacciones",
+        noTxMessage: "Las transacciones aparecerán aquí una vez que comiences a usar la wallet",
+        sent: "Enviado",
+        received: "Recibido"
+      }
+    },
+    invoiceModal: {
+      title: "Factura Lightning Generada",
+      invoice: "Factura BOLT11:",
+      paymentHash: "Payment Hash:",
+      closeButton: "Cerrar"
+    }
   }
 };
 
