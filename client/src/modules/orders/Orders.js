@@ -55,7 +55,7 @@ export default function Orders() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  
+
   // Hook personalizado para manejar monedas
   const { systemCurrency, formatAmount } = useCurrency();
 
@@ -168,7 +168,7 @@ export default function Orders() {
   // Componente para mostrar precio formateado
   const FormattedPrice = ({ amount }) => {
     const [formattedPrice, setFormattedPrice] = useState("");
-    
+
     useEffect(() => {
       async function formatPrice() {
         if (formatAmount) {
@@ -187,7 +187,9 @@ export default function Orders() {
     }, [amount]);
 
     return (
-      <span className={`font-semibold ${amount > 0 ? "text-green-600" : "text-gray-400"}`}>
+      <span
+        className={`font-semibold ${amount > 0 ? "text-green-600" : "text-gray-400"}`}
+      >
         {formattedPrice || "..."}
       </span>
     );

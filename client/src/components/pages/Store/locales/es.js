@@ -7,6 +7,7 @@ const store_es = {
     settings: "Configuración",
     logout: "Cerrar sesión",
     cart: "Caja",
+    orders: "Ordenes",
   },
   dashboard: {
     title: "Panel de control",
@@ -172,14 +173,14 @@ const store_es = {
       phone: "Teléfono",
       description: "Descripción",
       logo: "Logo",
-      edit: "Editar"
+      edit: "Editar",
     },
     cardCurrency: {
       title: "Moneda",
-      currencyLabel: "Moneda"
+      currencyLabel: "Moneda",
     },
     cardLanguage: {
-      title: "Idioma"
+      title: "Idioma",
     },
     modal: {
       title: "Información de la tienda",
@@ -200,7 +201,7 @@ const store_es = {
       logo: "Logo",
       logoUpload: "Sube tu logo",
       logoUploadMessage: "PNG, JPG o GIF (máx. 5MB)",
-    }
+    },
   },
   wallet: {
     title: "Wallet",
@@ -217,7 +218,7 @@ const store_es = {
       sats: "sats",
       balanceSat: "Balance Local",
       capacitySat: "Capacidad Total:",
-      inboundLiquidity: "Liquidez Entrante:"
+      inboundLiquidity: "Liquidez Entrante:",
     },
     payments: {
       receive: {
@@ -226,7 +227,7 @@ const store_es = {
         invoiceDescriptionLabel: "Descripción (opcional)",
         invoiceDescriptionPlaceholder: "Concepto del pago",
         invoiceLightningButton: "Crear Factura Lightning",
-        invoiceLightningLoading: "Creando Factura..."
+        invoiceLightningLoading: "Creando Factura...",
       },
       send: {
         tabTitle: "Enviar",
@@ -237,7 +238,7 @@ const store_es = {
         amountSent: "Monto enviado:",
         routingFee: "Tarifa de enrutamiento:",
         paymentHash: "Payment Hash:",
-        copyButton: "Copiar"
+        copyButton: "Copiar",
       },
       history: {
         tabTitle: "Historial",
@@ -245,18 +246,53 @@ const store_es = {
         received: "Recibidos",
         sent: "Enviados",
         noTx: "No hay transacciones",
-        noTxMessage: "Las transacciones aparecerán aquí una vez que comiences a usar la wallet",
+        noTxMessage:
+          "Las transacciones aparecerán aquí una vez que comiences a usar la wallet",
         sent: "Enviado",
-        received: "Recibido"
-      }
+        received: "Recibido",
+      },
     },
     invoiceModal: {
       title: "Factura Lightning Generada",
       invoice: "Factura BOLT11:",
       paymentHash: "Payment Hash:",
-      closeButton: "Cerrar"
-    }
-  }
+      closeButton: "Cerrar",
+    },
+  },
+  orders: {
+    title: "Ordenes",
+    subtitle: "Administra tus ventas",
+    header: {
+      paid: "Órdenes Pagadas ({count})",
+    },
+    filter: {
+      searchPlaceholder: "Buscar por ID o usuario...",
+      rowsPerPage: "Filas por página",
+      rowsOption: "{count} filas",
+      tabPaid: "Pagadas",
+    },
+    table: {
+      id: "ID",
+      waiter: "Mesero",
+      status: "Estado",
+      total: "Total",
+      date: "Fecha",
+      actions: "Acciones",
+      view: "Ver",
+    },
+    status: {
+      open: "Abierta",
+      closed: "Cerrada",
+      paid: "Pagada",
+    },
+    empty: {
+      titlePaid: "No hay órdenes pagadas",
+      titleInProgress: "No hay órdenes en curso",
+      subtitleSearch: "No se encontraron órdenes que coincidan con tu búsqueda",
+      subtitlePaid: "Las órdenes completadas aparecerán aquí",
+      subtitleInProgress: "Las órdenes activas aparecerán aquí",
+    },
+  },
 };
 
 export default store_es;
