@@ -1,6 +1,7 @@
 "use client";
 
 import { useContext, useEffect, useRef, useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import {
   Modal,
   ModalContent,
@@ -27,6 +28,7 @@ export default function WalletGuard({
 }) {
   const { user } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(true);
+  const [showPassword, setShowPassword] = useState(false)
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [authorized, setAuthorized] = useState(false);
@@ -116,10 +118,19 @@ export default function WalletGuard({
             <Form onSubmit={handleSubmit} id="wallet-guard-form">
               <Input
                 label={passwordLabel}
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 isDisabled={submitting}
+                endContent={
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  >
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
+                }
                 autoFocus
               />
             </Form>
