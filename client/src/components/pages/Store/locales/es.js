@@ -204,7 +204,7 @@ const store_es = {
   },
   wallet: {
     title: "Wallet",
-    subtitle: "Administra tu btc",
+    subtitle: "Supervisa tu saldo y tus transacciones en BTC",
     loadingMessage: "Cargando información de la wallet...",
     nodeInfo: {
       title: "Información del Nodo",
