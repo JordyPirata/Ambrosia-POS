@@ -32,13 +32,15 @@ export function OrdersTable({ orders, formatAmount, onViewOrder }) {
             <TableCell>
               <div className="flex items-center space-x-2">
                 <Users className="w-4 h-4 text-gray-400" />
-                <span className="font-medium text-deep">{order.waiter || "Sin asignar"}</span>
+                <span className="font-medium text-deep">
+                  {order.waiter || t("details.unassigned")}
+                </span>
               </div>
             </TableCell>
             <TableCell>
               <StatusChip status={order.status} />
             </TableCell>
-            <TableCell>{formatAmount(order.total)}</TableCell>
+            <TableCell>{formatAmount(order.total * 100)}</TableCell>
             <TableCell>
               <div className="flex items-center space-x-1 text-sm text-gray-500">
                 <Calendar className="w-3 h-3" />
@@ -46,7 +48,7 @@ export function OrdersTable({ orders, formatAmount, onViewOrder }) {
               </div>
             </TableCell>
             <TableCell>
-              <Button variant="outline" color="primary" size="sm" onPress={() => onViewOrder(order.id)}>
+              <Button variant="outline" color="primary" size="sm" onPress={() => onViewOrder(order)}>
                 <Eye className="w-4 h-4 mr-1" />
                 {t("table.view")}
               </Button>

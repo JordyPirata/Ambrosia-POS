@@ -278,7 +278,7 @@ const store_en = {
       total: "Total",
       date: "Date",
       actions: "Actions",
-      view: "View",
+      view: "Details",
     },
     status: {
       open: "Open",
@@ -291,6 +291,16 @@ const store_en = {
       subtitleSearch: "No orders matched your search",
       subtitlePaid: "Completed orders will appear here",
       subtitleInProgress: "Active orders will appear here",
+    },
+    details: {
+      title: "Order details",
+      id: "Order ID",
+      waiter: "Waiter",
+      status: "Status",
+      total: "Total",
+      createdAt: "Created at",
+      close: "Close",
+      unassigned: "Unassigned",
     },
   },
 };

@@ -278,7 +278,7 @@ const store_es = {
       total: "Total",
       date: "Fecha",
       actions: "Acciones",
-      view: "Ver",
+      view: "Detalles",
     },
     status: {
       open: "Abierta",
@@ -291,6 +291,16 @@ const store_es = {
       subtitleSearch: "No se encontraron órdenes que coincidan con tu búsqueda",
       subtitlePaid: "Las órdenes completadas aparecerán aquí",
       subtitleInProgress: "Las órdenes activas aparecerán aquí",
+    },
+    details: {
+      title: "Detalles de la orden",
+      id: "ID de la orden",
+      waiter: "Mesero",
+      status: "Estado",
+      total: "Total",
+      createdAt: "Creada el",
+      close: "Cerrar",
+      unassigned: "Sin asignar",
     },
   },
 };

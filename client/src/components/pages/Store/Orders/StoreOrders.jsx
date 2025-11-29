@@ -15,18 +15,30 @@ import { useCurrency } from "@/components/hooks/useCurrency";
 import { EmptyOrdersState } from "./EmptyOrdersState";
 import { OrdersFilterBar } from "./OrdersFilterBar";
 import { OrdersTable } from "./OrdersTable";
+import { OrderDetailsModal } from "./OrderDetailsModal";
 
 export default function StoreOrders() {
   const t = useTranslations("orders");
+  const router = useRouter();
   const [filter, setFilter] = useState("paid");
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [showDetails, setShowDetails] = useState(false);
   const { orders } = useOrders();
   const { formatAmount } = useCurrency();
   const paidCount = orders.filter((order) => order.status === "paid").length;
 
-  const handleOrderClick = (orderId) => {
+  const handleOrderClick = (order) => {
+    setSelectedOrder(order);
+    setShowDetails(true);
+  };
+
+  const handleEditOrder = () => {
+    if (!selectedOrder?.id) return;
+    router.push(`/modify-order/${selectedOrder.id}`);
+    setShowDetails(false);
   };
 
   const filteredOrders = orders.filter((order) => {
@@ -101,6 +113,14 @@ export default function StoreOrders() {
             )}
           </CardBody>
         </Card>
+
+        <OrderDetailsModal
+          order={selectedOrder}
+          isOpen={showDetails}
+          onClose={() => setShowDetails(false)}
+          onEdit={handleEditOrder}
+          formatAmount={formatAmount}
+        />
       </div>
     </div>
   );
