@@ -77,7 +77,7 @@ export function Onboarding() {
         description: t("submitOnboardingToast.description"),
         color: "success",
       });
-      router.push("/");
+      window.location.reload();
     } catch (error) {
       addToast({
         title: "Error",
