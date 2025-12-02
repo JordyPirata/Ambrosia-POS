@@ -10,7 +10,10 @@ import com.github.ajalt.clikt.parameters.types.int
 import com.github.ajalt.mordant.rendering.TextColors.*
 import io.ktor.server.config.MapApplicationConfig
 import io.ktor.server.engine.*
-import io.ktor.server.cio.*
+import io.ktor.server.netty.*
+import io.ktor.network.tls.certificates.*
+import java.security.KeyStore
+import java.io.File
 import kotlinx.io.buffered
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
@@ -90,10 +93,31 @@ class Ambrosia : CliktCommand() {
     Flyway.configure().dataSource("jdbc:sqlite:${datadir}/ambrosia.db", null , null)
       .mixed(true).load().migrate()
     try {
+      val keyStoreFile = File(datadir.toString(), "keystore.jks")
+
+      // Passwords seguras derivadas de tu secret
+      val privateKeyPassword = options.secret               // la privada usa el secret tal cual
+      val storePassword = SeedGenerator.generateSecureSeed( // store usa hash
+          seedInput = options.secret
+      )
+
+      if (!keyStoreFile.exists()) {
+          val keyStore = buildKeyStore {
+              certificate("ambrosia") {
+                  password = privateKeyPassword
+                  domains = listOf("localhost", "127.0.0.1", "0.0.0.0")
+              }
+          }
+
+          keyStore.saveToFile(keyStoreFile, storePassword)
+
+          echo(yellow("Generated self-signed certificate using server secret"))
+      }
+
 
       val server =
         embeddedServer(
-          CIO,
+          Netty,
           environment =
             applicationEnvironment {
               config =
@@ -109,6 +133,19 @@ class Ambrosia : CliktCommand() {
             connector {
               port = options.httpBindPort
               host = options.httpBindIp
+            }
+            val keyStore = KeyStore.getInstance("JKS").apply {
+                load(keyStoreFile.inputStream(), storePassword.toCharArray())
+            }
+
+            sslConnector(
+                keyStore = keyStore,
+                keyAlias = "ambrosia",
+                keyStorePassword = { storePassword.toCharArray() },
+                privateKeyPassword = { privateKeyPassword.toCharArray() }
+            ) {
+                port = 9443
+                host = options.httpBindIp
             }
           },
           module = { Api().run { module() } }
