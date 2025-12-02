@@ -95,10 +95,9 @@ class Ambrosia : CliktCommand() {
     try {
       val keyStoreFile = File(datadir.toString(), "keystore.jks")
 
-      // Passwords seguras derivadas de tu secret
-      val privateKeyPassword = options.secret               // la privada usa el secret tal cual
-      val storePassword = SeedGenerator.generateSecureSeed( // store usa hash
-          seedInput = options.secret
+      val privateKeyPassword = options.secret
+      val storePassword = SeedGenerator.generateSecureSeed(
+        seedInput = options.secret
       )
 
       if (!keyStoreFile.exists()) {
