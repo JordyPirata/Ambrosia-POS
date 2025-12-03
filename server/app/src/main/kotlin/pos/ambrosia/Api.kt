@@ -119,5 +119,6 @@ class Api() {
     configureCategories()
     configureCurrency()
     configureInitialSetup()
+    configurePhoenixWebhook()
   }
 }
