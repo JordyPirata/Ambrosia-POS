@@ -70,8 +70,6 @@ class TestAuthentication:
             # Try to refresh without any cookies
             response = await client.post("/auth/refresh")
 
-            # TODO: Server returns 500 because InvalidTokenException is not handled in Handler.kt
-            # Should return 401 Unauthorized
             assert response.status_code in [400, 401, 500], (
                 f"Expected 400/401/500 without refreshToken, got {response.status_code}"
             )
@@ -91,8 +89,6 @@ class TestAuthentication:
 
             response = await client.post("/auth/refresh")
 
-            # TODO: Server returns 500 because InvalidTokenException is not handled in Handler.kt
-            # Should return 401 Unauthorized
             assert response.status_code in [400, 401, 500], (
                 f"Expected 400/401/500 with invalid refreshToken, got {response.status_code}"
             )

@@ -56,14 +56,13 @@ fun Route.auth(
       return@post
     }
 
-    // Configurar cookies para los tokens
     call.response.cookies.append(
       Cookie(
         name = "accessToken",
         value = accessTokenResponse,
-        expires = GMTDate(System.currentTimeMillis() + (60 * 1000L)), // 60 s
-        httpOnly = true, // Accesible desde JavaScript
-        secure = false, // Cambiar a true en producción con HTTPS
+        expires = GMTDate(System.currentTimeMillis() + (60 * 1000L)),
+        httpOnly = true,
+        secure = false,
         path = "/",
       )
     )
@@ -72,9 +71,9 @@ fun Route.auth(
       Cookie(
         name = "refreshToken",
         value = refreshTokenResponse,
-        maxAge = 30 * 24 * 60 * 60, // 30 días en segundos
+        maxAge = 30 * 24 * 60 * 60,
         httpOnly = true,
-        secure = false, // Cambiar a true en producción con HTTPS
+        secure = false,
         path = "/",
       )
     )
@@ -94,53 +93,42 @@ fun Route.auth(
   }
 
   post("/refresh") {
-    try {
-      // Obtener el refresh token desde las cookies
-      val refreshToken =
-      call.request.cookies["refreshToken"]
-      ?: throw InvalidTokenException("Refresh token is required")
+    val refreshToken =
+    call.request.cookies["refreshToken"]
+    ?: throw InvalidTokenException("Refresh token is required")
 
-      logger.info("Refreshing token with: $refreshToken")
+    logger.info("Refreshing token with: $refreshToken")
 
-      // Verificar si el refresh token es válido
-      val isValidRefreshToken = tokenService.validateRefreshToken(refreshToken)
-      if (!isValidRefreshToken) {
-        throw InvalidTokenException("Invalid refresh token")
-      }
-
-      // Obtener información del usuario del refresh token
-      val userInfo = tokenService.getUserFromRefreshToken(refreshToken)
-      if (userInfo == null) {
-        throw InvalidTokenException("Unable to extract user information from refresh token")
-      }
-
-      // Generar SOLO un nuevo access token (NO generar nuevo refresh token)
-      val newAccessToken = tokenService.generateAccessToken(userInfo)
-
-      // Actualizar SOLO la cookie del access token (60 s)
-      call.response.cookies.append(
-        Cookie(
-          name = "accessToken",
-          value = newAccessToken,
-          expires = GMTDate(System.currentTimeMillis() + (60 * 1000L)), // 60 s
-          httpOnly = true,
-          secure = true,
-          path = "/"
-        )
-      )
-
-      // NO actualizamos el refresh token - sigue siendo el mismo
-
-      call.respond(
-        mapOf(
-          "message" to "Access token refreshed successfully",
-          "accessToken" to newAccessToken
-        )
-      )
-    } catch (e: Exception) {
-      logger.error("Error refreshing token: ${e.message}")
-      throw InvalidTokenException("Failed to refresh token")
+    val isValidRefreshToken = tokenService.validateRefreshToken(refreshToken)
+    if (!isValidRefreshToken) {
+      throw InvalidTokenException("Invalid refresh token")
     }
+
+    val userInfo = tokenService.getUserFromRefreshToken(refreshToken)
+    if (userInfo == null) {
+      throw InvalidTokenException("Unable to extract user information from refresh token")
+    }
+
+    val newAccessToken = tokenService.generateAccessToken(userInfo)
+
+    call.response.cookies.append(
+      Cookie(
+        name = "accessToken",
+        value = newAccessToken,
+        expires = GMTDate(System.currentTimeMillis() + (60 * 1000L)),
+        httpOnly = true,
+        secure = true,
+        path = "/"
+      )
+    )
+
+
+    call.respond(
+      mapOf(
+        "message" to "Access token refreshed successfully",
+        "accessToken" to newAccessToken
+      )
+    )
   }
 
   post("/logout") {
@@ -151,12 +139,11 @@ fun Route.auth(
       tokenService.revokeRefreshToken(userId)
     }
 
-    // Eliminar las cookies usando maxAge = 0
     call.response.cookies.append(
       Cookie(
         name = "accessToken",
         value = "",
-        maxAge = 0, // Expira inmediatamente
+        maxAge = 0,
         path = "/"
       )
     )
@@ -165,7 +152,7 @@ fun Route.auth(
       Cookie(
         name = "refreshToken",
         value = "",
-        maxAge = 0, // Expira inmediatamente
+        maxAge = 0,
         path = "/"
       )
     )
