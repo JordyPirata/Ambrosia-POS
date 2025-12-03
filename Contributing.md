@@ -2,7 +2,7 @@
 
 We love community collaboration! If you want to be part of the future of Bitcoin payments, you can:
 
-- 🔍 **Review our code** on [GitHub](https://github.com/btcgdl/Ambrosia-POS)
+- 🔍 **Review our code** on [GitHub](https://github.com/olympus-btc/ambrosia)
 - 🐛 **Report bugs** or suggest improvements
 - 💡 **Contribute ideas** for new features
 - 🧪 **Test the beta** when it's available

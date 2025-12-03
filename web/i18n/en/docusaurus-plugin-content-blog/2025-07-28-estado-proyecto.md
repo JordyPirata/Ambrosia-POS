@@ -101,7 +101,7 @@ To facilitate the adoption of the system, we are developing:
   <div class="col col--3">
     <div class="text--center">
       <h4>👨‍💻 Review Code</h4>
-      <p><strong>Review our code</strong> on <a href="https://github.com/btcgdl/Ambrosia-POS">GitHub</a></p>
+      <p><strong>Review our code</strong> on <a href="https://github.com/olympus-btc/ambrosia">GitHub</a></p>
     </div>
   </div>
   <div class="col col--3">

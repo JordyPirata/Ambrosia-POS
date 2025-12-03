@@ -1,6 +1,6 @@
 # Ambrosia-POS
 
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/btcgdl/Ambrosia-POS)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/olympus-btc/ambrosia)
 
 **Status: In Development**
 

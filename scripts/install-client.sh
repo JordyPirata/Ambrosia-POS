@@ -16,9 +16,9 @@ for arg in "$@"; do
   esac
 done
 
-TAG="0.2.0-beta"
+TAG="0.3.0-alpha"
 CLIENT_DIST_FILE="ambrosia-client-${TAG}.tar.gz"
-CLIENT_DIST_URL="https://github.com/btcgdl/Ambrosia-POS/releases/download/v${TAG}/${CLIENT_DIST_FILE}"
+CLIENT_DIST_URL="https://github.com/olympus-btc/ambrosia/releases/download/v${TAG}/${CLIENT_DIST_FILE}"
 
 echo " Starting Ambrosia POS Client installation "
 

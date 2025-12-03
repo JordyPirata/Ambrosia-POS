@@ -57,7 +57,7 @@ const config = {
           sidebarPath: "./sidebars.js",
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl: "https://github.com/btcgdl/Ambrosia-POS/tree/main/docs/api",
+          editUrl: "https://github.com/olympus-btc/ambrosia/tree/main/docs/api",
         },
         blog: {
           showReadingTime: true,

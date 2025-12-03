@@ -51,7 +51,7 @@ sdk install java 21.0.8-tem
 
 **Option 1: Full Installation (Ambrosia + phoenixd)**
 ```bash
-wget -q https://raw.githubusercontent.com/btcgdl/Ambrosia-POS/master/scripts/install.sh
+wget -q https://raw.githubusercontent.com/olympus-btc/ambrosia/master/scripts/install.sh
 chmod +x install.sh
 ./install.sh
 ```
@@ -62,7 +62,7 @@ Check [Mastering Phoenixd](https://btcgdl.github.io/Mastering-phoenixd/) for mor
 
 **Option 2: Project Scripts (without systemd)**
 ```bash
-curl -fsSL https://raw.githubusercontent.com/btcgdl/Ambrosia-POS/master/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/olympus-btc/ambrosia/master/scripts/install.sh | bash
 ```
 
 ## Uninstallation 
@@ -70,7 +70,7 @@ curl -fsSL https://raw.githubusercontent.com/btcgdl/Ambrosia-POS/master/scripts/
 To uninstall Ambrosia POS and phoenixd, run the following script:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/btcgdl/Ambrosia-POS/master/scripts/uninstall.sh | bash
+curl -fsSL https://raw.githubusercontent.com/olympus-btc/ambrosia/master/scripts/uninstall.sh | bash
 ```
 
 ## Development Scripts

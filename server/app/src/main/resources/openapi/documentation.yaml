@@ -18,12 +18,12 @@ info:
 
     **Nota:** Swagger UI puede no mostrar las cookies en la respuesta debido a restricciones de seguridad del navegador,
     pero están presentes en las cabeceras de respuesta HTTP real cuando se usa curl u otros clientes HTTP.
-  termsOfService: https://github.com/btcgdl/Ambrosia-POS
+  termsOfService: https://github.com/olympus-btc/ambrosia
   contact:
     email: guadalajarabitcoin@gmail.com
   license:
     name: MIT
-    url: https://github.com/btcgdl/Ambrosia-POS?tab=MIT-1-ov-file
+    url: https://github.com/olympus-btc/ambrosia?tab=MIT-1-ov-file
   version: ALPHA-0.0.1
 servers:
   - url: http://127.0.0.1:9154

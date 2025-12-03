@@ -52,7 +52,7 @@ function HomepageHeader() {
           </Link>
           <Link
             className="button button--secondary button--lg"
-            to="https://github.com/btcgdl/Ambrosia-POS"
+            to="https://github.com/olympus-btc/ambrosia"
           >
             <Github className="margin-right--sm" />
             <Translate id="homepage.viewOnGithub">Ver en GitHub</Translate>
