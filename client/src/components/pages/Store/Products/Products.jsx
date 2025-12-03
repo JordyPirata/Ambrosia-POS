@@ -135,7 +135,6 @@ export function Products() {
           setDeleteProductsShowModal={setDeleteProductsShowModal}
           onConfirm={() => {
             setDeleteProductsShowModal(false);
-            console.log(productToDelete)
             deleteProduct(productToDelete)
           }}
         />
