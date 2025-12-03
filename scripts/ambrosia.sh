@@ -18,10 +18,10 @@ for arg in "$@"; do
   esac
 done
 
-TAG="0.2.0-beta"
-AMBROSIA_URL="https://github.com/btcgdl/Ambrosia-POS/releases/download/v${TAG}"
+TAG="0.3.0-alpha"
+AMBROSIA_URL="https://github.com/olympus-btc/ambrosia/releases/download/v${TAG}"
 AMBROSIA_JAR="${AMBROSIA_URL}/ambrosia-${TAG}.jar"
-RUN_SERVER="https://raw.githubusercontent.com/btcgdl/Ambrosia-POS/v${TAG}/scripts/run-server.sh"
+RUN_SERVER="https://raw.githubusercontent.com/olympus-btc/ambrosia/v${TAG}/scripts/run-server.sh"
 
 echo ""
 echo "🍃 Welcome to Ambrosia POS installer"

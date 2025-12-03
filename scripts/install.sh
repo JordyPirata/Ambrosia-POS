@@ -27,7 +27,7 @@ print_header() {
 install_ambrosia() {
   echo "➡️  Starting Ambrosia POS installation..."
   local script_path="/tmp/ambrosia_install_temp.sh"
-  if ! curl -fsSL "https://raw.githubusercontent.com/btcgdl/Ambrosia-POS/master/scripts/ambrosia.sh" -o "$script_path"; then
+  if ! curl -fsSL "https://raw.githubusercontent.com/olympus-btc/ambrosia/master/scripts/ambrosia.sh" -o "$script_path"; then
     echo "❌ Error downloading Ambrosia installation script." >&2
     exit 1
   fi
@@ -40,7 +40,7 @@ install_ambrosia() {
 install_phoenixd() {
   echo "➡️  Starting phoenixd installation..."
   local script_path="/tmp/phoenixd_install_temp.sh"
-  if ! curl -fsSL "https://raw.githubusercontent.com/btcgdl/Ambrosia-POS/master/scripts/phoenixd.sh" -o "$script_path"; then
+  if ! curl -fsSL "https://raw.githubusercontent.com/olympus-btc/ambrosia/master/scripts/phoenixd.sh" -o "$script_path"; then
     echo "❌ Error downloading phoenixd installation script." >&2
     exit 1
   fi
@@ -53,7 +53,7 @@ install_phoenixd() {
 install_client() {
   echo "➡️  Starting client installation..."
   local script_path="/tmp/client_install_temp.sh"
-  if ! curl -fsSL "https://raw.githubusercontent.com/btcgdl/Ambrosia-POS/master/scripts/install-client.sh" -o "$script_path"; then
+  if ! curl -fsSL "https://raw.githubusercontent.com/olympus-btc/ambrosia/master/scripts/install-client.sh" -o "$script_path"; then
     echo "❌ Error downloading client installation script." >&2
     exit 1
   fi
