@@ -28,7 +28,7 @@ export function Products() {
   });
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [productToDelete, setProductToDelete] = useState(null)
-  const { products, addProduct, updateProduct, isUploading, refetch: refetchProducts } = useProducts();
+  const { products, addProduct, updateProduct, deleteProduct, isUploading, refetch: refetchProducts } = useProducts();
   const {
     categories,
     loading: categoriesLoading,
@@ -135,6 +135,8 @@ export function Products() {
           setDeleteProductsShowModal={setDeleteProductsShowModal}
           onConfirm={() => {
             setDeleteProductsShowModal(false);
+            console.log(productToDelete)
+            deleteProduct(productToDelete)
           }}
         />
       )}
