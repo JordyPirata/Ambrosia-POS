@@ -41,6 +41,9 @@ def set_cookie_in_jar(client: AmbrosiaHttpClient, name: str, value: str) -> None
         value: Cookie value
     """
     assert client._client is not None, "HTTP client should be initialized"
+    # Delete existing cookie first to avoid duplicates
+    if name in client._client.cookies:
+        del client._client.cookies[name]
     client._client.cookies.set(name, value)
 
 
