@@ -92,6 +92,16 @@ export function useProducts() {
     await fetchProducts();
   };
 
+  const deleteProduct = async (product) => {
+    await apiClient(`/products/${product.id}`, {
+      method: "DELETE",
+      notShowError: false,
+    });
+
+    await fetchProducts();
+  };
+
+
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);
@@ -101,6 +111,7 @@ export function useProducts() {
     addProduct,
     isUploading,
     updateProduct,
+    deleteProduct,
     loading,
     error,
     refetch: fetchProducts,
