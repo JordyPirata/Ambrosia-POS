@@ -144,7 +144,14 @@ const store_en = {
         retry: "Retry",
         totalLabel: "Total",
         cancel: "Cancel",
+        confirm: "Confirm payment",
+        close: "Close",
         complete: "Payment received",
+        confirmed: "Payment confirmed",
+        websocket: {
+          paymentReceivedTitle: "Payment received",
+          paymentReceivedDescription: "Hash: {hash}",
+        },
       },
       cash: {
         title: "Cash Payment",
@@ -257,6 +264,10 @@ const store_en = {
       invoice: "Factura BOLT11:",
       paymentHash: "Payment Hash:",
       closeButton: "Close",
+    },
+    websocket: {
+      paymentReceivedTitle: "Payment received",
+      paymentReceivedDescription: "Hash: {hash}",
     },
   },
   orders: {

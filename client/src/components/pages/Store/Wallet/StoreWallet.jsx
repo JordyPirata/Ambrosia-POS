@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import WalletGuard from "../../../auth/WalletGuard";
 import {
@@ -20,10 +20,8 @@ import {
   Bitcoin,
   CreditCard,
   History,
-  Home,
   CheckCircle,
   AlertCircle,
-  Info,
 } from "lucide-react";
 import {
   Card,
@@ -43,12 +41,11 @@ import {
   Chip,
   Progress,
 } from "@heroui/react";
-import { useRouter } from "next/navigation";
 import { addToast } from "@heroui/react";
+import { usePaymentWebsocket } from "../../../../hooks/usePaymentWebsocket";
 
 function WalletInner() {
   const t = useTranslations("wallet");
-  const router = useRouter();
   const [info, setInfo] = useState(null);
   const [invoiceAmount, setInvoiceAmount] = useState("");
   const [invoiceDesc, setInvoiceDesc] = useState("");
@@ -61,8 +58,12 @@ function WalletInner() {
   const [filter, setFilter] = useState("all");
   const [activeTab, setActiveTab] = useState("receive");
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
+  const [invoicePaid, setInvoicePaid] = useState(false);
+  const fetchTransactionsRef = useRef(null);
+  const invoiceHashRef = useRef(null);
+  const { setInvoiceHash, setFetchers, onPayment } = usePaymentWebsocket();
 
-  const fetchInfo = async () => {
+  const fetchInfo = useCallback(async () => {
     try {
       const res = await getInfo();
       setInfo(res);
@@ -77,7 +78,7 @@ function WalletInner() {
         color: "danger",
       });
     }
-  };
+  }, []);
 
   const fetchTransactions = useCallback(
     async () => {
@@ -113,11 +114,34 @@ function WalletInner() {
 
   useEffect(() => {
     fetchInfo();
-  }, []);
+  }, [fetchInfo]);
 
   useEffect(() => {
     fetchTransactions();
   }, [fetchTransactions]);
+
+  useEffect(() => {
+    fetchTransactionsRef.current = fetchTransactions;
+    setFetchers(fetchInfo, fetchTransactions);
+  }, [fetchTransactions, fetchInfo, setFetchers]);
+
+  useEffect(() => {
+    invoiceHashRef.current = createdInvoice?.paymentHash || null;
+    setInvoiceHash(createdInvoice?.paymentHash || null);
+  }, [createdInvoice, setInvoiceHash]);
+
+  useEffect(() => {
+    const off = onPayment((data) => {
+      if (
+        invoiceHashRef.current &&
+        data.paymentHash &&
+        data.paymentHash === invoiceHashRef.current
+      ) {
+        setInvoicePaid(true);
+      }
+    });
+    return () => off?.();
+  }, [onPayment]);
 
   const handleCreateInvoice = async () => {
     if (!invoiceAmount) {
@@ -128,6 +152,7 @@ function WalletInner() {
       setLoading(true);
       const res = await createInvoice(invoiceAmount, invoiceDesc);
       setCreatedInvoice(res);
+      setInvoicePaid(false);
       setShowInvoiceModal(true);
       setInvoiceAmount("");
       setInvoiceDesc("");
@@ -731,6 +756,11 @@ function WalletInner() {
                       <span className="font-medium text-deep">
                         {t("invoiceModal.paymentHash")}
                       </span>
+                      {invoicePaid && (
+                        <Chip color="success" variant="solid" size="sm">
+                          Pago recibido
+                        </Chip>
+                      )}
                       <Button
                         size="sm"
                         variant="outline"

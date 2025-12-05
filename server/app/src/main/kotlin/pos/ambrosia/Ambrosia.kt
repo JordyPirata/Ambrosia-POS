@@ -31,6 +31,7 @@ class Ambrosia : CliktCommand() {
   val AppVersion: String = Ambrosia::class.java.getPackage().implementationVersion ?: "-dev"
   val datadir = Path(Path(System.getProperty("user.home")), ".Ambrosia-POS")
   private val confFile = Path(datadir, "ambrosia.conf")
+  private val phoenixConfFile = Path(Path(System.getProperty("user.home")), ".phoenix/phoenix.conf")
 
   init {
     SystemFileSystem.createDirectories(datadir)
@@ -84,6 +85,21 @@ class Ambrosia : CliktCommand() {
         val value = AppConfig.getPhoenixProperty("http-password") ?: throw Exception("phoenixd http-password on found in phoenix.conf, please provide it with --phoenixd-password or in the phoenix.conf file")
         value
       }
+    val phoenixdWebhookSecret by
+      option("--phoenixd-webhook-secret", help = "webhook-secret for phoenixd webhooks").defaultLazy {
+        AppConfig.loadConfig()
+        val existing = AppConfig.getPhoenixProperty("webhook-secret")
+        existing ?: throw Exception("phoenixd webhook-secret not found in phoenix.conf, please provide it with --phoenixd-webhook-secret or set webhook-secret in phoenix.conf")
+      }
+    val phoenixdWebhookUrl by
+      option(
+        "--phoenixd-webhook",
+        help = "webhook URL to register in phoenix.conf (webhook=<url>)"
+      )
+        .defaultLazy {
+          val value = "https://${httpBindIp}:9443/webhook/phoenixd"
+          value
+        }
   }
   private val options by DaemonOptions()
 
@@ -126,6 +142,7 @@ class Ambrosia : CliktCommand() {
                   put("secret", options.secret)
                   put("phoenixd-url", options.phoenixdUrl)
                   put("phoenixd-password", options.phoenixdPassword)
+                  put("phoenix.webhook-secret", options.phoenixdWebhookSecret)
                 }
             },
           configure = {
@@ -149,10 +166,23 @@ class Ambrosia : CliktCommand() {
           },
           module = { Api().run { module() } }
         )
+      ensurePhoenixWebhookConfigured(options.phoenixdWebhookUrl)
       server.start(wait = true)
     } catch (e: Exception) {
       echo("Error starting server: ${e.message}", err = true)
       throw e
     }
+  }
+
+  private fun ensurePhoenixWebhookConfigured(url: String) {
+    val file = File(phoenixConfFile.toString())
+    file.parentFile?.mkdirs()
+    val existingLines = if (file.exists()) file.readLines() else emptyList()
+    if (existingLines.any { it.trim() == "webhook=$url" }) return
+
+    val needsNewline = file.exists() && !file.readText().endsWith("\n")
+    val prefix = if (needsNewline) "\n" else ""
+    file.appendText("${prefix}webhook=$url\n")
+    logger.info("Added phoenix webhook entry webhook=$url to ${file.absolutePath}")
   }
 }

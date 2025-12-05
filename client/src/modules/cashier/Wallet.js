@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import WalletGuard from "../../components/auth/WalletGuard";
 import {
   createInvoice,
@@ -59,8 +59,9 @@ function WalletInner() {
   const [filter, setFilter] = useState("all");
   const [activeTab, setActiveTab] = useState("receive");
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
+  const fetchTransactionsRef = useRef(null);
 
-  const fetchInfo = async () => {
+  const fetchInfo = useCallback(async () => {
     try {
       const res = await getInfo();
       setInfo(res);
@@ -75,7 +76,7 @@ function WalletInner() {
         color: "danger",
       });
     }
-  };
+  }, []);
 
   const fetchTransactions = useCallback(
     async () => {
@@ -111,11 +112,80 @@ function WalletInner() {
 
   useEffect(() => {
     fetchInfo();
-  }, []);
+  }, [fetchInfo]);
 
   useEffect(() => {
     fetchTransactions();
   }, [fetchTransactions]);
+
+  useEffect(() => {
+    fetchTransactionsRef.current = fetchTransactions;
+  }, [fetchTransactions]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const resolveWsUrl = () => {
+      const envWs = process.env.NEXT_PUBLIC_WS_URL;
+      if (envWs) return envWs;
+
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+      if (apiUrl) return `${apiUrl.replace(/^http/i, "ws")}/ws/payments`;
+
+      const host = window.location.hostname;
+      const port = process.env.NEXT_PUBLIC_PORT_API || window.location.port || "9154";
+      const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+      return `${protocol}://${host}${port ? `:${port}` : ""}/ws/payments`;
+    };
+
+    let ws;
+    let shouldReconnect = true;
+    const connect = () => {
+      const url = resolveWsUrl();
+      ws = new WebSocket(url);
+
+      ws.onopen = () => {
+        console.info("WS payments conectado", url);
+      };
+
+      ws.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          if (data?.type === "payment_received") {
+            addToast({
+              title: "Pago recibido",
+              description: `Hash: ${data.paymentHash || ""}`,
+              variant: "solid",
+              color: "success",
+            });
+            fetchTransactionsRef.current?.();
+            fetchInfo();
+          }
+        } catch (err) {
+          console.warn("WS payments mensaje no procesado", err);
+        }
+      };
+
+      ws.onerror = (err) => {
+        console.warn("WS payments error", err);
+      };
+
+      ws.onclose = () => {
+        if (shouldReconnect) {
+          setTimeout(connect, 3000);
+        }
+      };
+    };
+
+    connect();
+
+    return () => {
+      shouldReconnect = false;
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.close();
+      }
+    };
+  }, [fetchInfo]);
 
   const handleCreateInvoice = async () => {
     if (!invoiceAmount) {
