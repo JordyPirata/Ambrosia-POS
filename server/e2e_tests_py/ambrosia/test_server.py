@@ -53,7 +53,9 @@ class AmbrosiaTestServer:
             "./gradlew",
             "run",
             "--no-daemon",
-            "--args=--phoenixd-url=http://localhost:9740 --phoenixd-password=test-password",
+            "--args=--phoenixd-url=http://localhost:9740 --phoenixd-password=test-password"
+            "--phoenixd-password=test-password "
+            "--phoenixd-webhook-secret=test-webhook-secret",
         ]
 
         try:
