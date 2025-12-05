@@ -1,23 +1,12 @@
 "use client";
 import { useEffect, useRef, useState, useCallback } from "react";
-import { addToast } from "@heroui/react";
 
-const safeTranslate = (t, key, values) => {
-  if (!t) return null;
-  try {
-    return t(key, values);
-  } catch {
-    return null;
-  }
-};
-
-export function usePaymentWebsocket(options = {}) {
+export function usePaymentWebsocket() {
   const [connected, setConnected] = useState(false);
   const invoiceHashRef = useRef(null);
   const fetchTransactionsRef = useRef(null);
   const fetchInfoRef = useRef(null);
   const paymentListenersRef = useRef(new Set());
-  const t = options?.t;
 
   const setInvoiceHash = useCallback((hash) => {
     invoiceHashRef.current = hash || null;
@@ -66,25 +55,6 @@ export function usePaymentWebsocket(options = {}) {
         try {
           const data = JSON.parse(event.data);
           if (data?.type === "payment_received") {
-            const title =
-              safeTranslate(t, "websocket.paymentReceivedTitle") ||
-              safeTranslate(t, "paymentReceivedTitle") ||
-              "Pago recibido";
-            const description =
-              safeTranslate(t, "websocket.paymentReceivedDescription", {
-                hash: data.paymentHash || "",
-              }) ||
-              safeTranslate(t, "paymentReceivedDescription", {
-                hash: data.paymentHash || "",
-              }) ||
-              `Hash: ${data.paymentHash || ""}`;
-
-            addToast({
-              title,
-              description,
-              variant: "solid",
-              color: "success",
-            });
             fetchTransactionsRef.current?.();
             fetchInfoRef.current?.();
 

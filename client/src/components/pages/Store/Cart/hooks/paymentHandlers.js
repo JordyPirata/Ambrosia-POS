@@ -212,7 +212,9 @@ export function buildHandleBtcComplete({
       console.error("Error completing BTC payment:", err);
       notifyError(err?.message || t("errors.btcComplete"));
     } finally {
-      setBtcPaymentConfig(null);
+      setBtcPaymentConfig((prev) =>
+        prev ? { ...prev, paymentCompleted: true } : prev,
+      );
       dispatch({ type: "stop" });
     }
   };

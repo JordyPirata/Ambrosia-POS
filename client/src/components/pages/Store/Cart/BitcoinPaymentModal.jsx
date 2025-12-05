@@ -24,7 +24,7 @@ export function BitcoinPaymentModal({
   displayTotal,
 }) {
   const t = useTranslations("cart.paymentModal.bitcoin");
-  const { setInvoiceHash, onPayment } = usePaymentWebsocket({ t });
+  const { setInvoiceHash, onPayment } = usePaymentWebsocket();
   const [paymentReceived, setPaymentReceived] = useState(false);
   const completedRef = useRef(false);
   const {
@@ -96,13 +96,13 @@ export function BitcoinPaymentModal({
           </span>
         </ModalHeader>
         <ModalBody className="space-y-4">
-          {loading && (
+          {loading && !paymentReceived && (
             <div className="flex items-center justify-center py-6">
               <Spinner color="warning" label={t("generating")} />
             </div>
           )}
 
-          {!loading && error && (
+          {!loading && !paymentReceived && error && (
             <div className="bg-red-50 border border-red-200 text-red-700 p-3 rounded">
               <p className="text-sm">{error}</p>
               <Button className="mt-3" color="warning" onPress={generateInvoice}>
@@ -111,7 +111,7 @@ export function BitcoinPaymentModal({
             </div>
           )}
 
-          {!loading && !error && invoice && (
+          {!loading && !paymentReceived && !error && invoice && (
             <>
               <div className="flex justify-center">
                 <div className="bg-white p-4 rounded-xl shadow">
@@ -133,6 +133,30 @@ export function BitcoinPaymentModal({
               </div>
             </>
           )}
+
+          {paymentReceived && (
+            <div className="flex flex-col items-center justify-center py-6 space-y-3">
+              <div className="h-16 w-16 rounded-full bg-green-100 flex items-center justify-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-10 w-10 text-green-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+              <p className="text-lg font-semibold text-green-900">
+                {t("confirmed")}
+              </p>
+            </div>
+          )}
         </ModalBody>
         <ModalFooter className="flex gap-2">
           <Button variant="flat" onPress={handleClose}>
@@ -140,10 +164,10 @@ export function BitcoinPaymentModal({
           </Button>
           <Button
             color={paymentReceived ? "success" : "primary"}
-            isDisabled={!invoice || loading}
-            onPress={handleComplete}
+            isDisabled={loading}
+            onPress={paymentReceived ? handleClose : handleComplete}
           >
-            {paymentReceived ? t("complete") : t("confirm")}
+            {paymentReceived ? t("close") : t("confirm")}
           </Button>
         </ModalFooter>
       </ModalContent>

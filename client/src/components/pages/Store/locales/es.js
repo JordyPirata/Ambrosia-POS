@@ -145,7 +145,13 @@ const store_es = {
         totalLabel: "Total",
         cancel: "Cancelar",
         confirm: "Confirmar pago",
+        close: "Cerrar",
         complete: "Pago recibido",
+        confirmed: "Pago confirmado",
+        websocket: {
+          paymentReceivedTitle: "Pago recibido",
+          paymentReceivedDescription: "Hash: {hash}",
+        },
       },
       cash: {
         title: "Pago en Efectivo",

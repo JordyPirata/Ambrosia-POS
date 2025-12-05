@@ -145,7 +145,13 @@ const store_en = {
         totalLabel: "Total",
         cancel: "Cancel",
         confirm: "Confirm payment",
+        close: "Close",
         complete: "Payment received",
+        confirmed: "Payment confirmed",
+        websocket: {
+          paymentReceivedTitle: "Payment received",
+          paymentReceivedDescription: "Hash: {hash}",
+        },
       },
       cash: {
         title: "Cash Payment",

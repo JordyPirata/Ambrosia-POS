@@ -61,7 +61,7 @@ function WalletInner() {
   const [invoicePaid, setInvoicePaid] = useState(false);
   const fetchTransactionsRef = useRef(null);
   const invoiceHashRef = useRef(null);
-  const { setInvoiceHash, setFetchers, onPayment } = usePaymentWebsocket({ t });
+  const { setInvoiceHash, setFetchers, onPayment } = usePaymentWebsocket();
 
   const fetchInfo = useCallback(async () => {
     try {
