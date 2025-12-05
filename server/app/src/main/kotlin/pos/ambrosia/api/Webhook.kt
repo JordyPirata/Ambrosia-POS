@@ -69,6 +69,8 @@ fun Route.phoenixWebhook() {
       "Phoenix webhook received: type=${payload.type}, paymentHash=${payload.paymentHash}, amountSat=${payload.amountSat}, externalId=${payload.externalId}"
     )
 
+    PhoenixWebhookNotifier.broadcast(payload)
+
     call.respond(HttpStatusCode.Accepted, mapOf("status" to "ok"))
   }
 }

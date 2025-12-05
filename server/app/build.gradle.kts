@@ -36,6 +36,7 @@ dependencies {
   implementation("io.ktor:ktor-client-cio:$ktor-version")
   implementation("io.ktor:ktor-client-auth:$ktor-version")
   implementation("io.ktor:ktor-client-content-negotiation:$ktor-version")
+  implementation("io.ktor:ktor-server-websockets:$ktor-version")
   implementation("com.github.anastaciocintra:escpos-coffee:4.1.0")
 
   implementation("io.ktor:ktor-network-tls-certificates:$ktor-version")

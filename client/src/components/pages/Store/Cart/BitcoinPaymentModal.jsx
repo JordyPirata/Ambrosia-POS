@@ -10,6 +10,8 @@ import {
 import { QRCode } from "react-qr-code";
 import { useBitcoinInvoice } from "./hooks/useBitcoinInvoice";
 import { useTranslations } from "next-intl";
+import { usePaymentWebsocket } from "@/hooks/usePaymentWebsocket";
+import { useEffect, useRef, useState } from "react";
 
 export function BitcoinPaymentModal({
   isOpen,
@@ -22,6 +24,9 @@ export function BitcoinPaymentModal({
   displayTotal,
 }) {
   const t = useTranslations("cart.paymentModal.bitcoin");
+  const { setInvoiceHash, onPayment } = usePaymentWebsocket({ t });
+  const [paymentReceived, setPaymentReceived] = useState(false);
+  const completedRef = useRef(false);
   const {
     invoice,
     satsAmount,
@@ -37,13 +42,45 @@ export function BitcoinPaymentModal({
     onInvoiceReady,
   });
 
+  useEffect(() => {
+    if (invoice?.paymentHash) {
+      setPaymentReceived(false);
+      completedRef.current = false;
+      setInvoiceHash(invoice.paymentHash);
+    } else if (!isOpen) {
+      setInvoiceHash(null);
+      completedRef.current = false;
+      setPaymentReceived(false);
+    }
+  }, [invoice, isOpen, setInvoiceHash]);
+
+  useEffect(() => {
+    const off = onPayment((data) => {
+      if (
+        invoice?.paymentHash &&
+        data.paymentHash === invoice.paymentHash &&
+        !completedRef.current
+      ) {
+        completedRef.current = true;
+        setPaymentReceived(true);
+        onComplete?.({ invoice, satoshis: satsAmount, paymentId, auto: true });
+      }
+    });
+    return () => off?.();
+  }, [invoice, satsAmount, paymentId, onComplete, onPayment]);
+
   const handleClose = () => {
+    setInvoiceHash(null);
+    completedRef.current = false;
+    setPaymentReceived(false);
     reset();
     onClose?.();
   };
 
   const handleComplete = () => {
-    if (!invoice) return;
+    if (!invoice || completedRef.current) return;
+    completedRef.current = true;
+    setPaymentReceived(true);
     onComplete?.({ invoice, satoshis: satsAmount, paymentId });
   };
 
@@ -99,14 +136,14 @@ export function BitcoinPaymentModal({
         </ModalBody>
         <ModalFooter className="flex gap-2">
           <Button variant="flat" onPress={handleClose}>
-            Cancelar
+            {t("cancel")}
           </Button>
           <Button
-            color="success"
+            color={paymentReceived ? "success" : "primary"}
             isDisabled={!invoice || loading}
             onPress={handleComplete}
           >
-            Pago recibido
+            {paymentReceived ? t("complete") : t("confirm")}
           </Button>
         </ModalFooter>
       </ModalContent>

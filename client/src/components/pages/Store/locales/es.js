@@ -144,6 +144,7 @@ const store_es = {
         retry: "Reintentar",
         totalLabel: "Total",
         cancel: "Cancelar",
+        confirm: "Confirmar pago",
         complete: "Pago recibido",
       },
       cash: {
@@ -257,6 +258,10 @@ const store_es = {
       invoice: "Factura BOLT11:",
       paymentHash: "Payment Hash:",
       closeButton: "Cerrar",
+    },
+    websocket: {
+      paymentReceivedTitle: "Pago recibido",
+      paymentReceivedDescription: "Hash: {hash}",
     },
   },
   orders: {
