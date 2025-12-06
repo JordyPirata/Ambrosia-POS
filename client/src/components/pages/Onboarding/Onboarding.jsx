@@ -24,7 +24,7 @@ export function Onboarding() {
     businessPhone: "",
     businessEmail: "",
     businessRFC: "",
-    businessCurrency: "MXN",
+    businessCurrency: "USD",
     businessLogo: null,
   })
   const router = useRouter();
