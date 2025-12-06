@@ -60,7 +60,7 @@ const onboarding_en = {
       businessPhonePlaceholder: "Ej: 3312345678",
       businessEmail: "Email",
       businessEmailPlaceholder: "contact@awesomebusiness.com",
-      businessRFC: "RFC",
+      businessRFC: "Tax ID",
       businessRFCPlaceholder: "Ej: ABC123456XYZ",
       businessRFCMessage: "13 character format (letters and numbers)",
       businessRFCInvalid: "Invalid RFC format",

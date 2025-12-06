@@ -164,7 +164,7 @@ export function Onboarding() {
                 isDisabled={
                   (step === 1 && !data.businessType) ||
                   (step === 2 && (!data.userName || !data.userPassword || !isPasswordStrong(data.userPassword) || !isPinValid(data.userPin))) ||
-                  (step === 3 && (!data.businessName || !data.businessAddress || !data.businessRFC || !isRFCValid(data.businessRFC)))
+                  (step === 3 && (!data.businessName))
                 }
                 className="gradient-forest text-white"
               >
