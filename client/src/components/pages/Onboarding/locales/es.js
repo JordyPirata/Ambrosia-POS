@@ -35,7 +35,7 @@ const onboarding_es = {
     },
     tooltips: {
       userPin: "Sirve para accesar a la aplicación.",
-      userPassword: "Requerida para realizar acciones importantes.",
+      userPassword: "Requerida para acceder a la wallet.",
     },
     strength: {
       title: "Fortaleza",
