@@ -34,7 +34,7 @@ const onboarding_en = {
     },
     tooltips: {
       userPin: "To access the application.",
-      userPassword: "To acces the wallet.",
+      userPassword: "To access the wallet.",
     },
     strength: {
       title: "Password Strength",
