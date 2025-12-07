@@ -1,12 +1,18 @@
 "use client";
 import { Card, CardBody, Spinner } from "@heroui/react";
+import { useTranslations } from "next-intl";
+
 
 export default function LoadingCard({ 
-  message = "Cargando...", 
-  size = "lg", 
+  message = "",
+  size = "lg",
   color = "success",
   fullScreen = true 
 }) {
+  const t = useTranslations("loadingCard");
+
+  message = t("message");
+
   const containerClass = fullScreen 
     ? "min-h-screen gradient-fresh flex items-center justify-center p-4"
     : "flex items-center justify-center p-4";
