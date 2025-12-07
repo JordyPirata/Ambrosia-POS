@@ -97,7 +97,7 @@ class Ambrosia : CliktCommand() {
         help = "webhook URL to register in phoenix.conf (webhook=<url>)"
       )
         .defaultLazy {
-          val value = "https://${httpBindIp}:9443/webhook/phoenixd"
+          val value = "http://${httpBindIp}:9154/webhook/phoenixd"
           value
         }
   }
