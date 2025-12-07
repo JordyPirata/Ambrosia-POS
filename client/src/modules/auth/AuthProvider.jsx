@@ -18,7 +18,7 @@ export function AuthProvider({ children }) {
     try {
       setIsLoading(true)
 
-      const data = await apiClient("/users/me", { skipRefresh: true, silentAuth: true })
+      const data = await apiClient("/users/me", { silentAuth: true })
 
       setPermissions(data.perms);
       setUser(data.user);
