@@ -214,6 +214,12 @@ const store_en = {
     title: "Wallet",
     subtitle: "Track your BTC balance and transactions",
     loadingMessage: "Loading wallet info...",
+    access: {
+      title: "Confirm Wallet Access",
+      passwordLabel: "Password",
+      confirmText: "Access",
+      cancelText: "Cancel"
+    },
     nodeInfo: {
       title: "Node Information",
       totalBalance: "Total Balance",
@@ -223,7 +229,7 @@ const store_en = {
       subtitle: "Lightning Channels",
       channel: "Channel #",
       sats: "sats",
-      balanceSat: "Balance Sat",
+      balanceSat: "Sats Balance",
       capacitySat: "Total Capacity:",
       inboundLiquidity: "Inbound Liquidity:",
     },
@@ -260,10 +266,11 @@ const store_en = {
       },
     },
     invoiceModal: {
-      title: "Factura Lightning Generada",
-      invoice: "Factura BOLT11:",
+      title: "Lightning Invoice Generated",
+      invoice: "BOLT11 Invoice:",
       paymentHash: "Payment Hash:",
       closeButton: "Close",
+      copyButton: "Copy"
     },
     websocket: {
       paymentReceivedTitle: "Payment received",
