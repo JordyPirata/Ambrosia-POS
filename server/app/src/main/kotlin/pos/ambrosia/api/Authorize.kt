@@ -7,6 +7,7 @@ import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.plugins.origin
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -42,6 +43,8 @@ fun Route.auth(
     val loginRequest = call.receive<AuthRequest>()
     val userInfo = authService.authenticateUser(loginRequest.name, loginRequest.pin.toCharArray())
     logger.info(userInfo?.toString() ?: "User not found")
+    val isSecureRequest = call.request.origin.scheme == "https" ||
+      call.request.header("X-Forwarded-Proto") == "https"
 
     if (userInfo == null) {
       throw InvalidCredentialsException()
@@ -62,7 +65,7 @@ fun Route.auth(
         value = accessTokenResponse,
         expires = GMTDate(System.currentTimeMillis() + (60 * 1000L)),
         httpOnly = true,
-        secure = false,
+        secure = isSecureRequest,
         path = "/",
       )
     )
@@ -73,7 +76,7 @@ fun Route.auth(
         value = refreshTokenResponse,
         maxAge = 30 * 24 * 60 * 60,
         httpOnly = true,
-        secure = false,
+        secure = isSecureRequest,
         path = "/",
       )
     )
@@ -96,6 +99,8 @@ fun Route.auth(
     val refreshToken =
     call.request.cookies["refreshToken"]
     ?: throw InvalidTokenException("Refresh token is required")
+    val isSecureRequest = call.request.origin.scheme == "https" ||
+      call.request.header("X-Forwarded-Proto") == "https"
 
     logger.info("Refreshing token with: $refreshToken")
 
@@ -117,7 +122,7 @@ fun Route.auth(
         value = newAccessToken,
         expires = GMTDate(System.currentTimeMillis() + (60 * 1000L)),
         httpOnly = true,
-        secure = true,
+        secure = isSecureRequest,
         path = "/"
       )
     )
