@@ -77,13 +77,6 @@ export function BitcoinPaymentModal({
     onClose?.();
   };
 
-  const handleComplete = () => {
-    if (!invoice || completedRef.current) return;
-    completedRef.current = true;
-    setPaymentReceived(true);
-    onComplete?.({ invoice, satoshis: satsAmount, paymentId });
-  };
-
   return (
     <Modal isOpen={isOpen} onClose={handleClose} size="lg">
       <ModalContent>
@@ -91,9 +84,11 @@ export function BitcoinPaymentModal({
           <span className="text-base font-semibold text-green-900">
             {t("title")}
           </span>
-          <span className="text-sm text-gray-600">
-            {t("subtitle")}
-          </span>
+          {!paymentReceived &&
+            <span className="text-sm text-gray-600">
+              {t("subtitle")}
+            </span>
+          }
         </ModalHeader>
         <ModalBody className="space-y-4">
           {loading && !paymentReceived && (
@@ -159,15 +154,12 @@ export function BitcoinPaymentModal({
           )}
         </ModalBody>
         <ModalFooter className="flex gap-2">
-          <Button variant="flat" onPress={handleClose}>
-            {t("cancel")}
-          </Button>
           <Button
             color={paymentReceived ? "success" : "primary"}
             isDisabled={loading}
-            onPress={paymentReceived ? handleClose : handleComplete}
+            onPress={handleClose}
           >
-            {paymentReceived ? t("close") : t("confirm")}
+            {paymentReceived ? t("close") : t("cancel")}
           </Button>
         </ModalFooter>
       </ModalContent>
