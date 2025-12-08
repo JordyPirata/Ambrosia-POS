@@ -5,6 +5,8 @@ import { NextIntlClientProvider } from "next-intl";
 import { Languages } from "lucide-react"
 import { Button } from "@heroui/react";
 
+import components_en from "../components/locales/en.js";
+import components_es from "../components/locales/es.js";
 import onboarding_es from "../components/pages/Onboarding/locales/es.js";
 import onboarding_en from "../components/pages/Onboarding/locales/en.js";
 import store_es from "../components/pages/Store/locales/es.js";
@@ -15,10 +17,12 @@ export const useI18n = () => useContext(I18nContext);
 
 const translations = {
   en: {
+    components: components_en,
     onboarding: onboarding_en,
     store: store_en,
   },
   es: {
+    components: components_es,
     onboarding: onboarding_es,
     store: store_es,
   },
