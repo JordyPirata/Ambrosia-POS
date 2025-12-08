@@ -24,6 +24,7 @@ export default function WalletGuard({
   title = "Confirmar acceso a Wallet",
   passwordLabel = "Contraseña",
   confirmText = "Entrar",
+  cancelText = "Cancelar",
   onAuthorized,
 }) {
   const { user } = useContext(AuthContext);
@@ -137,7 +138,7 @@ export default function WalletGuard({
           </ModalBody>
           <ModalFooter>
             <Button color="secondary" onPress={() => setIsOpen(false)}>
-              Cancelar
+              {cancelText}
             </Button>
             <Button
               color="primary"

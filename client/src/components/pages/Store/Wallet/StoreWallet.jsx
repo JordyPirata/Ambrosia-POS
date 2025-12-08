@@ -743,7 +743,7 @@ function WalletInner() {
                         }
                       >
                         <Copy className="w-3 h-3 mr-1" />
-                        Copiar
+                        {t("invoiceModal.copyButton")}
                       </Button>
                     </div>
                     <div className="bg-gray-50 p-3 rounded text-xs break-all">
@@ -769,7 +769,7 @@ function WalletInner() {
                         }
                       >
                         <Copy className="w-3 h-3 mr-1" />
-                        Copiar
+                        {t("invoiceModal.copyButton")}
                       </Button>
                     </div>
                     <div className="bg-gray-50 p-3 rounded text-xs break-all">
@@ -795,12 +795,14 @@ function WalletInner() {
 }
 
 export function StoreWallet() {
+  const t = useTranslations("wallet");
   return (
     <WalletGuard
       placeholder={<div className="min-h-screen gradient-fresh p-4" />}
-      title="Confirmar acceso a Wallet"
-      passwordLabel="Contraseña"
-      confirmText="Entrar"
+      title={t("access.title")}
+      passwordLabel={t("access.passwordLabel")}
+      confirmText={t("access.confirmText")}
+      cancelText={t("access.cancelText")}
     >
       <WalletInner />
     </WalletGuard>
