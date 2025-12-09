@@ -96,10 +96,7 @@ class Ambrosia : CliktCommand() {
         "--phoenixd-webhook",
         help = "webhook URL to register in phoenix.conf (webhook=<url>)"
       )
-        .defaultLazy {
-          val value = "http://${httpBindIp}:9154/webhook/phoenixd"
-          value
-        }
+        .defaultLazy { this@Ambrosia.defaultWebhookUrl(httpBindIp, httpBindPort) }
   }
   private val options by DaemonOptions()
 
@@ -174,15 +171,49 @@ class Ambrosia : CliktCommand() {
     }
   }
 
+  private fun defaultWebhookUrl(httpBindIp: String, httpBindPort: Int): String {
+    val envHost = System.getenv("PHOENIXD_WEBHOOK_HOST")?.takeIf { it.isNotBlank() }
+    val resolvedHost =
+      envHost
+        ?: when (httpBindIp) {
+          "0.0.0.0", "::" -> "ambrosia"
+          else -> httpBindIp
+        }
+
+    if (envHost == null && (httpBindIp == "0.0.0.0" || httpBindIp == "::")) {
+      logger.info(
+        "Using default webhook host 'ambrosia' because http-bind-ip is $httpBindIp; override with PHOENIXD_WEBHOOK_HOST or --phoenixd-webhook if needed"
+      )
+    }
+
+    return "http://${resolvedHost}:${httpBindPort}/webhook/phoenixd"
+  }
+
   private fun ensurePhoenixWebhookConfigured(url: String) {
     val file = File(phoenixConfFile.toString())
     file.parentFile?.mkdirs()
     val existingLines = if (file.exists()) file.readLines() else emptyList()
-    if (existingLines.any { it.trim() == "webhook=$url" }) return
+    val updatedLines = mutableListOf<String>()
+    var replaced = false
 
-    val needsNewline = file.exists() && !file.readText().endsWith("\n")
-    val prefix = if (needsNewline) "\n" else ""
-    file.appendText("${prefix}webhook=$url\n")
-    logger.info("Added phoenix webhook entry webhook=$url to ${file.absolutePath}")
+    existingLines.forEach { line ->
+      if (line.trimStart().startsWith("webhook=")) {
+        if (!replaced) {
+          updatedLines.add("webhook=$url")
+          replaced = true
+        }
+      } else {
+        updatedLines.add(line)
+      }
+    }
+
+    if (!replaced) {
+      updatedLines.add("webhook=$url")
+    }
+
+    if (existingLines != updatedLines) {
+      file.writeText(updatedLines.joinToString(separator = "\n", postfix = "\n"))
+      logger.info("Updated phoenix webhook entry to webhook=$url in ${file.absolutePath}")
+    }
   }
 }
