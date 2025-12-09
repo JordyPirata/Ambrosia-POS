@@ -1,12 +1,15 @@
 package pos.ambrosia.api
 
+import com.auth0.jwt.JWT
 import io.ktor.http.*
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
+import io.ktor.server.plugins.origin
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.util.date.GMTDate
 import java.sql.Connection
 import pos.ambrosia.utils.InvalidCredentialsException
 import pos.ambrosia.db.DatabaseConnection
@@ -20,6 +23,7 @@ import pos.ambrosia.services.TokenService
 import pos.ambrosia.utils.authenticateAdmin
 import pos.ambrosia.utils.getCurrentUser
 import pos.ambrosia.models.RolePassword
+import pos.ambrosia.models.WalletAuthResponse
 
 fun Application.configureWallet() {
   val connection: Connection = DatabaseConnection.getConnection()
@@ -40,21 +44,26 @@ fun Route.wallet(phoenixService: PhoenixService, tokenService: TokenService, aut
   }
   authenticateAdmin {
     post("/auth") {
+      val isSecureRequest = call.request.origin.scheme == "https" ||
+        call.request.header("X-Forwarded-Proto") == "https"
       val rolePassword = call.receive<RolePassword>()
       val userInfo = call.getCurrentUser() ?: throw InvalidCredentialsException()
       val result = authService.authenticateByRole(userInfo.userId, rolePassword.password.toCharArray())
       if (result == true) {
         val token = tokenService.generateWalletAccessToken(userInfo.userId)
+        val decoded = JWT.decode(token)
+        val expiresAt = decoded.expiresAt?.time ?: System.currentTimeMillis()
         call.response.cookies.append(
           Cookie(
             name = "walletAccessToken", 
             value = token, 
             httpOnly = true, 
-            secure = false, 
-            path = "/"
+            secure = isSecureRequest, 
+            path = "/",
+            expires = GMTDate(expiresAt)
           )
         )
-        call.respond(HttpStatusCode.OK, mapOf("message" to "Login successful"))
+        call.respond(HttpStatusCode.OK, WalletAuthResponse("Login successful", expiresAt))
       } else {
         call.respond(HttpStatusCode.Unauthorized)
       }
