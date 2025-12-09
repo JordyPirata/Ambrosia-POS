@@ -56,7 +56,7 @@ class TokenService(environment: ApplicationEnvironment, private val connection: 
   .withClaim("scope", "wallet_access")
   .withClaim("userId", userId)
   .withClaim("realm", "Ambrosia-Server")
-  .withExpiresAt(Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(2)))
+  .withExpiresAt(Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(8)))
   .sign(algorithm)
 
   fun validateRefreshToken(refreshToken: String): Boolean {
