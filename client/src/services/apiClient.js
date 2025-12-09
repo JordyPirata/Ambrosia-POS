@@ -135,12 +135,6 @@ async function performTokenRefresh() {
       await performLogout();
       dispatchAuthEvent("auth:expired");
 
-      addToast({
-        color: "warning",
-        title: "Session Expired",
-        description: "Please log in again.",
-      });
-
       return false;
     }
 
