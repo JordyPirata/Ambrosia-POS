@@ -33,8 +33,7 @@ export function usePaymentWebsocket() {
       if (apiUrl) return `${apiUrl.replace(/^http/i, "ws")}/ws/payments`;
 
       const host = window.location.hostname;
-      const port =
-        process.env.NEXT_PUBLIC_PORT_API || window.location.port || "9154";
+      const port = process.env.NEXT_PUBLIC_PORT_API || "9154";
       const protocol = window.location.protocol === "https:" ? "wss" : "ws";
       return `${protocol}://${host}${port ? `:${port}` : ""}/ws/payments`;
     };
