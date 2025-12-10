@@ -363,7 +363,7 @@ function WalletInner() {
                       </h5>
                       <div className="flex items-center space-x-1 mt-1">
                         <span
-                          className={`w-2 h-2 rounded-full ${channel.state === "NORMAL" ? "bg-green-500" : "bg-red-500"}`}
+                          className={`w-2 h-2 rounded-full ${channel.state === "Normal" ? "bg-green-500" : "bg-red-500"}`}
                         ></span>
                         <span className="text-sm text-forest">
                           {channel.state}
