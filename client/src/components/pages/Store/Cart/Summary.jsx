@@ -73,7 +73,7 @@ export function Summary({
                       {item.name}
                     </h3>
                     <div className="text-xs text-gray-700">
-                      {formatAmount(item.price)} c/u
+                      {formatAmount(item.price)} {t("summary.each")}
                     </div>
                   </div>
                   <Button
