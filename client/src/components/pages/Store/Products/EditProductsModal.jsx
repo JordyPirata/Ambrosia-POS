@@ -193,6 +193,7 @@ export function EditProductsModal({
                     {currency?.acronym || "$"}
                   </span>
                 }
+                minValue={0}
                 value={data.productPrice}
                 onValueChange={(value) => {
                   const numeric = value === null ? "" : Number(value);

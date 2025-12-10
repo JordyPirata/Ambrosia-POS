@@ -116,6 +116,7 @@ const store_es = {
       paymentMethodSelectPlaceholder: "Elige un metodo de pago",
       errorMsgSelectEmpty: "Por favor, seleccione un elemento de la lista.",
       pay: "Pagar",
+      each: "c/u",
     },
     payment: {
       errors: {
