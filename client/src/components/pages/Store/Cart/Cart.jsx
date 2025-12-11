@@ -1,5 +1,4 @@
 "use client";
-import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { StoreLayout } from "../StoreLayout";
 import { SearchProducts } from "./SearchProducts";
@@ -7,17 +6,19 @@ import { Summary } from "./Summary";
 import { useProducts } from "../hooks/useProducts.jsx"
 import { useCategories } from "../hooks/useCategories.jsx"
 import { useCartPayment } from "./hooks/useCartPayment";
+import { usePersistentCart } from "./hooks/usePersistentCart";
 
 export function Cart() {
   const t = useTranslations("cart");
-  const [cart, setCart] = useState([]);
-  const [discount, setDiscount] = useState(0);
+  const {
+    cart,
+    setCart,
+    discount,
+    setDiscount,
+    resetCartState,
+  } = usePersistentCart();
   const { products } = useProducts();
   const { categories } = useCategories();
-  const resetCartState = () => {
-    setCart([]);
-    setDiscount(0);
-  };
 
   const {
     handlePay,
