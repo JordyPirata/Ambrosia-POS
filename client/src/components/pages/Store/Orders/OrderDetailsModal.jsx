@@ -24,7 +24,7 @@ export function OrderDetailsModal({ order, isOpen, onClose, onEdit, formatAmount
         <ModalBody>
           <div className="space-y-3 text-sm text-deep">
             <DetailRow label={t("details.id")} value={order?.id} />
-            <DetailRow label={t("details.waiter")} value={waiterLabel} />
+            <DetailRow label={t("details.user")} value={waiterLabel} />
             <DetailRow
               label={t("details.status")}
               value={order ? <StatusChip status={order.status} /> : t("details.unassigned")}
