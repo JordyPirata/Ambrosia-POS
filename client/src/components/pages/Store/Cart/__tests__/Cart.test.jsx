@@ -4,6 +4,7 @@ import * as useModulesHook from "../../../../../hooks/useModules";
 import * as useAuthHook from "../../../../../modules/auth/useAuth";
 import * as configurationsProvider from "../../../../../providers/configurations/configurationsProvider";
 import { Cart } from "../Cart";
+import { CART_STORAGE_KEY } from "../hooks/usePersistentCart";
 import { PRODUCTS, CART_ITEMS } from "./__mocks__/mocks";
 
 function renderCart() {
@@ -31,6 +32,7 @@ const mockConfig = {
 };
 
 beforeEach(() => {
+  localStorage.clear();
   console.warn = (...args) => {
     if (
       typeof args[0] === "string" &&
@@ -119,4 +121,14 @@ describe("Cart page", () => {
     expect(screen.getAllByLabelText("Remove Product")).toHaveLength(1);
   });
 
+  it("hydrates cart from localStorage", async () => {
+    localStorage.setItem(
+      CART_STORAGE_KEY,
+      JSON.stringify({ items: CART_ITEMS, discount: 10 }),
+    );
+    await act(async () => {
+      renderCart();
+    });
+    expect(screen.getAllByLabelText("Remove Product")).toHaveLength(CART_ITEMS.length);
+  });
 });
