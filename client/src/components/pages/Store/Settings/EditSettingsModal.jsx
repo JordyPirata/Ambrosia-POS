@@ -46,7 +46,7 @@ export function EditSettingsModal({ data, setData, onChange, onSubmit, editSetti
       setRfcError("");
     }
 
-    onChange({ ...data, businessTaxID: upperValue });
+    onChange({ ...data, businessTaxId: upperValue });
   };
 
   return (
@@ -106,7 +106,7 @@ export function EditSettingsModal({ data, setData, onChange, onSubmit, editSetti
               value={data.businessPhone ?? ""}
               onChange={(e) => {
                 const onlyNumbers = e.target.value.replace(/\D/g, "");
-                onChange({ ...data, businesshone: onlyNumbers });
+                onChange({ ...data, businessPhone: onlyNumbers });
               }}
             />
 
