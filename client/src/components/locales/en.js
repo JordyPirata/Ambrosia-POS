@@ -1,6 +1,6 @@
 const components_en = {
   loadingCard: {
-    message: "Loading..."
+    message: "Loading...",
   },
   pinLogin: {
     title: "Enter PIN to access",
@@ -11,17 +11,18 @@ const components_en = {
     clearButton: "Clear",
     loginButton: "Log In",
     loading: "Verifying...",
+    roleName: "Employee",
     errorMessages: {
       selectEmployee: "Please select an employee.",
       enterPin: "The PIN must be at least 4 digits long.",
-      incorrectPin: "Incorrect PIN for the selected employee."
+      incorrectPin: "Incorrect PIN for the selected employee.",
     },
     successMessages: {
       toastTitle: "Successful login",
       firstMessage: "Welcome",
-      secondMessage: "Access granted as"
-    }
-  }
-}
+      secondMessage: "Access granted as",
+    },
+  },
+};
 
 export default components_en;

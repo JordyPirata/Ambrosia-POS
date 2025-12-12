@@ -1,6 +1,6 @@
 const components_es = {
   loadingCard: {
-    message: "Cargando..."
+    message: "Cargando...",
   },
   pinLogin: {
     title: "Ingresa tu PIN para acceder al sistema",
@@ -11,17 +11,18 @@ const components_es = {
     clearButton: "Limpiar",
     loginButton: "Iniciar Sesión",
     loading: "Verificando...",
+    roleName: "Empleado",
     errorMessages: {
       selectEmployee: "Por favor selecciona un empleado",
       enterPin: "El PIN debe tener al menos 4 dígitos",
-      incorrectPin: "PIN incorrecto para el empleado seleccionado."
+      incorrectPin: "PIN incorrecto para el empleado seleccionado.",
     },
     successMessages: {
       toastTitle: "Inicio de sesión exitoso",
       firstMessage: "Bienvenido",
-      secondMessage: "Acceso concedido como"
-    }
-  }
-}
+      secondMessage: "Acceso concedido como",
+    },
+  },
+};
 
 export default components_es;

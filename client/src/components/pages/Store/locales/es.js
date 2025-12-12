@@ -215,11 +215,11 @@ const store_es = {
     title: "Wallet",
     subtitle: "Supervisa tu saldo y tus transacciones en BTC",
     loadingMessage: "Cargando información de la wallet...",
-     access: {
+    access: {
       title: "Confirmar acceso a Wallet",
       passwordLabel: "Contraseña",
       confirmText: "Entrar",
-      cancelText: "Cancelar"
+      cancelText: "Cancelar",
     },
     nodeInfo: {
       title: "Información del Nodo",
@@ -271,7 +271,7 @@ const store_es = {
       invoice: "Factura BOLT11:",
       paymentHash: "Payment Hash:",
       closeButton: "Cerrar",
-      copyButton: "Copiar"
+      copyButton: "Copiar",
     },
     websocket: {
       paymentReceivedTitle: "Pago recibido",
@@ -292,7 +292,7 @@ const store_es = {
     },
     table: {
       id: "ID",
-      waiter: "Mesero",
+      user: "Usuario",
       status: "Estado",
       total: "Total",
       date: "Fecha",
@@ -314,7 +314,7 @@ const store_es = {
     details: {
       title: "Detalles de la orden",
       id: "ID de la orden",
-      waiter: "Mesero",
+      user: "Usuario",
       status: "Estado",
       total: "Total",
       createdAt: "Creada el",

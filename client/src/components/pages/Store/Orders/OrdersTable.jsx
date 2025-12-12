@@ -17,7 +17,7 @@ export function OrdersTable({ orders, formatAmount, onViewOrder }) {
     >
       <TableHeader>
         <TableColumn className="bg-gray-50 text-forest font-semibold">{t("table.id")}</TableColumn>
-        <TableColumn className="bg-gray-50 text-forest font-semibold">{t("table.waiter")}</TableColumn>
+        <TableColumn className="bg-gray-50 text-forest font-semibold">{t("table.user")}</TableColumn>
         <TableColumn className="bg-gray-50 text-forest font-semibold">{t("table.status")}</TableColumn>
         <TableColumn className="bg-gray-50 text-forest font-semibold">{t("table.total")}</TableColumn>
         <TableColumn className="bg-gray-50 text-forest font-semibold">{t("table.date")}</TableColumn>

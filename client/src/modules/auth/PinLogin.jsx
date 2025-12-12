@@ -35,7 +35,6 @@ export default function PinLoginNew() {
       avatar: "MG",
     },
   ]);
-  const router = useRouter();
   const { login } = useAuth();
   const { config } = useConfigurations();
 
@@ -48,8 +47,8 @@ export default function PinLoginNew() {
         const employeesWithRoleName = users.map((user) => {
           return {
             ...user,
-            role: "Empleado", //TODO Update with RoleName
-            avatar: "MG", //TODO FOR UPDATE : Add avatar image
+            role: t("roleName"), //TODO Update with RoleName
+            avatar: user.name.slice(0, 2),
           };
         });
 

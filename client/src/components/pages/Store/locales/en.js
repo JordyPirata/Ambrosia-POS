@@ -219,7 +219,7 @@ const store_en = {
       title: "Confirm Wallet Access",
       passwordLabel: "Password",
       confirmText: "Access",
-      cancelText: "Cancel"
+      cancelText: "Cancel",
     },
     nodeInfo: {
       title: "Node Information",
@@ -271,7 +271,7 @@ const store_en = {
       invoice: "BOLT11 Invoice:",
       paymentHash: "Payment Hash:",
       closeButton: "Close",
-      copyButton: "Copy"
+      copyButton: "Copy",
     },
     websocket: {
       paymentReceivedTitle: "Payment received",
@@ -292,7 +292,7 @@ const store_en = {
     },
     table: {
       id: "ID",
-      waiter: "Waiter",
+      user: "User",
       status: "Status",
       total: "Total",
       date: "Date",
@@ -314,7 +314,7 @@ const store_en = {
     details: {
       title: "Order details",
       id: "Order ID",
-      waiter: "Waiter",
+      user: "User",
       status: "Status",
       total: "Total",
       createdAt: "Created at",
