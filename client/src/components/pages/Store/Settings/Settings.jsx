@@ -37,11 +37,6 @@ export function Settings() {
     }
   }, [locale]);
 
-  const getCurrentCurrency = () => {
-    const currentCurrency = CURRENCIES.find((el) => el.code === currency.acronym);
-    return currentCurrency.name;
-  };
-
   const handleEditSumbit = (e) => {
     e.preventDefault()
     updateConfig(data)
@@ -64,128 +59,153 @@ export function Settings() {
         </p>
       </header>
 
-      <Card className="rounded-lg mb-6 p-6">
-        <CardHeader className="flex flex-col items-start">
-          <h2 className="text-2xl font-semibold text-green-900">
-            {t("cardInfo.title")}
-          </h2>
-        </CardHeader>
+      <div className="flex flex-col lg:flex-row lg:w-full lg:space-x-6">
+        <Card className="rounded-lg mb-6 p-6 lg:w-full">
+          <CardHeader className="flex flex-col items-start">
+            <h2 className="text-2xl font-semibold text-green-900">
+              {t("cardInfo.title")}
+            </h2>
+          </CardHeader>
 
-        <CardBody>
-          <div className="flex flex-col max-w-2xl ">
-            <div className="flex items-start justify-between my-2">
-              <div className="w-1/2">
-                <div className="font-semibold text-gray-600">{t("cardInfo.name")}</div>
-                <div className="text-xl mt-0.5 font-medium text-green-800">{data.businessName}</div>
+          <CardBody>
+            <div className="flex flex-col max-w-2xl ">
+              <div className="flex items-start justify-between my-2">
+                <div className="w-1/2">
+                  <div className="font-semibold text-gray-600">{t("cardInfo.name")}</div>
+                  <div className="text-xl mt-0.5 font-medium text-green-800">{data.businessName}</div>
+                </div>
+
+                <div className="w-1/2">
+                  <div className="font-semibold text-gray-600">{t("cardInfo.rfc")}</div>
+                  <div className="text-xl mt-0.5 font-medium text-green-800">
+                    { data.businessTaxId ?
+                      data.businessTaxId :
+                      <span className="text-gray-400 italic">---</span>
+                    }
+                  </div>
+                </div>
+
               </div>
 
-              <div className="w-1/2">
-                <div className="font-semibold text-gray-600">{t("cardInfo.rfc")}</div>
-                <div className="text-xl mt-0.5 font-medium text-green-800">{data.businessTaxId}</div>
+              <div className="flex items-start justify-between my-2">
+
+                <div className="w-1/2">
+                  <div className="font-semibold text-gray-600">{t("cardInfo.address")}</div>
+                  <div className="text-xl mt-0.5 font-medium text-green-800">
+                    { data.businessAddress ?
+                      data.businessAddress :
+                      <span className="text-gray-400 italic">---</span>
+                    }
+                  </div>
+                </div>
               </div>
 
-            </div>
+              <div className="flex items-start justify-between my-2">
+                <div className="w-1/2">
+                  <div className="font-semibold text-gray-600">{t("cardInfo.email")}</div>
+                  <div className="text-xl mt-0.5 font-medium text-green-800">
+                    { data.businessEmail ?
+                      data.businessEmail :
+                      <span className="text-gray-400 italic">---</span>
+                    }
+                  </div>
+                </div>
 
-            <div className="flex items-start justify-between my-2">
-
-              <div className="w-1/2">
-                <div className="font-semibold text-gray-600">{t("cardInfo.address")}</div>
-                <div className="text-xl mt-0.5 font-medium text-green-800">{data.businessAddress}</div>
-              </div>
-            </div>
-
-            <div className="flex items-start justify-between my-2">
-              <div className="w-1/2">
-                <div className="font-semibold text-gray-600">{t("cardInfo.email")}</div>
-                <div className="text-xl mt-0.5 font-medium text-green-800">
-                  {data.businessEmail}
+                <div className="w-1/2">
+                  <div className="font-semibold text-gray-600">{t("cardInfo.phone")}</div>
+                  <div className="text-xl mt-0.5 font-medium text-green-800">
+                    { data.businessPhone ?
+                      data.businessPhone :
+                      <span className="text-gray-400 italic">---</span>
+                    }
+                  </div>
                 </div>
               </div>
 
               <div className="w-1/2">
-                <div className="font-semibold text-gray-600">{t("cardInfo.phone")}</div>
-                <div className="text-xl mt-0.5 font-medium text-green-800">{data.businessPhone}</div>
+                <div className="font-semibold text-gray-600 mb-4">{t("cardInfo.logo")}</div>
+                {srcLogo ?
+                  <Image
+                    src={srcLogo}
+                    width={200}
+                    height={0}
+                    alt="Logo"
+                  /> :
+                  <div className="w-40 h-40 bg-slate-100 rounded-lg border-2 border-dashed border-gray-400 flex items-center justify-center">
+                    <span className="text-sm text-slate-500">{t("cardInfo.noLogo")}</span>
+                  </div>
+                }
               </div>
             </div>
+          </CardBody>
+          <CardFooter>
+            <Button
+              color="primary"
+              onPress={() => setEditSettingsShowModal(true)}
+            >
+              Editar Información
+            </Button>
+          </CardFooter>
+        </Card>
+        <div className="flex flex-col lg:w-full">
+          <Card className="rounded-lg mb-6 p-6">
+            <CardHeader className="flex flex-col items-start">
+              <h2 className="text-2xl font-semibold text-green-900">
+                {t("cardCurrency.title")}
+              </h2>
+            </CardHeader>
 
-            <div className="w-1/2">
-              <div className="font-semibold text-gray-600 mb-2">{t("cardInfo.logo")}</div>
-              {srcLogo &&
-                <Image
-                  src={srcLogo}
-                  width={200}
-                  height={0}
-                  alt="Logo"
-                />}
-            </div>
-          </div>
-        </CardBody>
-        <CardFooter>
-          <Button
-            color="primary"
-            onPress={() => setEditSettingsShowModal(true)}
-          >
-            Editar Información
-          </Button>
-        </CardFooter>
-      </Card>
+            <CardBody>
+              <div className="flex flex-col max-w-2xl max-w-2x">
+                <div className="flex items-start justify-between my-2">
+                  <div className="w-1/2">
+                    <div className="font-semibold text-gray-600">{t("cardInfo.name")}</div>
+                    <div className="text-xl mt-0.5 font-medium text-green-800">{currency.acronym}</div>
+                  </div>
 
-      <Card className="rounded-lg mb-6 p-6">
-        <CardHeader className="flex flex-col items-start">
-          <h2 className="text-2xl font-semibold text-green-900">
-            {t("cardCurrency.title")}
-          </h2>
-        </CardHeader>
+                  <Select
+                    className="max-w-48"
+                    label={t("cardCurrency.currencyLabel")}
+                    value={data.businessCurrency}
+                    onChange={handleCurrencyChange}
+                  >
+                    {CURRENCIES.map((currency) => (
+                      <SelectItem key={currency.code}>
+                        {`${currency.code}  -  ${currency.name}`}
+                      </SelectItem>
+                    ))}
+                  </Select>
 
-        <CardBody>
-          <div className="flex flex-col max-w-2xl max-w-2x">
-            <div className="flex items-start justify-between my-2">
-              <div className="w-1/2">
-                <div className="font-semibold text-gray-600">{t("cardInfo.name")}</div>
-                <div className="text-xl mt-0.5 font-medium text-green-800">{currency.acronym}</div>
+                </div>
+
               </div>
+            </CardBody>
+          </Card>
 
-              <Select
-                label={t("cardCurrency.currencyLabel")}
-                defaultSelectedKeys={[getCurrentCurrency()]}
-                value={data.businessCurrency}
-                onChange={handleCurrencyChange}
-              >
-                {CURRENCIES.map((currency) => (
-                  <SelectItem key={currency.code}>
-                    {currency.name}
-                  </SelectItem>
-                ))}
-              </Select>
+          <Card className="rounded-lg mb-6 p-6">
+            <CardHeader className="flex flex-col items-start">
+              <h2 className="text-2xl font-semibold text-green-900">
+                {t("cardLanguage.title")}
+              </h2>
+            </CardHeader>
 
-            </div>
+            <CardBody>
+              <div className="flex flex-col max-w-2xl max-w-2x">
+                <div className="flex items-center justify-between my-2">
+                  <div className="w-1/2">
+                    <div className="font-semibold text-gray-600">{t("cardInfo.name")}</div>
+                    <div className="text-xl mt-0.5 font-medium text-green-800">{locale.toUpperCase()}</div>
+                  </div>
 
-          </div>
-        </CardBody>
-      </Card>
+                  <LanguageSwitcher />
 
-      <Card className="rounded-lg mb-6 p-6">
-        <CardHeader className="flex flex-col items-start">
-          <h2 className="text-2xl font-semibold text-green-900">
-            {t("cardLanguage.title")}
-          </h2>
-        </CardHeader>
+                </div>
 
-        <CardBody>
-          <div className="flex flex-col max-w-2xl max-w-2x">
-            <div className="flex items-start justify-between my-2">
-              <div className="w-1/2">
-                <div className="font-semibold text-gray-600">{t("cardInfo.name")}</div>
-                <div className="text-xl mt-0.5 font-medium text-green-800">{locale}</div>
               </div>
-
-              <LanguageSwitcher />
-
-            </div>
-
-          </div>
-        </CardBody>
-      </Card>
+            </CardBody>
+          </Card>
+        </div>
+      </div>
 
       {editSettingsShowModal &&
         <EditSettingsModal
