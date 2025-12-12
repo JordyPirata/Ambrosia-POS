@@ -65,14 +65,12 @@ export function I18nProvider({ children }) {
 export function LanguageSwitcher() {
   const { locale, changeLocale } = useI18n();
   return (
-    <div className="absolute top-4 right-4 z-50">
-      <Button
-        className="bg-slate-200 rounded-lg"
-        onPress={() => changeLocale(locale === "es" ? "en" : "es")}
-        startContent={<Languages />}
-      >
-        {locale === "es" ? "Switch to English" : "Cambiar a Español"}
-      </Button>
-    </div>
+    <Button
+      className="bg-slate-200 rounded-lg"
+      onPress={() => changeLocale(locale === "es" ? "en" : "es")}
+      startContent={<Languages />}
+    >
+      {locale === "es" ? "Switch to English" : "Cambiar a Español"}
+    </Button>
   );
 }

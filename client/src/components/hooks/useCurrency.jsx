@@ -5,8 +5,8 @@ import { apiClient } from "@/services/apiClient";
 
 const DEFAULT_CURRENCY = {
   id: null,
-  acronym: "MXN",
-  locale: "es-MX",
+  acronym: "USD",
+  locale: "en-US",
 };
 
 function deriveLocale(countryCode) {
