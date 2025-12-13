@@ -8,7 +8,6 @@ import pos.ambrosia.models.PaymentMethod
 
 class PaymentService(private val connection: Connection) {
   companion object {
-    // Payment queries
     private const val ADD_PAYMENT =
             "INSERT INTO payments (id, method_id, currency_id, transaction_id, amount, date) VALUES (?, ?, ?, ?, ?, datetime('now'))"
     private const val GET_PAYMENTS =
@@ -21,14 +20,12 @@ class PaymentService(private val connection: Connection) {
     private const val CHECK_PAYMENT_IN_USE =
             "SELECT COUNT(*) as count FROM ticket_payments WHERE payment_id = ?"
 
-    // Payment method queries
     private const val GET_PAYMENT_METHODS = "SELECT id, name FROM payment_methods"
     private const val GET_PAYMENT_METHOD_BY_ID = "SELECT id, name FROM payment_methods WHERE id = ?"
     private const val CHECK_PAYMENT_METHOD_EXISTS = "SELECT id FROM payment_methods WHERE id = ?"
 
-    // Currency queries
-    private const val GET_CURRENCIES = "SELECT id, acronym, name, country_name, country_code FROM currency"
-    private const val GET_CURRENCY_BY_ID = "SELECT id, acronym, name, country_name, country_code FROM currency WHERE id = ?"
+    private const val GET_CURRENCIES = "SELECT id, acronym, name, symbol, country_name, country_code FROM currency"
+    private const val GET_CURRENCY_BY_ID = "SELECT id, acronym, name, symbol, country_name, country_code FROM currency WHERE id = ?"
     private const val CHECK_CURRENCY_EXISTS = "SELECT id FROM currency WHERE id = ?"
   }
 
@@ -56,7 +53,6 @@ class PaymentService(private val connection: Connection) {
     return resultSet.next()
   }
 
-  // Payment Methods operations
   suspend fun getPaymentMethods(): List<PaymentMethod> {
     val statement = connection.prepareStatement(GET_PAYMENT_METHODS)
     val resultSet = statement.executeQuery()
@@ -82,7 +78,6 @@ class PaymentService(private val connection: Connection) {
     }
   }
 
-  // Currency operations
   suspend fun getCurrencies(): List<Currency> {
     val statement = connection.prepareStatement(GET_CURRENCIES)
     val resultSet = statement.executeQuery()
@@ -92,6 +87,7 @@ class PaymentService(private val connection: Connection) {
         id = resultSet.getString("id"),
         acronym = resultSet.getString("acronym"),
         name = resultSet.getString("name"),
+        symbol = resultSet.getString("symbol"),
         country_name = resultSet.getString("country_name"),
         country_code = resultSet.getString("country_code"),
       )
@@ -110,6 +106,7 @@ class PaymentService(private val connection: Connection) {
         id = resultSet.getString("id"),
         acronym = resultSet.getString("acronym"),
         name = resultSet.getString("name"),
+        symbol = resultSet.getString("symbol"),
         country_name = resultSet.getString("country_name"),
         country_code = resultSet.getString("country_code"),
       )
@@ -120,19 +117,16 @@ class PaymentService(private val connection: Connection) {
   }
 
   suspend fun addPayment(payment: Payment): String? {
-    // Validar que los campos requeridos no estén vacíos
     if (payment.method_id.isBlank() || payment.currency_id.isBlank()) {
       logger.error("Method ID, currency ID and transaction ID are required fields")
       return null
     }
 
-    // Verificar que el method_id exista en payment_methods
     if (!paymentMethodExists(payment.method_id)) {
       logger.error("Payment method ID does not exist: ${payment.method_id}")
       return null
     }
 
-    // Verificar que el currency_id exista en currency
     if (!currencyExists(payment.currency_id)) {
       logger.error("Currency ID does not exist: ${payment.currency_id}")
       return null
@@ -201,19 +195,16 @@ class PaymentService(private val connection: Connection) {
       return false
     }
 
-    // Validar que los campos requeridos no estén vacíos
     if (payment.method_id.isBlank() || payment.currency_id.isBlank()) {
       logger.error("Method ID, currency ID and transaction ID are required fields")
       return false
     }
 
-    // Verificar que el method_id exista en payment_methods
     if (!paymentMethodExists(payment.method_id)) {
       logger.error("Payment method ID does not exist: ${payment.method_id}")
       return false
     }
 
-    // Verificar que el currency_id exista en currency
     if (!currencyExists(payment.currency_id)) {
       logger.error("Currency ID does not exist: ${payment.currency_id}")
       return false
@@ -236,7 +227,6 @@ class PaymentService(private val connection: Connection) {
   }
 
   suspend fun deletePayment(id: String): Boolean {
-    // Verificar que el payment no esté siendo usado
     if (paymentInUse(id)) {
       logger.error("Cannot delete payment $id: it's being used in transactions")
       return false

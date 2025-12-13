@@ -153,7 +153,6 @@ data class OrderDish(
   val should_prepare: Boolean,
 )
 
-// NEW: DTO for adding dishes to an order
 @Serializable
 data class AddOrderDishRequest(
   val dish_id: String,
@@ -200,6 +199,18 @@ data class Ticket(
   val id: String? = null,
   val acronym: String,
   val name: String? = null,
+  val symbol: String? = null,
+  val country_name: String? = null,
+  val country_code: String? = null,
+)
+
+@Serializable
+data class BaseCurrencyResponse(
+  val currency_id: String? = null,
+  val id: String? = null,
+  val acronym: String? = null,
+  val name: String? = null,
+  val symbol: String? = null,
   val country_name: String? = null,
   val country_code: String? = null,
 )

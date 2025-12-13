@@ -6,12 +6,12 @@ import pos.ambrosia.models.Currency
 
 class CurrencyService(private val connection: Connection) {
   companion object {
-    private const val SELECT_BY_ACRONYM = "SELECT id, acronym, name, country_name, country_code FROM currency WHERE acronym = ?"
-    private const val SELECT_ALL = "SELECT id, acronym, name, country_name, country_code FROM currency"
+    private const val SELECT_BY_ACRONYM = "SELECT id, acronym, name, symbol, country_name, country_code FROM currency WHERE acronym = ?"
+    private const val SELECT_ALL = "SELECT id, acronym, name, symbol, country_name, country_code FROM currency"
     private const val UPSERT_BASE = "INSERT OR REPLACE INTO base_currency (id, currency_id) VALUES (1, ?)"
     private const val SELECT_BASE_JOIN =
       """
-      SELECT c.id, c.acronym, c.name, c.country_name, c.country_code
+      SELECT c.id, c.acronym, c.name, c.symbol, c.country_name, c.country_code
       FROM base_currency b
       JOIN currency c ON c.id = b.currency_id
       WHERE b.id = 1
@@ -27,6 +27,7 @@ class CurrencyService(private val connection: Connection) {
           id = rs.getString("id"),
           acronym = rs.getString("acronym"),
           name = rs.getString("name"),
+          symbol = rs.getString("symbol"),
           country_name = rs.getString("country_name"),
           country_code = rs.getString("country_code"),
         )
@@ -44,6 +45,7 @@ class CurrencyService(private val connection: Connection) {
             id = rs.getString("id"),
             acronym = rs.getString("acronym"),
             name = rs.getString("name"),
+            symbol = rs.getString("symbol"),
             country_name = rs.getString("country_name"),
             country_code = rs.getString("country_code"),
           )
@@ -74,6 +76,7 @@ class CurrencyService(private val connection: Connection) {
           id = rs.getString("id"),
           acronym = rs.getString("acronym"),
           name = rs.getString("name"),
+          symbol = rs.getString("symbol"),
           country_name = rs.getString("country_name"),
           country_code = rs.getString("country_code"),
         )
