@@ -6,7 +6,11 @@ import { apiClient } from "@/services/apiClient";
 const DEFAULT_CURRENCY = {
   id: null,
   acronym: "USD",
+  symbol: "$",
   locale: "en-US",
+  name: null,
+  country_code: null,
+  country_name: null,
 };
 
 function deriveLocale(countryCode) {
@@ -16,48 +20,28 @@ function deriveLocale(countryCode) {
 
 export function useCurrency() {
   const [currency, setCurrency] = useState(DEFAULT_CURRENCY);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   const fetchCurrency = useCallback(async () => {
-    setLoading(true);
-    setError(null);
     try {
       const base = await apiClient("/base-currency");
 
-      if (base?.acronym) {
-        setCurrency({
-          id: base?.currency_id || base?.id || null,
-          acronym: base.acronym,
-          locale:
-            deriveLocale(base.country_code) ||
-            base.locale ||
-            (typeof navigator !== "undefined" ? navigator.language : DEFAULT_CURRENCY.locale),
-        });
-        return;
-      }
-
-      const currencyId = base?.currency_id;
-      if (!currencyId) {
-        setCurrency(DEFAULT_CURRENCY);
-        return;
-      }
-
-      const list = await apiClient("/currencies");
-      const found = Array.isArray(list) ? list.find((c) => c.id === currencyId) : null;
+      const currencyId = base?.currency_id || base?.id;
+      const baseAcronym = base?.acronym;
 
       setCurrency({
-        id: found?.id || currencyId || null,
-        acronym: found?.acronym || DEFAULT_CURRENCY.acronym,
+        id: currencyId || null,
+        acronym: baseAcronym || DEFAULT_CURRENCY.acronym,
+        symbol: base?.symbol || DEFAULT_CURRENCY.symbol,
+        name: base?.name || DEFAULT_CURRENCY.name,
+        country_code: base?.country_code || null,
+        country_name: base?.country_name || null,
         locale:
-          deriveLocale(found?.country_code) ||
-          found?.locale ||
+          deriveLocale(base?.country_code) ||
+          base?.locale ||
           (typeof navigator !== "undefined" ? navigator.language : DEFAULT_CURRENCY.locale),
       });
-    } catch (err) {
-      setError(err);
-    } finally {
-      setLoading(false);
+    } catch (_err) {
+      setCurrency(DEFAULT_CURRENCY);
     }
   }, []);
 
@@ -71,34 +55,35 @@ export function useCurrency() {
       if (!Number.isFinite(numeric)) return cents;
       const value = numeric / 100;
       try {
+        if (currency.symbol) {
+          const formattedNumber = new Intl.NumberFormat(currency.locale, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }).format(value);
+          return `${currency.symbol} ${formattedNumber}`;
+        }
+
         return new Intl.NumberFormat(currency.locale, {
           style: "currency",
           currency: currency.acronym || DEFAULT_CURRENCY.acronym,
         }).format(value);
       } catch {
-        return value.toFixed(2);
+        const prefix = currency.symbol || currency.acronym || DEFAULT_CURRENCY.acronym;
+        return `${prefix} ${value.toFixed(2)}`;
       }
     },
     [currency],
   );
 
-  const formatNumber = useCallback(
-    (value) => {
-      const numeric = Number(value);
-      if (!Number.isFinite(numeric)) return value;
-      try {
-        return new Intl.NumberFormat(currency.locale).format(numeric);
-      } catch {
-        return numeric.toString();
-      }
-    },
-    [currency],
-  );
+  const updateCurrency = async (acronymOrObj) => {
+    const acronym =
+      typeof acronymOrObj === "string"
+        ? acronymOrObj
+        : acronymOrObj?.acronym || DEFAULT_CURRENCY.acronym;
 
-  const updateCurrency = async (acronym) => {
     const updateConfigResponse = await apiClient(`/base-currency`, {
       method: "PUT",
-      body: acronym,
+      body: { acronym },
     });
 
     fetchCurrency();
@@ -109,12 +94,9 @@ export function useCurrency() {
     () => ({
       currency,
       updateCurrency,
-      loading,
-      error,
       formatAmount,
-      formatNumber,
       refetch: fetchCurrency,
     }),
-    [currency, loading, error, formatAmount, formatNumber, fetchCurrency],
+    [currency, formatAmount, fetchCurrency, updateCurrency],
   );
 }
