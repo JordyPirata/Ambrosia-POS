@@ -143,7 +143,7 @@ export function Settings() {
               color="primary"
               onPress={() => setEditSettingsShowModal(true)}
             >
-              Editar Información
+              {t("cardInfo.edit")}
             </Button>
           </CardFooter>
         </Card>
