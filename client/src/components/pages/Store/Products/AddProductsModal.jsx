@@ -202,6 +202,7 @@ export function AddProductsModal({
               <NumberInput
                 label={t("modal.productStockLabel")}
                 placeholder={t("modal.productStockPlaceholder")}
+                minValue={0}
                 value={data.productStock}
                 isRequired
                 errorMessage={t("modal.errorMsgInputFieldEmpty")}
