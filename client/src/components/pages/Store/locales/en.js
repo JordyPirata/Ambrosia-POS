@@ -206,7 +206,7 @@ const store_en = {
       phone: "Phone",
       phonePlaceholder: "3312312311",
       cancelButton: "Cancel",
-      editButton: "Edit",
+      editButton: "Save",
       logo: "Logo",
       logoUpload: "Upload your logo",
       logoUploadMessage: "PNG, JPG or GIF (máx. 5MB)",
@@ -238,7 +238,7 @@ const store_en = {
     payments: {
       receive: {
         tabTitle: "Receive",
-        invoiceAmountLabel: "Ammount in satoshis",
+        invoiceAmountLabel: "Amount in satoshis",
         invoiceDescriptionLabel: "Description (optional)",
         invoiceDescriptionPlaceholder: "Payment concept",
         invoiceLightningButton: "Create Lightning Invoice",

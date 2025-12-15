@@ -143,6 +143,7 @@ export function Summary({
               {paymentMethods.map((method) => (
                 <SelectItem key={method.id} value={method.id}>
                   {method.name}
+                  {method.name === "BTC" && ` (Lightning)`}
                 </SelectItem>
               ))}
             </Select>

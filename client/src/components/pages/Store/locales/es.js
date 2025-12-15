@@ -181,7 +181,7 @@ const store_es = {
       phone: "Teléfono",
       description: "Descripción",
       logo: "Logo",
-      edit: "Editar",
+      edit: "Editar Información",
       noLogo: "Sin logo",
     },
     cardCurrency: {
@@ -206,7 +206,7 @@ const store_es = {
       phone: "Teléfono",
       phonePlaceholder: "3312312311",
       cancelButton: "Cancelar",
-      editButton: "Editar",
+      editButton: "Guardar",
       logo: "Logo",
       logoUpload: "Sube tu logo",
       logoUploadMessage: "PNG, JPG o GIF (máx. 5MB)",

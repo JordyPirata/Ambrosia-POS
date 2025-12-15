@@ -208,6 +208,7 @@ export function EditProductsModal({
                 placeholder={t("modal.productStockPlaceholder")}
                 isRequired
                 errorMessage={t("modal.errorMsgInputFieldEmpty")}
+                minValue={0}
                 value={data.productStock}
                 onValueChange={(value) => {
                   const numeric = value === null ? "" : Number(value);
