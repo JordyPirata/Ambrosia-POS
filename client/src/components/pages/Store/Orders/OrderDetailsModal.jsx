@@ -30,6 +30,10 @@ export function OrderDetailsModal({ order, isOpen, onClose, onEdit, formatAmount
               value={order ? <StatusChip status={order.status} /> : t("details.unassigned")}
             />
             <DetailRow
+              label={t("details.paymentMethod")}
+              value={order?.payment_method || t("details.noPayment")}
+            />
+            <DetailRow
               label={t("details.total")}
               value={order ? formatAmount(order.total * 100 ?? 0) : t("details.unassigned")}
             />

@@ -19,6 +19,7 @@ export function OrdersTable({ orders, formatAmount, onViewOrder }) {
         <TableColumn className="bg-gray-50 text-forest font-semibold">{t("table.id")}</TableColumn>
         <TableColumn className="bg-gray-50 text-forest font-semibold">{t("table.user")}</TableColumn>
         <TableColumn className="bg-gray-50 text-forest font-semibold">{t("table.status")}</TableColumn>
+        <TableColumn className="bg-gray-50 text-forest font-semibold">{t("table.paymentMethod")}</TableColumn>
         <TableColumn className="bg-gray-50 text-forest font-semibold">{t("table.total")}</TableColumn>
         <TableColumn className="bg-gray-50 text-forest font-semibold">{t("table.date")}</TableColumn>
         <TableColumn className="bg-gray-50 text-forest font-semibold">{t("table.actions")}</TableColumn>
@@ -39,6 +40,11 @@ export function OrdersTable({ orders, formatAmount, onViewOrder }) {
             </TableCell>
             <TableCell>
               <StatusChip status={order.status} />
+            </TableCell>
+            <TableCell>
+              <span className="text-sm text-gray-700">
+                {order.payment_method || t("details.noPayment")}
+              </span>
             </TableCell>
             <TableCell>{formatAmount(order.total * 100)}</TableCell>
             <TableCell>
