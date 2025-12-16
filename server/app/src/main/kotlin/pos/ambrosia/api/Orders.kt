@@ -37,6 +37,15 @@ fun Route.orders(orderService: OrderService) {
       call.respond(HttpStatusCode.OK, orders)
     }
 
+    get("/with-payments") {
+      val orders = orderService.getOrdersWithPayments()
+      if (orders.isEmpty()) {
+        call.respond(HttpStatusCode.NoContent, "No orders found")
+        return@get
+      }
+      call.respond(HttpStatusCode.OK, orders)
+    }
+
     get("/{id}") {
       val id = call.parameters["id"]
       if (id.isNullOrEmpty()) {

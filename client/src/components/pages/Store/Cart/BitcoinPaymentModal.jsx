@@ -26,6 +26,8 @@ export function BitcoinPaymentModal({
   const t = useTranslations("cart.paymentModal.bitcoin");
   const { setInvoiceHash, onPayment } = usePaymentWebsocket();
   const [paymentReceived, setPaymentReceived] = useState(false);
+  const [paymentAwaiting, setPaymentAwaiting] = useState(false);
+  const [paymentCompletedAt, setPaymentCompletedAt] = useState(null);
   const completedRef = useRef(false);
   const {
     invoice,
@@ -47,10 +49,14 @@ export function BitcoinPaymentModal({
       setPaymentReceived(false);
       completedRef.current = false;
       setInvoiceHash(invoice.paymentHash);
+      setPaymentAwaiting(true);
+      setPaymentCompletedAt(null);
     } else if (!isOpen) {
       setInvoiceHash(null);
       completedRef.current = false;
       setPaymentReceived(false);
+      setPaymentAwaiting(false);
+      setPaymentCompletedAt(null);
     }
   }, [invoice, isOpen, setInvoiceHash]);
 
@@ -63,6 +69,8 @@ export function BitcoinPaymentModal({
       ) {
         completedRef.current = true;
         setPaymentReceived(true);
+        setPaymentAwaiting(false);
+        setPaymentCompletedAt(Date.now());
         onComplete?.({ invoice, satoshis: satsAmount, paymentId, auto: true });
       }
     });
@@ -73,6 +81,8 @@ export function BitcoinPaymentModal({
     setInvoiceHash(null);
     completedRef.current = false;
     setPaymentReceived(false);
+    setPaymentAwaiting(false);
+    setPaymentCompletedAt(null);
     reset();
     onClose?.();
   };
@@ -126,6 +136,12 @@ export function BitcoinPaymentModal({
                   <p className="text-xs text-gray-500">{satsAmount} sats</p>
                 ) : null}
               </div>
+              {paymentAwaiting && (
+                <div className="flex items-center justify-center space-x-2 text-sm text-forest">
+                  <Spinner size="sm" color="success" />
+                  <span>{t("waitingPayment")}</span>
+                </div>
+              )}
             </>
           )}
 
@@ -150,6 +166,11 @@ export function BitcoinPaymentModal({
               <p className="text-lg font-semibold text-green-900">
                 {t("confirmed")}
               </p>
+              {paymentCompletedAt && (
+                <p className="text-sm text-green-700">
+                  {t("paidAt", { time: new Date(paymentCompletedAt).toLocaleTimeString() })}
+                </p>
+              )}
             </div>
           )}
         </ModalBody>

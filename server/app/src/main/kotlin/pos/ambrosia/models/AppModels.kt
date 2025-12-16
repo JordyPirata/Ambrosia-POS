@@ -143,6 +143,19 @@ data class Order(
 )
 
 @Serializable
+data class OrderWithPayment(
+  val id: String,
+  val user_id: String,
+  val table_id: String? = null,
+  val waiter: String? = null,
+  val status: String,
+  val total: Double,
+  val created_at: String,
+  val payment_method: String? = null,
+  val payment_method_ids: List<String> = emptyList(),
+)
+
+@Serializable
 data class OrderDish(
   val id: String? = null,
   val order_id: String,

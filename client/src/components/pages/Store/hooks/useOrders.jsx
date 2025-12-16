@@ -1,6 +1,6 @@
 "use client";
-import { useState, useEffect, useCallback } from 'react';
-import { apiClient } from '@/services/apiClient';
+import { useState, useEffect, useCallback } from "react";
+import { apiClient } from "@/services/apiClient";
 
 export function useOrders() {
   const [orders, setOrders] = useState([]);
@@ -12,16 +12,13 @@ export function useOrders() {
     setError(null);
 
     try {
-      const res = await apiClient("/orders");
-
-      if (Array.isArray(res)) {
-        setOrders(res);
-      } else {
-        setOrders([]);
-      }
+      const ordersResponse = await apiClient("/orders/with-payments");
+      const ordersList = Array.isArray(ordersResponse) ? ordersResponse : [];
+      setOrders(ordersList);
     } catch (err) {
       console.error("Error fetching orders:", err);
       setError(err);
+      setOrders([]);
     } finally {
       setLoading(false);
     }
