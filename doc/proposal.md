@@ -3,7 +3,7 @@
 ## General Description
 
 The described system is a point of sale (POS) application for restaurants.
-The system's frontend uses **React** and **Electron** to provide a modern and reactive experience in desktop environments. Additionally, the backend is developed in Kotlin with support for **Gradle** as a build tool.
+The system's frontend uses **React** to provide a modern and reactive experience in desktop environments. Additionally, the backend is developed in Kotlin with support for **Gradle** as a build tool.
 
 This system is designed to optimize the daily operations of a restaurant, such as managing orders, tables, inventory, and finances, with a modern and reactive interface. The system modules are detailed below, considering the requested features: login, table selection, order history, user management and permission assignment, inventory management (including products, supplies, suppliers, and recipes), dish creation, ticket printing, fund withdrawal, cash closing, and support for Bitcoin payments via the **Lightning Network**.
 

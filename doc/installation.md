@@ -1,12 +1,19 @@
-# Installation Guide - Ambrosia POS
+# Installation Guide - Ambrosia
+## Installation (Docker)
 
-## Project Dependencies
+for more details about the docker installation see [ambrosia-tutorial](https://olympus-btc.github.io/ambrosia-tutorial/)
+```bash
+docker-compose up -d --wait && docker-compose restart
+```
+
+## Installation (Native)
 
 ### Main Requirements
 
-- **npm**: To manage frontend dependencies (React/Electron).
+- **npm**: To manage frontend dependencies.
 - **Gradle 8.1.4**: To build and manage the Kotlin backend.
-- **JDK 21**: Java Development Kit version 21, required to compile and run the backend.
+- **JDK 21 / JRE 21**: Java Development Kit version 21, required to compile and run the backend.
+
 
 ### Installing Node.js and npm with nvm
 
@@ -30,9 +37,8 @@ nvm current # Should print "v22.18.0".
 npm -v # Should print "10.9.3".
 ```
 
+### Installing JDK with SDKMAN!
 > [!NOTE]
-> **Installing JDK with SDKMAN!**
->
 > To install the Java Development Kit (JDK), we recommend using [SDKMAN!](https://sdkman.io/), a tool for managing multiple versions of Software Development Kits.
 
 ```bash
@@ -47,9 +53,6 @@ sdk install java 21.0.8-tem
  ```
  **Note:** Remember to add `source "$HOME/.sdkman/bin/sdkman-init.sh"` to your `~/.bashrc` or `~/.zshrc` file so that `sdk` is available in all future terminal sessions.
 
-## Interactive Installation (Recommended)
-
-**Option 1: Full Installation (Ambrosia + phoenixd)**
 ```bash
 wget -q https://raw.githubusercontent.com/olympus-btc/ambrosia/master/scripts/install.sh
 chmod +x install.sh
@@ -60,11 +63,6 @@ The phoenixd installation script installs phoenixd automatically. The script dow
 
 Check [Mastering Phoenixd](https://btcgdl.github.io/Mastering-phoenixd/) for more details.
 
-**Option 2: Project Scripts (without systemd)**
-```bash
-curl -fsSL https://raw.githubusercontent.com/olympus-btc/ambrosia/master/scripts/install.sh | bash
-```
-
 ## Uninstallation 
 
 To uninstall Ambrosia POS and phoenixd, run the following script:
@@ -74,24 +72,6 @@ curl -fsSL https://raw.githubusercontent.com/olympus-btc/ambrosia/master/scripts
 ```
 
 ## Development Scripts
-
-### docker-compose with all 3 images (phoenixd, ambrosia, and ambrosia-client)
-To set up the entire docker-compose environment (including installing dependencies if not already installed):
-
-This command will optionally build the client and server docker images (required on first run)
-```sh
-make run-rebuild
-```
-
-This command will only rebuild the server jar and restart any containers whose images have been rebuilt:
-```sh
-make run
-```
-
-Command for rebuilding the server image without rebuilding the other containers (useful for rapid development on the server Kotlin code):
-```sh
-cd server/ && ./gradlew jar && cd .. && docker-compose build ambrosia && make run
-```
 
 ### Server (Backend - Kotlin/Gradle)
 
