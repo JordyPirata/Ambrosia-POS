@@ -15,6 +15,7 @@ import {
 } from "@heroui/react";
 import { Pencil, Trash } from 'lucide-react';
 import { useCurrency } from "@/components/hooks/useCurrency";
+import { storedAssetUrl } from "../../../utils/storedAssetUrl";
 
 export function ProductsTable({ products, categories = [], onEditProduct, onDeleteProduct }) {
   const t = useTranslations("products");
@@ -44,7 +45,7 @@ export function ProductsTable({ products, categories = [], onEditProduct, onDele
           {products.map((product) => (
             <TableRow key={product.sku}>
               <TableCell>
-                <Image src={product.image_url} width={75} alt={product.name} />
+                <Image src={storedAssetUrl(product?.image_url)} width={75} alt={product.name} />
               </TableCell>
               <TableCell>{product.name}</TableCell>
               <TableCell>
