@@ -2,9 +2,10 @@
 
 ### Main Requirements
 
-- **npm**: To manage frontend dependencies (React/Electron).
+- **npm**: To manage frontend dependencies.
 - **Gradle 8.1.4**: To build and manage the Kotlin backend.
-- **JDK 21**: Java Development Kit version 21, required to compile and run the backend.
+- **JDK 21 / JRE 21**: Java Development Kit version 21, required to compile and run the backend.
+
 
 ### Installing Node.js and npm with nvm
 
@@ -28,9 +29,8 @@ nvm current # Should print "v22.18.0".
 npm -v # Should print "10.9.3".
 ```
 
+### Installing JDK with SDKMAN!
 > [!NOTE]
-> **Installing JDK with SDKMAN!**
->
 > To install the Java Development Kit (JDK), we recommend using [SDKMAN!](https://sdkman.io/), a tool for managing multiple versions of Software Development Kits.
 
 ```bash
