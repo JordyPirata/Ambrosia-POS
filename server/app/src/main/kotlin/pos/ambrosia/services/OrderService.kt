@@ -5,6 +5,7 @@ import java.util.UUID
 import pos.ambrosia.logger
 import pos.ambrosia.models.Order
 import pos.ambrosia.models.OrderDish
+import pos.ambrosia.models.OrderWithPayment
 
 class OrderService(private val connection: Connection) {
   companion object {
@@ -29,6 +30,25 @@ class OrderService(private val connection: Connection) {
             "SELECT id, user_id, table_id, waiter, status, total, created_at FROM orders WHERE created_at BETWEEN ? AND ? AND is_deleted = 0"
     private const val GET_TOTAL_SALES_BY_DATE =
             "SELECT SUM(total) AS total_sales FROM orders WHERE DATE(created_at) = ? AND status = 'paid' AND is_deleted = 0"
+    private const val GET_ORDERS_WITH_PAYMENTS =
+            """
+            SELECT o.id,
+                   o.user_id,
+                   o.table_id,
+                   o.waiter,
+                   o.status,
+                   o.total,
+                   o.created_at,
+                   GROUP_CONCAT(DISTINCT pm.name) AS payment_method,
+                   GROUP_CONCAT(DISTINCT p.id) AS payment_method_ids
+            FROM orders o
+            LEFT JOIN tickets t ON t.order_id = o.id
+            LEFT JOIN ticket_payments tp ON tp.ticket_id = t.id
+            LEFT JOIN payments p ON p.id = tp.payment_id
+            LEFT JOIN payment_methods pm ON pm.id = p.method_id
+            WHERE o.is_deleted = 0
+            GROUP BY o.id
+            """
   }
 
   private val validStatuses = setOf("open", "closed", "paid")
@@ -117,6 +137,32 @@ class OrderService(private val connection: Connection) {
       orders.add(mapResultSetToOrder(resultSet))
     }
     logger.info("Retrieved ${orders.size} orders")
+    return orders
+  }
+
+  suspend fun getOrdersWithPayments(): List<OrderWithPayment> {
+    val statement = connection.prepareStatement(GET_ORDERS_WITH_PAYMENTS)
+    val resultSet = statement.executeQuery()
+    val orders = mutableListOf<OrderWithPayment>()
+    while (resultSet.next()) {
+      val paymentNames = resultSet.getString("payment_method") ?: ""
+      val paymentIdsConcat = resultSet.getString("payment_method_ids") ?: ""
+      val paymentIds =
+              paymentIdsConcat.split(",").mapNotNull { it.takeIf { id -> id.isNotBlank() } }
+      orders.add(
+              OrderWithPayment(
+                      id = resultSet.getString("id"),
+                      user_id = resultSet.getString("user_id"),
+                      table_id = resultSet.getString("table_id"),
+                      waiter = resultSet.getString("waiter"),
+                      status = resultSet.getString("status"),
+                      total = resultSet.getDouble("total"),
+                      created_at = resultSet.getString("created_at"),
+                      payment_method = paymentNames,
+                      payment_method_ids = paymentIds
+              ))
+    }
+    logger.info("Retrieved ${orders.size} orders with payments")
     return orders
   }
 

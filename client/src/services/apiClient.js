@@ -26,7 +26,8 @@ export async function apiClient(
   const makeRequest = async () => {
     try {
       const requestHeaders = { ...headers };
-      if (body && !requestHeaders["Content-Type"]) {
+      const isFormData = typeof FormData !== "undefined" && body instanceof FormData;
+      if (body && !requestHeaders["Content-Type"] && !isFormData) {
         requestHeaders["Content-Type"] = "application/json";
       }
 
@@ -77,12 +78,12 @@ export async function apiClient(
     clearTimeout(timeoutId);
 
     if (error.name === "AbortError") {
-      const timeoutError = new Error("Tiempo de espera agotado");
+      const timeoutError = new Error("Timeout exceeded");
       timeoutError.code = "TIMEOUT";
 
       addToast({
-        title: "Error de conexión",
-        description: "La petición tardó demasiado tiempo",
+        title: "Connection Error",
+        description: "The request took too long",
         color: "danger",
       });
 
@@ -97,7 +98,7 @@ export async function apiClient(
     if (!isLoginEndpoint && !isSilentError && !notShowError) {
       addToast({
         title: "Error",
-        description: error.message || "Error de conexión",
+        description: error.message || "Connection Error",
         color: "danger",
       });
     }
@@ -134,12 +135,6 @@ async function performTokenRefresh() {
       await performLogout();
       dispatchAuthEvent("auth:expired");
 
-      addToast({
-        color: "warning",
-        title: "Sesión expirada",
-        description: "Vuelve a iniciar sesión.",
-      });
-
       return false;
     }
 
@@ -158,7 +153,7 @@ async function handleHttpError(status, endpoint, data, silentAuth = false) {
       const msg =
         typeof data === "string"
           ? data
-          : data?.message || "Credenciales inválidas";
+          : data?.message || "Invalid Credentials";
       const error = new Error(msg);
       error.status = status;
       throw error;
@@ -178,8 +173,8 @@ async function handleHttpError(status, endpoint, data, silentAuth = false) {
 
     addToast({
       color: "danger",
-      title: "Error de autenticación",
-      description: "No autenticado",
+      title: "Authentication Error",
+      description: "Not authenticated",
     });
 
     throw new Error("UNAUTHORIZED");
@@ -189,7 +184,7 @@ async function handleHttpError(status, endpoint, data, silentAuth = false) {
   if (status === 403) {
     if (isAuthEndpoint) {
       const msg =
-        typeof data === "string" ? data : data?.message || "No autorizado";
+        typeof data === "string" ? data : data?.message || "Not authorized";
       const error = new Error(msg);
       error.status = status;
       throw error;
@@ -204,8 +199,8 @@ async function handleHttpError(status, endpoint, data, silentAuth = false) {
       dispatchAuthEvent("auth:forbidden");
       addToast({
         color: "warning",
-        title: "Acceso denegado",
-        description: "No autorizado",
+        title: "Access Denied",
+        description: "Not authorized",
       });
     }
 
@@ -223,11 +218,11 @@ function extractErrorMessage(data, status) {
     return typeof data.error === "string" ? data.error : data.error.message;
 
   const statusMessages = {
-    400: "Solicitud inválida",
-    404: "Recurso no encontrado",
-    500: "Error interno del servidor",
-    502: "Servicio no disponible",
-    503: "Servicio temporalmente no disponible",
+    400: "Bad Request",
+    404: "Not Found",
+    500: "Internal server error",
+    502: "Bad Gateway",
+    503: "Service Unavailable",
   };
 
   return statusMessages[status] || `Error ${status}`;

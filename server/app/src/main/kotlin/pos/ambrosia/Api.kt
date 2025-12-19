@@ -9,17 +9,19 @@ import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.engine.*
-import io.ktor.server.cio.*
+import io.ktor.server.netty.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
+import io.ktor.server.websocket.*
 import org.slf4j.LoggerFactory
 import pos.ambrosia.api.*
 import pos.ambrosia.config.AppConfig
 import pos.ambrosia.utils.UnauthorizedApiException
 import pos.ambrosia.db.DatabaseConnection
 import kotlinx.coroutines.*
+import kotlin.time.Duration.Companion.seconds
 
 public val logger = LoggerFactory.getLogger("Server")
 
@@ -36,6 +38,10 @@ class Api() {
       allowMethod(HttpMethod.Delete)
       allowHeader(HttpHeaders.ContentType)
       allowHeader(HttpHeaders.Authorization)
+    }
+    install(WebSockets) {
+      pingPeriod = 30.seconds
+      timeout = 15.seconds
     }
 
     install(Authentication) {
@@ -119,5 +125,7 @@ class Api() {
     configureCategories()
     configureCurrency()
     configureInitialSetup()
+    configurePhoenixWebhook()
+    configurePaymentWebsocket()
   }
 }

@@ -12,25 +12,38 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
+  Select,
+  SelectItem,
 } from "@heroui/react";
 import { Upload, X } from "lucide-react";
+import { useCurrency } from "@/components/hooks/useCurrency";
 
 export function AddProductsModal({
   data,
   setData,
+  addProduct,
   onChange,
+  onProductCreated,
+  isUploading = false,
+  categories = [],
+  categoriesLoading = false,
+  createCategory,
   addProductsShowModal,
   setAddProductsShowModal,
 }) {
   const t = useTranslations("products");
+  const { currency } = useCurrency();
   const fileInputRef = useRef(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [isCreatingCategory, setIsCreatingCategory] = useState(false);
 
   const handleImageChange = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    onChange({ storeImage: file });
+    onChange({ storeImage: file, productImage: "" });
 
     const reader = new FileReader();
     reader.onloadend = () => setImagePreview(reader.result);
@@ -38,25 +51,47 @@ export function AddProductsModal({
   };
 
   const handleRemoveImage = () => {
-    onChange({ storeImage: null });
+    onChange({ storeImage: null, productImage: "" });
     setImagePreview(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(data);
-    setData({
-      productName: "",
-      productDescription: "",
-      productCategory: "",
-      productSKU: "",
-      productPrice: "",
-      productStock: "",
-      productImage: ""
-    });
+    if (isSubmitting || isUploading) return;
 
-    setAddProductsShowModal(false);
+    try {
+      setIsSubmitting(true);
+      await addProduct(data);
+      setData({
+        productName: "",
+        productDescription: "",
+        productCategory: "",
+        productSKU: "",
+        productPrice: "",
+        productStock: "",
+        productImage: "",
+        storeImage: null,
+      });
+      setAddProductsShowModal(false);
+      onProductCreated?.();
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleCreateCategory = async () => {
+    if (!newCategoryName.trim() || isCreatingCategory) return;
+    try {
+      setIsCreatingCategory(true);
+      const newId = await createCategory(newCategoryName.trim());
+      if (newId) {
+        onChange({ productCategory: newId });
+      }
+      setNewCategoryName("");
+    } finally {
+      setIsCreatingCategory(false);
+    }
   };
 
   return (
@@ -76,6 +111,8 @@ export function AddProductsModal({
             <Input
               label={t("modal.productNameLabel")}
               placeholder={t("modal.productNamePlaceholder")}
+              isRequired
+              errorMessage={t("modal.errorMsgInputFieldEmpty")}
               value={data.productName}
               onChange={(e) =>
                 onChange({ productName: e.target.value })
@@ -86,23 +123,55 @@ export function AddProductsModal({
               label={t("modal.productDescriptionLabel")}
               placeholder={t("modal.productDescriptionPlaceholder")}
               value={data.productDescription}
+              isRequired
+              errorMessage={t("modal.errorMsgInputFieldEmpty")}
               onChange={(e) =>
                 onChange({ productDescription: e.target.value })
               }
             />
 
-            <Input
-              label={t("modal.productCategoryLabel")}
-              placeholder={t("modal.productCategoryPlaceholder")}
-              value={data.productCategory}
-              onChange={(e) =>
-                onChange({ productCategory: e.target.value })
-              }
-            />
+            <div className="space-y-4">
+              <Select
+                label={t("modal.productCategoryLabel")}
+                placeholder={t("modal.categorySelectPlaceholder")}
+                selectedKeys={data.productCategory ? [data.productCategory] : []}
+                isRequired
+                errorMessage={t("modal.errorMsgInputFieldEmpty")}
+                onChange={(e) =>
+                  onChange({ productCategory: e.target.value })
+                }
+                isLoading={categoriesLoading}
+              >
+                {categories.map((category) => (
+                  <SelectItem key={category.id} value={category.id}>
+                    {category.name}
+                  </SelectItem>
+                ))}
+              </Select>
+
+              <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-3">
+                <Input
+                  label={t("modal.createCategoryLabel")}
+                  placeholder={t("modal.createCategoryPlaceholder")}
+                  value={newCategoryName}
+                  onChange={(e) => setNewCategoryName(e.target.value)}
+                />
+                <Button
+                  color="primary"
+                  className="bg-green-800 h-full"
+                  onPress={handleCreateCategory}
+                  isLoading={isCreatingCategory}
+                >
+                  {t("modal.createCategoryButton")}
+                </Button>
+              </div>
+            </div>
 
             <Input
               label={t("modal.productSKULabel")}
               placeholder={t("modal.productSKUPlaceholder")}
+              isRequired
+              errorMessage={t("modal.errorMsgInputFieldEmpty")}
               value={data.productSKU}
               onChange={(e) =>
                 onChange({ productSKU: e.target.value })
@@ -113,9 +182,14 @@ export function AddProductsModal({
               <NumberInput
                 label={t("modal.productPriceLabel")}
                 placeholder={t("modal.productPricePlaceholder")}
+                isRequired
+                errorMessage={t("modal.errorMsgInputFieldEmpty")}
                 startContent={
-                  <span className="text-default-400 text-small">$</span>
+                  <span className="text-default-400 text-small">
+                    {currency?.acronym || "$"}
+                  </span>
                 }
+                minValue={0}
                 value={data.productPrice}
                 onValueChange={(value) => {
                   const numeric = value === null ? "" : Number(value);
@@ -128,7 +202,10 @@ export function AddProductsModal({
               <NumberInput
                 label={t("modal.productStockLabel")}
                 placeholder={t("modal.productStockPlaceholder")}
+                minValue={0}
                 value={data.productStock}
+                isRequired
+                errorMessage={t("modal.errorMsgInputFieldEmpty")}
                 onValueChange={(value) => {
                   const numeric = value === null ? "" : Number(value);
                   onChange({ productStock: numeric });
@@ -189,7 +266,12 @@ export function AddProductsModal({
                 {t("modal.cancelButton")}
               </Button>
 
-              <Button color="primary" className="bg-green-800" type="submit">
+              <Button
+                color="primary"
+                className="bg-green-800"
+                type="submit"
+                isLoading={isSubmitting || isUploading}
+              >
                 {t("modal.submitButton")}
               </Button>
             </ModalFooter>

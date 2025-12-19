@@ -1,0 +1,263 @@
+import { addToast } from "@heroui/react";
+import { createOrderAndTicket } from "./paymentFlows";
+
+export function buildHandlePay({
+  t,
+  currency,
+  formatAmount,
+  paymentMethodMap,
+  getPaymentCurrencyById,
+  setBtcPaymentConfig,
+  setCashPaymentConfig,
+  processBasePayment,
+  updateOrder,
+  onResetCart,
+  onPay,
+  notifyError,
+  dispatch,
+  user,
+  ensureCartReady,
+  normalizeAmounts,
+  buildOrderPayload,
+  buildTicketPayload,
+  buildPaymentPayload,
+  createOrder,
+  createTicket,
+  createPayment,
+  linkPaymentToTicket,
+}) {
+  return async function handlePay({
+    items = [],
+    subtotal = 0,
+    discount = 0,
+    discountAmount = 0,
+    total = 0,
+    selectedPaymentMethod,
+  }) {
+    try {
+      ensureCartReady({
+        t,
+        items,
+        selectedPaymentMethod,
+        userId: user?.user_id,
+        currencyId: currency?.id,
+      });
+    } catch (err) {
+      notifyError(err.message);
+      return;
+    }
+
+    dispatch({ type: "start" });
+
+    try {
+      const currencyId = currency.id;
+
+      const amounts = normalizeAmounts({
+        subtotal,
+        discount,
+        discountAmount,
+        total,
+        formatAmount,
+      });
+
+      const paymentMethodData = paymentMethodMap[selectedPaymentMethod] || null;
+      const methodName = (paymentMethodData?.name || "").toLowerCase();
+
+      if (methodName.includes("btc")) {
+        const currencyData = await getPaymentCurrencyById(currencyId);
+        const currencyAcronym = (
+          currencyData?.acronym ||
+          currency?.acronym ||
+          "MXN"
+        ).toLowerCase();
+
+        setBtcPaymentConfig({
+          paymentId: `btc-${Date.now()}`,
+          amountFiat: amounts.amountFiat,
+          currencyAcronym,
+          displayTotal: amounts.displayTotal,
+          subtotal: amounts.subtotal,
+          discount: amounts.discount,
+          discountAmount: amounts.discountAmount,
+          total: amounts.total,
+          items,
+          selectedPaymentMethod,
+          currencyId,
+        });
+        return;
+      }
+
+      const { paymentResult, orderPayload, orderId } = await processBasePayment({
+        items,
+        amounts,
+        selectedPaymentMethod,
+        currencyId,
+        user,
+        createOrder,
+        createTicket,
+        createPayment,
+        linkPaymentToTicket,
+        buildOrderPayload,
+        buildTicketPayload,
+        buildPaymentPayload,
+        t,
+      });
+
+      if (methodName.includes("cash") || methodName.includes("efectivo")) {
+        setCashPaymentConfig({
+          amountDue: amounts.amountFiat,
+          displayTotal: amounts.displayTotal,
+          paymentResult,
+          orderPayload,
+          orderId,
+        });
+        return;
+      }
+
+      if (orderId) {
+        await updateOrder(orderId, {
+          ...orderPayload,
+          id: orderId,
+          status: "paid",
+        });
+      }
+
+      addToast({
+        color: "success",
+        description: t("success.paid"),
+      });
+      onResetCart?.();
+      onPay?.(paymentResult);
+    } catch (err) {
+      console.error("Error processing payment:", err);
+      notifyError(err?.message || t("errors.process"));
+    } finally {
+      dispatch({ type: "stop" });
+    }
+  };
+}
+
+export function buildHandleBtcInvoiceReady({ setBtcPaymentConfig }) {
+  return (data) =>
+    setBtcPaymentConfig((prev) =>
+      prev ? { ...prev, invoiceData: data } : prev,
+    );
+}
+
+export function buildHandleBtcComplete({
+  btcPaymentConfig,
+  dispatch,
+  createOrderAndTicketFn = createOrderAndTicket,
+  buildOrderPayload,
+  buildTicketPayload,
+  createOrder,
+  createTicket,
+  buildPaymentPayload,
+  createPayment,
+  linkPaymentToTicket,
+  onPay,
+  onResetCart,
+  notifyError,
+  t,
+  user,
+  setBtcPaymentConfig,
+}) {
+  return async (data) => {
+    if (!btcPaymentConfig) return;
+    dispatch({ type: "start" });
+    try {
+      const { orderId, ticketId } = await createOrderAndTicketFn({
+        totalAmount: btcPaymentConfig.amountFiat,
+        user,
+        buildOrderPayload,
+        buildTicketPayload,
+        createOrder,
+        createTicket,
+        t,
+      });
+
+      const paymentPayload = buildPaymentPayload({
+        methodId: btcPaymentConfig.selectedPaymentMethod,
+        currencyId: btcPaymentConfig.currencyId,
+        amount: btcPaymentConfig.amountFiat,
+        transactionId: data?.invoice?.serialized || "",
+      });
+
+      const paymentResponse = await createPayment(paymentPayload);
+      if (!paymentResponse?.id) {
+        throw new Error(t("errors.createPayment"));
+      }
+
+      await linkPaymentToTicket(paymentResponse.id, ticketId);
+
+      onPay?.({
+        items: btcPaymentConfig.items,
+        subtotal: btcPaymentConfig.subtotal,
+        discount: btcPaymentConfig.discount,
+        discountAmount: btcPaymentConfig.discountAmount,
+        total: btcPaymentConfig.total,
+        amount: btcPaymentConfig.amountFiat,
+        paymentMethod: btcPaymentConfig.selectedPaymentMethod,
+        paymentId: paymentResponse?.id || null,
+        orderId,
+        ticketId: ticketId || null,
+        ...data,
+      });
+      onResetCart?.();
+      addToast({
+        color: "success",
+        description: t("success.btcPaid"),
+      });
+    } catch (err) {
+      console.error("Error completing BTC payment:", err);
+      notifyError(err?.message || t("errors.btcComplete"));
+    } finally {
+      setBtcPaymentConfig((prev) =>
+        prev ? { ...prev, paymentCompleted: true } : prev,
+      );
+      dispatch({ type: "stop" });
+    }
+  };
+}
+
+export function buildHandleCashComplete({
+  cashPaymentConfig,
+  dispatch,
+  updateOrder,
+  onPay,
+  onResetCart,
+  notifyError,
+  t,
+  setCashPaymentConfig,
+}) {
+  return async ({ cashReceived, change }) => {
+    if (!cashPaymentConfig) return;
+    dispatch({ type: "start" });
+    try {
+      if (cashPaymentConfig.orderId) {
+        await updateOrder(cashPaymentConfig.orderId, {
+          ...cashPaymentConfig.orderPayload,
+          id: cashPaymentConfig.orderId,
+          status: "paid",
+        });
+      }
+
+      onPay?.({
+        ...cashPaymentConfig.paymentResult,
+        cashReceived,
+        change,
+      });
+      onResetCart?.();
+      addToast({
+        color: "success",
+        description: t("success.cashPaid"),
+      });
+    } catch (err) {
+      console.error("Error completing cash payment:", err);
+      notifyError(err?.message || t("errors.cashComplete"));
+    } finally {
+      setCashPaymentConfig(null);
+      dispatch({ type: "stop" });
+    }
+  };
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useContext, useEffect, useRef, useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import {
   Modal,
   ModalContent,
@@ -23,15 +24,19 @@ export default function WalletGuard({
   title = "Confirmar acceso a Wallet",
   passwordLabel = "Contraseña",
   confirmText = "Entrar",
+  cancelText = "Cancelar",
   onAuthorized,
 }) {
   const { user } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(true);
+  const [showPassword, setShowPassword] = useState(false)
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [authorized, setAuthorized] = useState(false);
   const expiryKey = "walletAccessExpiry";
   const expiryTimeoutRef = useRef(null);
+  const fallbackExpiryMs = 8 * 60 * 60 * 1000; // 8h
+  const expiryBufferMs = 30 * 1000; // small buffer to re-auth before server expiry
 
   useEffect(() => {
     return () => {
@@ -45,6 +50,19 @@ export default function WalletGuard({
         expiryTimeoutRef.current = null;
       }
     };
+  }, []);
+
+  // Restore wallet session if cookie/localStorage still valid
+  useEffect(() => {
+    try {
+      const storedExpiry = Number(localStorage.getItem(expiryKey));
+      const now = Date.now();
+      if (Number.isFinite(storedExpiry) && storedExpiry - now > 0) {
+        setAuthorized(true);
+        setIsOpen(false);
+        scheduleExpiry(storedExpiry);
+      }
+    } catch (_) {}
   }, []);
 
   // React to unauthorized wallet API responses
@@ -71,28 +89,34 @@ export default function WalletGuard({
   }, []);
 
   // Do not proactively call wallet endpoints here; children handle their own data fetching
+  const scheduleExpiry = (expiresAtMs) => {
+    try {
+      localStorage.setItem(expiryKey, String(expiresAtMs));
+      if (expiryTimeoutRef.current) clearTimeout(expiryTimeoutRef.current);
+      const msRemaining = Math.max(0, expiresAtMs - Date.now() - expiryBufferMs);
+      expiryTimeoutRef.current = setTimeout(() => {
+        setAuthorized(false);
+        setIsOpen(true);
+      }, msRemaining);
+    } catch (_) {}
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!password) return;
     setSubmitting(true);
     try {
-      await loginWallet(password);
+      const result = await loginWallet(password);
       // Allow Set-Cookie to persist before enabling children
       await new Promise((r) => setTimeout(r, 150));
       setAuthorized(true);
       setIsOpen(false);
-      // Track client-side expiry approximately (server token ~120s)
-      try {
-        const expiresAt = Date.now() + 110 * 1000; // 110s buffer
-        localStorage.setItem(expiryKey, String(expiresAt));
-        if (expiryTimeoutRef.current) clearTimeout(expiryTimeoutRef.current);
-        const ms = Math.max(0, expiresAt - Date.now());
-        expiryTimeoutRef.current = setTimeout(() => {
-          setAuthorized(false);
-          setIsOpen(true);
-        }, ms + 250);
-      } catch (_) {}
+      // Track client-side expiry using server-provided timestamp or fallback
+      const expiresAt =
+        typeof result?.walletTokenExpiresAt === "number"
+          ? result.walletTokenExpiresAt
+          : Date.now() + fallbackExpiryMs;
+      scheduleExpiry(expiresAt);
       if (onAuthorized) onAuthorized();
     } catch (_) {
       // apiClient already shows a toast on error
@@ -116,17 +140,26 @@ export default function WalletGuard({
             <Form onSubmit={handleSubmit} id="wallet-guard-form">
               <Input
                 label={passwordLabel}
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 isDisabled={submitting}
+                endContent={
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  >
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
+                }
                 autoFocus
               />
             </Form>
           </ModalBody>
           <ModalFooter>
             <Button color="secondary" onPress={() => setIsOpen(false)}>
-              Cancelar
+              {cancelText}
             </Button>
             <Button
               color="primary"

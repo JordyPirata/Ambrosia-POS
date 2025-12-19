@@ -3,6 +3,7 @@ const config = {
   testEnvironment: "jsdom",
   moduleFileExtensions: ["js", "jsx", "ts", "tsx"],
   testPathIgnorePatterns: ["/node_modules/", "/.next/", "__tests__/__mocks__/"],
+  setupFiles: ["<rootDir>/__tests__/__mocks__/next/fetch.js"],
   setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
   moduleNameMapper: {
     "\\.(css|less|scss|sass)$": "identity-obj-proxy",
@@ -14,7 +15,7 @@ const config = {
   transform: {
     "^.+\\.(js|jsx|ts|tsx)$": [
       "babel-jest",
-      { configFile: "./.babel-jest.config.js" }
+      { configFile: "./.babel-jest.config.js" },
     ],
   },
   transformIgnorePatterns: [

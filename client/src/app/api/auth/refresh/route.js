@@ -6,10 +6,18 @@ const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ||
   `http://${process.env.HOST}:${process.env.NEXT_PUBLIC_PORT_API}`;
 
-export async function POST() {
+const isSecureRequest = (request) => {
+  const forwardedProto = request.headers.get("x-forwarded-proto");
+  if (forwardedProto) return forwardedProto === "https";
+  const url = new URL(request.url);
+  return url.protocol === "https:";
+};
+
+export async function POST(request) {
   try {
     const cookieStore = await cookies();
     const refreshToken = cookieStore.get("refreshToken")?.value;
+    const useSecureCookies = isSecureRequest(request);
 
     if (!refreshToken) {
       return NextResponse.json(
@@ -52,7 +60,7 @@ export async function POST() {
       const accessMaxAge = accessExp ? Math.max(0, accessExp - nowSec) : 60; // fallback 60s
       nextResponse.cookies.set("accessToken", data.accessToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: useSecureCookies,
         sameSite: "strict",
         maxAge: accessMaxAge,
         path: "/",
@@ -67,7 +75,7 @@ export async function POST() {
         : 30 * 24 * 60 * 60; // fallback 30 días
       nextResponse.cookies.set("refreshToken", data.refreshToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: useSecureCookies,
         sameSite: "strict",
         maxAge: refreshMaxAge,
         path: "/",

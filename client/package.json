@@ -11,7 +11,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@heroui/react": "^2.8.2",
+    "@heroui/react": "^2.8.5",
     "framer-motion": "^12.23.12",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.536.0",

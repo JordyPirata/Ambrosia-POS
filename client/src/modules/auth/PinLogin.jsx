@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { getUsers } from "./authService";
 import { Delete, LogIn, Users, Trash2 } from "lucide-react";
 import {
@@ -20,6 +21,7 @@ import { useRouter } from "next/navigation";
 import { useConfigurations } from "../../providers/configurations/configurationsProvider";
 
 export default function PinLoginNew() {
+  const t = useTranslations("pinLogin");
   const [pin, setPin] = useState("");
   const [selectedUser, setSelectedUser] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -33,7 +35,6 @@ export default function PinLoginNew() {
       avatar: "MG",
     },
   ]);
-  const router = useRouter();
   const { login } = useAuth();
   const { config } = useConfigurations();
 
@@ -46,8 +47,8 @@ export default function PinLoginNew() {
         const employeesWithRoleName = users.map((user) => {
           return {
             ...user,
-            role: "Empleado", //TODO Update with RoleName
-            avatar: "MG", //TODO FOR UPDATE : Add avatar image
+            role: t("roleName"), //TODO Update with RoleName
+            avatar: user.name.slice(0, 2),
           };
         });
 
@@ -80,12 +81,12 @@ export default function PinLoginNew() {
 
   const handleLogin = async () => {
     if (!selectedUser) {
-      setError("Por favor selecciona un empleado");
+      setError(t("errorMessages.selectEmployee"));
       return;
     }
 
     if (pin.length < 4) {
-      setError("El PIN debe tener al menos 4 dígitos");
+      setError(t("errorMessages.enterPin"));
       return;
     }
 
@@ -100,15 +101,15 @@ export default function PinLoginNew() {
         pin,
       });
       addToast({
-        title: "Inicio de sesión exitoso",
-        description: `¡Bienvenido ${employee.name}! Acceso concedido como ${employee.role}.`,
+        title: t("successMessages.toastTitle"),
+        description: `${t("successMessages.firstMessage")} ${employee.name} ${t("successMessages.secondMessage")} ${employee.role}.`,
         color: "success",
       });
       setPin("");
       setSelectedUser("");
-      router.push("/");
+      window.location.reload();
     } catch (error) {
-      setError("PIN incorrecto para el empleado seleccionado.");
+      setError(t("errorMessages.incorrectPin"));
       setPin("");
     } finally {
       setIsLoading(false);
@@ -135,7 +136,7 @@ export default function PinLoginNew() {
                 {config?.businessName}
               </h1>
               <p className="text-forest mt-2 text-base text-center">
-                Ingresa tu PIN para acceder al sistema
+                {t("title")}
               </p>
             </div>
           </div>
@@ -146,12 +147,12 @@ export default function PinLoginNew() {
           <div className="space-y-2">
             <label className="text-sm font-semibold text-deep flex items-center">
               <Users className="w-4 h-4 mr-2" />
-              Seleccionar Empleado
+              {t("selectLabel")}
             </label>
             <Select
               value={selectedUser}
               onChange={(e) => setSelectedUser(e.target.value)}
-              placeholder="Toca para elegir tu nombre"
+              placeholder={t("selectPlaceholder")}
               variant="bordered"
               size="lg"
               aria-label="Employees"
@@ -233,7 +234,7 @@ export default function PinLoginNew() {
           {/* PIN Display */}
           <div className="space-y-2">
             <label className="text-sm font-semibold text-deep">
-              PIN de Acceso
+              {t("pinLabel")}
             </label>
             <div className="text-center">
               <Input
@@ -282,7 +283,7 @@ export default function PinLoginNew() {
               className="h-12 text-base font-semibold border-2 border-lime bg-lime/20 hover:bg-lime hover:text-deep active:scale-95"
             >
               <Delete className="w-4 h-4 mr-2" />
-              Borrar
+              {t("eraseButton")}
             </Button>
             <Button
               variant="outline"
@@ -292,7 +293,7 @@ export default function PinLoginNew() {
               className="h-12 text-base font-semibold border-2 border-lime bg-lime/20 hover:bg-lime hover:text-deep active:scale-95"
             >
               <Trash2 className="w-4 h-4 mr-2" />
-              Limpiar
+              {t("clearButton")}
             </Button>
           </div>
 
@@ -306,12 +307,12 @@ export default function PinLoginNew() {
             {isLoading ? (
               <div className="flex items-center">
                 <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white mr-3"></div>
-                Verificando...
+                {t("loading")}
               </div>
             ) : (
               <>
                 <LogIn className="w-5 h-5 mr-2" />
-                Iniciar Sesión
+                {t("loginButton")}
               </>
             )}
           </Button>

@@ -52,6 +52,12 @@ data class LoginResponse(
 )
 
 @Serializable
+data class WalletAuthResponse(
+  val message: String,
+  val walletTokenExpiresAt: Long,
+)
+
+@Serializable
 data class User(
   val id: String? = null,
   val name: String,
@@ -137,6 +143,19 @@ data class Order(
 )
 
 @Serializable
+data class OrderWithPayment(
+  val id: String,
+  val user_id: String,
+  val table_id: String? = null,
+  val waiter: String? = null,
+  val status: String,
+  val total: Double,
+  val created_at: String,
+  val payment_method: String? = null,
+  val payment_method_ids: List<String> = emptyList(),
+)
+
+@Serializable
 data class OrderDish(
   val id: String? = null,
   val order_id: String,
@@ -147,7 +166,6 @@ data class OrderDish(
   val should_prepare: Boolean,
 )
 
-// NEW: DTO for adding dishes to an order
 @Serializable
 data class AddOrderDishRequest(
   val dish_id: String,
@@ -194,6 +212,18 @@ data class Ticket(
   val id: String? = null,
   val acronym: String,
   val name: String? = null,
+  val symbol: String? = null,
+  val country_name: String? = null,
+  val country_code: String? = null,
+)
+
+@Serializable
+data class BaseCurrencyResponse(
+  val currency_id: String? = null,
+  val id: String? = null,
+  val acronym: String? = null,
+  val name: String? = null,
+  val symbol: String? = null,
   val country_name: String? = null,
   val country_code: String? = null,
 )

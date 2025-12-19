@@ -20,7 +20,11 @@ fun Application.configureRouting() {
     get("/base-currency") {
       val baseCurrencyService = BaseCurrencyService(connection)
       val baseCurrency = baseCurrencyService.getBaseCurrency()
-      call.respond(mapOf("currency_id" to baseCurrency))
+      if (baseCurrency == null) {
+        call.respond(mapOf("currency_id" to null))
+      } else {
+        call.respond(baseCurrency)
+      }
     }
   }
 }

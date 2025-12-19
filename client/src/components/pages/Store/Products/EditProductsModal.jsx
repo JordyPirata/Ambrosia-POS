@@ -12,25 +12,38 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
+  Select,
+  SelectItem,
 } from "@heroui/react";
 import { Upload, X } from "lucide-react";
+import { useCurrency } from "@/components/hooks/useCurrency";
 
 export function EditProductsModal({
   data,
   setData,
   onChange,
+  updateProduct,
+  onProductUpdated,
+  isUploading = false,
+  categories = [],
+  categoriesLoading = false,
+  createCategory,
   editProductsShowModal,
   setEditProductsShowModal,
 }) {
   const t = useTranslations("products");
+  const { currency } = useCurrency();
   const fileInputRef = useRef(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [isCreatingCategory, setIsCreatingCategory] = useState(false);
 
   const handleImageChange = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    onChange({ storeImage: file });
+    onChange({ storeImage: file, productImage: "" });
 
     const reader = new FileReader();
     reader.onloadend = () => setImagePreview(reader.result);
@@ -38,27 +51,36 @@ export function EditProductsModal({
   };
 
   const handleRemoveImage = () => {
-    onChange({ storeImage: null });
+    onChange({ storeImage: null, productImage: "" });
     setImagePreview(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(data);
+    if (isSubmitting || isUploading) return;
 
-    setEditProductsShowModal(false);
+    try {
+      setIsSubmitting(true);
+      await updateProduct(data);
+      setEditProductsShowModal(false);
+      onProductUpdated?.();
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleOnCloseModal = () => {
     setData({
+      productId: "",
       productName: "",
       productDescription: "",
       productCategory: "",
       productSKU: "",
       productPrice: "",
       productStock: "",
-      productImage: ""
+      productImage: "",
+      storeImage: null,
     });
 
     setEditProductsShowModal(false);
@@ -81,6 +103,8 @@ export function EditProductsModal({
             <Input
               label={t("modal.productNameLabel")}
               placeholder={t("modal.productNamePlaceholder")}
+              isRequired
+              errorMessage={t("modal.errorMsgInputFieldEmpty")}
               value={data.productName}
               onChange={(e) =>
                 onChange({ productName: e.target.value })
@@ -90,24 +114,68 @@ export function EditProductsModal({
             <Textarea
               label={t("modal.productDescriptionLabel")}
               placeholder={t("modal.productDescriptionPlaceholder")}
+              isRequired
+              errorMessage={t("modal.errorMsgInputFieldEmpty")}
               value={data.productDescription}
               onChange={(e) =>
                 onChange({ productDescription: e.target.value })
               }
             />
 
-            <Input
-              label={t("modal.productCategoryLabel")}
-              placeholder={t("modal.productCategoryPlaceholder")}
-              value={data.productCategory}
-              onChange={(e) =>
-                onChange({ productCategory: e.target.value })
-              }
-            />
+            <div className="space-y-2">
+              <Select
+                label={t("modal.productCategoryLabel")}
+                placeholder={t("modal.categorySelectPlaceholder")}
+                isRequired
+                errorMessage={t("modal.errorMsgSelectEmpty")}
+                selectedKeys={data.productCategory ? [data.productCategory] : []}
+                onChange={(e) =>
+                  onChange({ productCategory: e.target.value })
+                }
+                isLoading={categoriesLoading}
+              >
+                {categories.map((category) => (
+                  <SelectItem key={category.id} value={category.id}>
+                    {category.name}
+                  </SelectItem>
+                ))}
+              </Select>
+
+              <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-3">
+                <Input
+                  label={t("modal.createCategoryLabel")}
+                  placeholder={t("modal.createCategoryPlaceholder")}
+                  value={newCategoryName}
+                  onChange={(e) => setNewCategoryName(e.target.value)}
+                />
+                <Button
+                  color="primary"
+                  className="bg-green-800"
+                  onPress={async () => {
+                    if (!newCategoryName.trim() || isCreatingCategory) return;
+                    try {
+                      setIsCreatingCategory(true);
+                      const newId = await createCategory(newCategoryName.trim());
+                      if (newId) {
+                        onChange({ productCategory: newId });
+                      }
+                      setNewCategoryName("");
+                    } finally {
+                      setIsCreatingCategory(false);
+                    }
+                  }}
+                  isLoading={isCreatingCategory}
+                >
+                  {t("modal.createCategoryButton")}
+                </Button>
+              </div>
+            </div>
 
             <Input
               label={t("modal.productSKULabel")}
               placeholder={t("modal.productSKUPlaceholder")}
+              isRequired
+              errorMessage={t("modal.errorMsgInputFieldEmpty")}
               value={data.productSKU}
               onChange={(e) =>
                 onChange({ productSKU: e.target.value })
@@ -118,9 +186,14 @@ export function EditProductsModal({
               <NumberInput
                 label={t("modal.productPriceLabel")}
                 placeholder={t("modal.productPricePlaceholder")}
+                isRequired
+                errorMessage={t("modal.errorMsgInputFieldEmpty")}
                 startContent={
-                  <span className="text-default-400 text-small">$</span>
+                  <span className="text-default-400 text-small">
+                    {currency?.acronym || "$"}
+                  </span>
                 }
+                minValue={0}
                 value={data.productPrice}
                 onValueChange={(value) => {
                   const numeric = value === null ? "" : Number(value);
@@ -133,6 +206,9 @@ export function EditProductsModal({
               <NumberInput
                 label={t("modal.productStockLabel")}
                 placeholder={t("modal.productStockPlaceholder")}
+                isRequired
+                errorMessage={t("modal.errorMsgInputFieldEmpty")}
+                minValue={0}
                 value={data.productStock}
                 onValueChange={(value) => {
                   const numeric = value === null ? "" : Number(value);
@@ -194,7 +270,12 @@ export function EditProductsModal({
                 {t("modal.cancelButton")}
               </Button>
 
-              <Button color="primary" className="bg-green-800" type="submit">
+              <Button
+                color="primary"
+                className="bg-green-800"
+                type="submit"
+                isLoading={isSubmitting || isUploading}
+              >
                 {t("modal.editButton")}
               </Button>
             </ModalFooter>

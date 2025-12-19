@@ -15,7 +15,7 @@ object InjectLogs
         val client = HttpClient(CIO)
         return try {
             runBlocking {
-                val response: HttpResponse = client.get("https://github.com/btcgdl/Ambrosia-POS/raw/main/server/app/src/main/resources/Ambrosia-Logs.xml")
+                val response: HttpResponse = client.get("https://github.com/olympus-btc/ambrosia/raw/main/server/app/src/main/resources/Ambrosia-Logs.xml")
                 if (response.status == HttpStatusCode.OK) {
                     destination.writeBytes(response.readRawBytes())
                     true

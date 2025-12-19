@@ -24,13 +24,13 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
       - name: install ambrosia
-        run: curl -fsSL https://raw.githubusercontent.com/btcgdl/Ambrosia-POS/master/scripts/ambrosia.sh | bash
+        run: curl -fsSL https://raw.githubusercontent.com/olympus-btc/ambrosia/master/scripts/ambrosia.sh | bash
 
       - name: Check Ambrosia POS installation
         run: command -v ambrosia
 
       - name: install phoenixd
-        run: curl -fsSL https://raw.githubusercontent.com/btcgdl/Ambrosia-POS/master/scripts/phoenixd.sh | bash
+        run: curl -fsSL https://raw.githubusercontent.com/olympus-btc/ambrosia/master/scripts/phoenixd.sh | bash
 
       - name: Check phoenixd installation
         run: command -v phoenixd

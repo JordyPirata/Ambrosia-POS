@@ -11,6 +11,7 @@ import pos.ambrosia.models.Message
 import pos.ambrosia.utils.AdminOnlyException
 import pos.ambrosia.utils.PermissionDeniedException
 import pos.ambrosia.utils.InvalidCredentialsException
+import pos.ambrosia.utils.InvalidTokenException
 import pos.ambrosia.utils.PhoenixBalanceException
 import pos.ambrosia.utils.PhoenixConnectionException
 import pos.ambrosia.utils.PhoenixNodeInfoException
@@ -33,6 +34,10 @@ fun Application.Handler() {
     exception<InvalidCredentialsException> { call, cause ->
       logger.warn("Invalid login attempt: ${cause.message}")
       call.respond(HttpStatusCode.Unauthorized, Message("Invalid credentials"))
+    }
+    exception<InvalidTokenException> { call, cause ->
+      logger.warn("Invalid token: ${cause.message}")
+      call.respond(HttpStatusCode.Unauthorized, Message("Invalid token"))
     }
     exception<Exception> { call, cause ->
       logger.error("Unhandled exception: ${cause.message}")
