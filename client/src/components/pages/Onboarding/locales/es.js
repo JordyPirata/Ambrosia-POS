@@ -1,4 +1,4 @@
-const onboarding_es = {
+const onboardingEs = {
   submitOnboardingToast: {
     title: "Guardado Exitoso",
     description: "La información se almaceno correctamente",
@@ -99,4 +99,4 @@ const onboarding_es = {
   },
 };
 
-export default onboarding_es;
+export default onboardingEs;

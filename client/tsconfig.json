@@ -23,7 +23,15 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@services/*": ["./src/services/*"],
+      "@components/*": ["./src/components/*"],
+      "@lib/*": ["./src/lib/*"],
+      "@providers/*": ["./src/providers/*"],
+      "@modules/*": ["./src/modules/*"],
+      "@i18n/*": ["./src/i18n/*"],
+      "@app/*": ["./src/app/*"]
     }
   },
   "include": [
