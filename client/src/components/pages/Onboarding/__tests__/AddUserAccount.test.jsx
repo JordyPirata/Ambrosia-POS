@@ -1,4 +1,5 @@
 import { render, screen, fireEvent, act } from "@testing-library/react";
+
 import { UserAccountStep } from "../AddUserAccount";
 
 describe("Step 2 User Account", () => {
@@ -41,7 +42,7 @@ describe("Step 2 User Account", () => {
 
   it("calls onChange and updates password strength", async () => {
     const { rerender } = render(
-      <UserAccountStep data={defaultData} onChange={mockChange} />
+      <UserAccountStep data={defaultData} onChange={mockChange} />,
     );
 
     const passwordInput = screen.getByPlaceholderText("step2.fields.passwordPlaceholder");
@@ -54,7 +55,7 @@ describe("Step 2 User Account", () => {
       <UserAccountStep
         data={{ ...defaultData, userPassword: "abc123!!" }}
         onChange={mockChange}
-      />
+      />,
     );
 
     expect(mockChange).toHaveBeenCalledWith({

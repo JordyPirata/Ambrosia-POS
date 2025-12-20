@@ -1,4 +1,4 @@
-const onboarding_en = {
+const onboardingEn = {
   submitOnboardingToast: {
     title: "Success",
     description: "The data is saved succesfully",
@@ -97,4 +97,4 @@ const onboarding_en = {
     },
   },
 };
-export default onboarding_en;
+export default onboardingEn;
