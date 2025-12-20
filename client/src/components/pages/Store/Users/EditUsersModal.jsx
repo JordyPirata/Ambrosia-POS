@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
+
+import { Button, Input, Select, SelectItem, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@heroui/react";
+import { Eye, EyeOff } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Eye, EyeOff } from 'lucide-react';
-import { Button, Input, Select, SelectItem, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, } from "@heroui/react";
 
 export function EditUsersModal({ data, setData, roles, onChange, editUsersShowModal, setEditUsersShowModal, updateUser }) {
   const t = useTranslations("users");
-  const [showPin, setShowPin] = useState(false)
+  const [showPin, setShowPin] = useState(false);
   const handleOnCloseModal = () => {
     setData({
       userId: "",
@@ -18,8 +19,8 @@ export function EditUsersModal({ data, setData, roles, onChange, editUsersShowMo
       userRole: roles?.[0]?.id || "",
     });
 
-    setEditUsersShowModal(false)
-  }
+    setEditUsersShowModal(false);
+  };
 
   return (
     <Modal
@@ -39,7 +40,6 @@ export function EditUsersModal({ data, setData, roles, onChange, editUsersShowMo
             className="space-y-4"
             onSubmit={(e) => {
               e.preventDefault();
-              console.log("User data to submit:", data);
               setData({
                 userId: "",
                 userName: "",
@@ -88,13 +88,15 @@ export function EditUsersModal({ data, setData, roles, onChange, editUsersShowMo
                 onChange({ ...data, userPin: onlyNumbers });
               }}
               endContent={
-                <button
-                  type="button"
-                  onClick={() => setShowPin(!showPin)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                >
-                  {showPin ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
+                (
+                  <button
+                    type="button"
+                    onClick={() => setShowPin(!showPin)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  >
+                    {showPin ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
+                )
               }
             />
             <Select

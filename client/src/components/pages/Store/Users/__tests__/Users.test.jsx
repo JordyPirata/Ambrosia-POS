@@ -1,8 +1,9 @@
 import { render, screen, fireEvent, act } from "@testing-library/react";
-import { I18nProvider } from "../../../../../i18n/I18nProvider";
-import { Users } from "../Users";
+
 import * as useModulesHook from "../../../../../hooks/useModules";
+import { I18nProvider } from "../../../../../i18n/I18nProvider";
 import * as configurationsProvider from "../../../../../providers/configurations/configurationsProvider";
+import { Users } from "../Users";
 
 jest.mock("next/navigation", () => ({
   usePathname: jest.fn(() => "/store/users"),
@@ -79,7 +80,7 @@ describe("Users page", () => {
     return render(
       <I18nProvider>
         <Users />
-      </I18nProvider>
+      </I18nProvider>,
     );
   }
 

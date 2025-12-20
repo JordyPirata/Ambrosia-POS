@@ -1,19 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useTranslations } from "next-intl";
-import { Button } from "@heroui/react";
-import { StoreLayout } from "../StoreLayout";
-import { UsersTable } from "./UsersTable";
-import { AddUsersModal } from "./AddUsersModal";
-import { EditUsersModal } from "./EditUsersModal";
-import { DeleteUsersModal } from "./DeleteUsersModal";
-import { useUsers } from "./../hooks/useUsers";
-import { useRoles } from "./../hooks/useRoles";
+import { useState } from "react";
 
+import { Button } from "@heroui/react";
+import { useTranslations } from "next-intl";
+
+import { StoreLayout } from "../StoreLayout";
+
+import { useRoles } from "./../hooks/useRoles";
+import { useUsers } from "./../hooks/useUsers";
+import { AddUsersModal } from "./AddUsersModal";
+import { DeleteUsersModal } from "./DeleteUsersModal";
+import { EditUsersModal } from "./EditUsersModal";
+import { UsersTable } from "./UsersTable";
 
 export function Users() {
-
   const [addUsersShowModal, setAddUsersShowModal] = useState(false);
   const [editUsersShowModal, setEditUsersShowModal] = useState(false);
   const [deleteUsersShowModal, setDeleteUsersShowModal] = useState(false);
@@ -29,7 +30,7 @@ export function Users() {
     userPhone: "",
     userEmail: "",
     userRole: "",
-  })
+  });
 
   const handleEditUser = (user) => {
     setSelectedUser(user);
@@ -52,16 +53,10 @@ export function Users() {
   };
 
   const handleDataChange = (newData) => {
-    setData((prev) => ({ ...prev, ...newData }))
-  }
+    setData((prev) => ({ ...prev, ...newData }));
+  };
 
   const t = useTranslations("users");
-
-  useEffect(() => {
-    if (!data.userRole && roles.length > 0) {
-      setData((prev) => ({ ...prev, userRole: roles[0].id }));
-    }
-  }, [roles]);
 
   return (
     <StoreLayout>
@@ -84,7 +79,7 @@ export function Users() {
               userEmail: "",
               userRole: roles?.[0]?.id || "",
             });
-            setAddUsersShowModal(true)
+            setAddUsersShowModal(true);
           }}
         >
           {t("addUser")}
