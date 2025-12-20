@@ -1,8 +1,9 @@
-"use client"
-import { useState, useRef, useEffect } from "react"
+"use client";
+import { useState, useRef, useMemo } from "react";
+
+import { Image, Input, Select, SelectItem } from "@heroui/react";
+import { Upload, X } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
-import { Input, Select, SelectItem } from "@heroui/react"
-import { Upload, X } from "lucide-react"
 
 import { CURRENCIES_EN } from "./utils/currencies_en";
 import { CURRENCIES_ES } from "./utils/currencies_es";
@@ -13,8 +14,9 @@ export function BusinessDetailsStep({ data, onChange }) {
 
   const [rfcError, setRfcError] = useState("");
   const [logoPreview, setLogoPreview] = useState(null);
-  const [CURRENCIES, setCURRENCIES] = useState(CURRENCIES_ES);
   const fileInputRef = useRef(null);
+
+  const CURRENCIES = useMemo(() => (locale === "en" ? CURRENCIES_EN : CURRENCIES_ES), [locale]);
 
   const validateRFC = (value) => {
     const upperValue = value.toUpperCase();
@@ -32,44 +34,36 @@ export function BusinessDetailsStep({ data, onChange }) {
   };
 
   const handleLogoChange = (e) => {
-    const file = e.target.files?.[0]
+    const file = e.target.files?.[0];
     if (file) {
-      onChange({ storeLogo: file })
+      onChange({ storeLogo: file });
 
-      const reader = new FileReader()
+      const reader = new FileReader();
       reader.onloadend = () => {
-        setLogoPreview(reader.result)
-      }
-      reader.readAsDataURL(file)
+        setLogoPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
-  }
+  };
 
   const handleRemoveLogo = () => {
-    onChange({ storeLogo: null })
-    setLogoPreview(null)
+    onChange({ storeLogo: null });
+    setLogoPreview(null);
     if (fileInputRef.current) {
-      fileInputRef.current.value = ""
+      fileInputRef.current.value = "";
     }
-  }
-
-  useEffect(() => {
-  if (locale === "en") {
-      setCURRENCIES(CURRENCIES_EN);
-    } else {
-      setCURRENCIES(CURRENCIES_ES);
-    }
-  }, [locale]);
+  };
 
   return (
     <div>
       <h2 className="text-2xl font-bold text-foreground mb-2">
-        {data.businessType === 'store' ? t("step3.titleStore") : t("step3.titleRestaurant")}
+        {data.businessType === "store" ? t("step3.titleStore") : t("step3.titleRestaurant")}
       </h2>
       <p className="text-muted-foreground mb-8">{t("step3.subtitle")}</p>
 
       <div className="space-y-6">
         <Input
-          label={data.businessType === 'store' ? t("step3.fields.businessrNameLabelStore") : t("step3.fields.businessrNameLabelRestaurant")}
+          label={data.businessType === "store" ? t("step3.fields.businessrNameLabelStore") : t("step3.fields.businessrNameLabelRestaurant")}
           type="text"
           placeholder={t("step3.fields.businessNamePlaceholder")}
           value={data.businessName}
@@ -123,19 +117,20 @@ export function BusinessDetailsStep({ data, onChange }) {
           onChange={(e) => onChange({ ...data, businessCurrency: e.target.value })}
         >
           {CURRENCIES.map((currency) => (
-              <SelectItem key={currency.code}>
-                {`${currency.code}  -  ${currency.name}`}
-              </SelectItem>
-            ))}
+            <SelectItem key={currency.code}>
+              {`${currency.code}  -  ${currency.name}`}
+            </SelectItem>
+          ))}
         </Select>
 
         <div>
           <label className="block text-sm font-medium text-foreground mb-2">
-            { data.businessType === 'store' ? t("step3.fields.businessLogoLabelStore") : t("step3.fields.businessLogoLabelRestaurant")}
+            {data.businessType === "store" ? t("step3.fields.businessLogoLabelStore") : t("step3.fields.businessLogoLabelRestaurant")}
           </label>
           {logoPreview ? (
             <div className="relative w-32 h-32 rounded-lg border-2 border-border overflow-hidden bg-muted">
-              <img src={logoPreview || "/placeholder.svg"} alt="Logo preview" className="w-full h-full object-cover" />
+              {/* <img src={logoPreview || "/placeholder.svg"} alt="Logo preview" className="w-full h-full object-cover" /> */}
+              <Image src={logoPreview || "/placeholder.svg"} alt="Logo preview" className="w-full h-full object-cover" />
               <button
                 onClick={handleRemoveLogo}
                 className="absolute top-1 right-1 p-1 bg-destructive text-destructive-foreground rounded hover:opacity-90"
@@ -157,5 +152,5 @@ export function BusinessDetailsStep({ data, onChange }) {
         </div>
       </div>
     </div>
-  )
+  );
 }

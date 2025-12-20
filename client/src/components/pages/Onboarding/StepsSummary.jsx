@@ -1,7 +1,7 @@
-"use client"
-import {Card, CardHeader, Button} from "@heroui/react";
+"use client";
+import { Card, CardHeader, Button, Image } from "@heroui/react";
+import { Edit2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Edit2 } from "lucide-react"
 
 export function WizardSummary({ data, onEdit }) {
   const t = useTranslations();
@@ -86,7 +86,12 @@ export function WizardSummary({ data, onEdit }) {
               {data.storeLogo && (
                 <div className="mt-3">
                   <p className="text-xs text-muted-foreground mb-2">Logo</p>
-                  <img
+                  {/* <img
+                    src={URL.createObjectURL(data.storeLogo) || "/placeholder.svg"}
+                    alt="Store logo"
+                    className="w-16 h-16 object-cover rounded border border-border"
+                  /> */}
+                  <Image
                     src={URL.createObjectURL(data.storeLogo) || "/placeholder.svg"}
                     alt="Store logo"
                     className="w-16 h-16 object-cover rounded border border-border"
@@ -107,5 +112,5 @@ export function WizardSummary({ data, onEdit }) {
         </Card>
       </div>
     </div>
-  )
+  );
 }
