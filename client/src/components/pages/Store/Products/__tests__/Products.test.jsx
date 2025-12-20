@@ -1,14 +1,15 @@
 import { render, screen, fireEvent, act } from "@testing-library/react";
-import { I18nProvider } from "../../../../../i18n/I18nProvider";
+
 import * as useModulesHook from "../../../../../hooks/useModules";
+import { I18nProvider } from "../../../../../i18n/I18nProvider";
 import * as configurationsProvider from "../../../../../providers/configurations/configurationsProvider";
-import { Products} from "../Products";
+import { Products } from "../Products";
 
 function renderProducts() {
   return render(
     <I18nProvider>
       <Products />
-    </I18nProvider>
+    </I18nProvider>,
   );
 }
 

@@ -1,15 +1,17 @@
 "use client";
-
 import { useState } from "react";
+
 import { Button } from "@heroui/react";
 import { useTranslations } from "next-intl";
-import { StoreLayout } from "../StoreLayout";
-import { ProductsTable } from "./ProductsTable";
-import { AddProductsModal } from "./AddProductsModal";
-import { EditProductsModal } from "./EditProductsModal";
-import { DeleteProductsModal } from "./DeleteProductsModal";
-import { useProducts } from "../hooks/useProducts";
+
 import { useCategories } from "../hooks/useCategories";
+import { useProducts } from "../hooks/useProducts";
+import { StoreLayout } from "../StoreLayout";
+
+import { AddProductsModal } from "./AddProductsModal";
+import { DeleteProductsModal } from "./DeleteProductsModal";
+import { EditProductsModal } from "./EditProductsModal";
+import { ProductsTable } from "./ProductsTable";
 
 export function Products() {
   const [addProductsShowModal, setAddProductsShowModal] = useState(false);
@@ -27,17 +29,17 @@ export function Products() {
     storeImage: null,
   });
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [productToDelete, setProductToDelete] = useState(null)
+  const [productToDelete, setProductToDelete] = useState(null);
   const { products, addProduct, updateProduct, deleteProduct, isUploading, refetch: refetchProducts } = useProducts();
   const {
     categories,
     loading: categoriesLoading,
     createCategory,
-    refetch: refetchCategories
+    refetch: refetchCategories,
   } = useCategories("product");
 
   const handleDataChange = (newData) => {
-    setData((prev) => ({ ...prev, ...newData }))
+    setData((prev) => ({ ...prev, ...newData }));
   };
 
   const handleEditProduct = (product) => {
@@ -135,7 +137,7 @@ export function Products() {
           setDeleteProductsShowModal={setDeleteProductsShowModal}
           onConfirm={() => {
             setDeleteProductsShowModal(false);
-            deleteProduct(productToDelete)
+            deleteProduct(productToDelete);
           }}
         />
       )}
