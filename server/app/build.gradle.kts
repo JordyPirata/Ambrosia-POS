@@ -51,6 +51,13 @@ tasks.named<JavaExec>("run") {
   jvmArgs("-Dlogback.configurationFile=Ambrosia-Logs.xml")
 }
 
+tasks.test {
+    testLogging {
+        // Define qué eventos quieres ver en el log
+        events("passed", "skipped", "failed")
+    }
+}
+
 tasks.named<Jar>("jar") {
   manifest {
     attributes["Main-Class"] = "pos.ambrosia.AmbrosiaKt"
