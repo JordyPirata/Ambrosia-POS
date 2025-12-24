@@ -1,4 +1,4 @@
-name: Server Tests
+name: Server Unit Tests
 
 on:
   pull_request:
