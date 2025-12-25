@@ -1,8 +1,8 @@
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
-import DynamicModuleRenderer from "../../../components/DynamicModuleRenderer";
-import { findRouteConfig, matchesBusiness } from "../../../lib/modules";
+import DynamicModuleRenderer from "@/components/DynamicModuleRenderer";
+import { findRouteConfig, matchesBusiness } from "@/lib/modules";
 
 export const dynamic = "force-dynamic";
 
@@ -51,7 +51,6 @@ export default async function ModuleSubPage({ params, searchParams }) {
       componentBase={componentBase}
       componentPath={componentPath}
       componentFile={routeConfig.route.component}
-      loadingMessage="Loading component..."
       passProps={{
         moduleKey: routeConfig.module,
         params: { module, slug, ...dynamicParams },

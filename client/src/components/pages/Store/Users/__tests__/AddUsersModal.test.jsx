@@ -2,35 +2,8 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 
 import { AddUsersModal } from "../AddUsersModal";
 
-const translations = {
-  title: "Users",
-  subtitle: "Manage your store staff",
-  addUser: "Add User",
-  name: "Name",
-  role: "Role",
-  email: "Email",
-  phone: "Phone",
-  actions: "Actions",
-  modal: {
-    titleAdd: "Add User",
-    titleEdit: "Edit User",
-    titleDelete: "Delete User",
-    subtitleDelete: "Are you sure you want to delete",
-    warningDelete: "This action cannot be undone.",
-    userNameLabel: "Name",
-    userEmailLabel: "Email",
-    userPhoneLabel: "Phone",
-    userPinLabel: "PIN",
-    userRoleLabel: "Role",
-    submitButton: "Add",
-    editButton: "Save",
-    cancelButton: "Cancel",
-    deleteButton: "Delete",
-  },
-};
-
 jest.mock("next-intl", () => ({
-  useTranslations: () => (key) => key.split(".").reduce((acc, k) => acc?.[k], translations) ?? key,
+  useTranslations: () => (key) => key,
 }));
 
 jest.mock("framer-motion", () => {
@@ -92,21 +65,21 @@ describe("AddUsersModal", () => {
   it("renders modal and basic fields", () => {
     renderModal();
 
-    expect(screen.getByText("Add User")).toBeInTheDocument();
-    expect(screen.getByLabelText("Name")).toBeInTheDocument();
-    expect(screen.getByLabelText("Email")).toBeInTheDocument();
-    expect(screen.getByLabelText("Phone")).toBeInTheDocument();
-    expect(screen.getByLabelText("PIN")).toBeInTheDocument();
+    expect(screen.getByText("modal.titleAdd")).toBeInTheDocument();
+    expect(screen.getByLabelText("modal.userNameLabel")).toBeInTheDocument();
+    expect(screen.getByLabelText("modal.userEmailLabel")).toBeInTheDocument();
+    expect(screen.getByLabelText("modal.userPhoneLabel")).toBeInTheDocument();
+    expect(screen.getByLabelText("modal.userPinLabel")).toBeInTheDocument();
   });
 
   it("normalizes phone and pin to digits on change", () => {
     const onChange = jest.fn();
     renderModal({ onChange });
 
-    fireEvent.change(screen.getByLabelText("Phone"), { target: { value: "123-45a" } });
+    fireEvent.change(screen.getByLabelText("modal.userPhoneLabel"), { target: { value: "123-45a" } });
     expect(onChange).toHaveBeenLastCalledWith({ ...baseData, userPhone: "12345a".replace(/\D/g, "") });
 
-    fireEvent.change(screen.getByLabelText("PIN"), { target: { value: "9x8y" } });
+    fireEvent.change(screen.getByLabelText("modal.userPinLabel"), { target: { value: "9x8y" } });
     expect(onChange).toHaveBeenLastCalledWith({ ...baseData, userPin: "98" });
   });
 
@@ -121,7 +94,7 @@ describe("AddUsersModal", () => {
       setAddUsersShowModal,
     });
 
-    fireEvent.click(screen.getByText("Add"));
+    fireEvent.click(screen.getByText("modal.submitButton"));
 
     await waitFor(() => expect(addUser).toHaveBeenCalledWith(baseData));
     expect(setData).toHaveBeenCalledWith({

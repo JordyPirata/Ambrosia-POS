@@ -1,32 +1,8 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 
+import { I18nProvider } from "@/i18n/I18nProvider";
+
 import { EditUsersModal } from "../EditUsersModal";
-
-const translations = {
-  title: "Users",
-  subtitle: "Manage your store staff",
-  addUser: "Add User",
-  modal: {
-    titleAdd: "Add User",
-    titleEdit: "Edit User",
-    titleDelete: "Delete User",
-    subtitleDelete: "Are you sure you want to delete",
-    warningDelete: "This action cannot be undone.",
-    userNameLabel: "Name",
-    userEmailLabel: "Email",
-    userPhoneLabel: "Phone",
-    userPinLabel: "PIN",
-    userRoleLabel: "Role",
-    submitButton: "Add",
-    editButton: "Save",
-    cancelButton: "Cancel",
-    deleteButton: "Delete",
-  },
-};
-
-jest.mock("next-intl", () => ({
-  useTranslations: () => (key) => key.split(".").reduce((acc, k) => acc?.[k], translations) ?? key,
-}));
 
 jest.mock("framer-motion", () => {
   const React = require("react");
@@ -68,16 +44,18 @@ const localStorageMock = {
 global.localStorage = localStorageMock;
 
 const renderModal = (props = {}) => render(
-  <EditUsersModal
-    data={baseData}
-    setData={jest.fn()}
-    roles={roles}
-    onChange={jest.fn()}
-    updateUser={jest.fn()}
-    editUsersShowModal
-    setEditUsersShowModal={jest.fn()}
-    {...props}
-  />,
+  <I18nProvider>
+    <EditUsersModal
+      data={baseData}
+      setData={jest.fn()}
+      roles={roles}
+      onChange={jest.fn()}
+      updateUser={jest.fn()}
+      editUsersShowModal
+      setEditUsersShowModal={jest.fn()}
+      {...props}
+    />
+  </I18nProvider>,
 );
 
 describe("EditUsersModal", () => {
@@ -88,10 +66,10 @@ describe("EditUsersModal", () => {
   it("renders user data and translations", () => {
     renderModal();
 
-    expect(screen.getByText("Edit User")).toBeInTheDocument();
+    expect(screen.getByText("modal.titleEdit")).toBeInTheDocument();
     expect(screen.getByDisplayValue("Jane Doe")).toBeInTheDocument();
     expect(screen.getByDisplayValue("0987654321")).toBeInTheDocument();
-    expect(screen.getByLabelText("PIN")).toBeInTheDocument();
+    expect(screen.getByLabelText("modal.userPinLabel")).toBeInTheDocument();
   });
 
   it("closes and resets data on cancel", () => {
@@ -100,7 +78,7 @@ describe("EditUsersModal", () => {
 
     renderModal({ setData, setEditUsersShowModal });
 
-    fireEvent.click(screen.getByText("Cancel"));
+    fireEvent.click(screen.getByText("modal.cancelButton"));
 
     expect(setData).toHaveBeenCalledWith({
       userId: "",
@@ -120,7 +98,7 @@ describe("EditUsersModal", () => {
 
     renderModal({ setData, setEditUsersShowModal, updateUser });
 
-    fireEvent.click(screen.getByText("Save"));
+    fireEvent.click(screen.getByText("modal.editButton"));
 
     expect(updateUser).toHaveBeenCalledWith(baseData);
     expect(setData).toHaveBeenCalledWith({

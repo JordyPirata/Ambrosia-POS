@@ -1,20 +1,8 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 
+import { I18nProvider } from "@/i18n/I18nProvider";
+
 import { DeleteUsersModal } from "../DeleteUsersModal";
-
-const translations = {
-  modal: {
-    titleDelete: "Delete User",
-    subtitleDelete: "Are you sure you want to delete",
-    warningDelete: "This action cannot be undone.",
-    cancelButton: "Cancel",
-    deleteButton: "Delete",
-  },
-};
-
-jest.mock("next-intl", () => ({
-  useTranslations: () => (key) => key.split(".").reduce((acc, k) => acc?.[k], translations) ?? key,
-}));
 
 jest.mock("framer-motion", () => {
   const React = require("react");
@@ -47,13 +35,15 @@ const localStorageMock = {
 global.localStorage = localStorageMock;
 
 const renderModal = (props = {}) => render(
-  <DeleteUsersModal
-    user={user}
-    deleteUsersShowModal
-    setDeleteUsersShowModal={jest.fn()}
-    onConfirm={jest.fn()}
-    {...props}
-  />,
+  <I18nProvider>
+    <DeleteUsersModal
+      user={user}
+      deleteUsersShowModal
+      setDeleteUsersShowModal={jest.fn()}
+      onConfirm={jest.fn()}
+      {...props}
+    />
+  </I18nProvider>,
 );
 
 describe("DeleteUsersModal", () => {
@@ -64,9 +54,9 @@ describe("DeleteUsersModal", () => {
   it("shows warning with user name", () => {
     renderModal();
 
-    expect(screen.getByText("Delete User")).toBeInTheDocument();
+    expect(screen.getByText("modal.titleDelete")).toBeInTheDocument();
     expect(screen.getByText(/Test User/)).toBeInTheDocument();
-    expect(screen.getByText("This action cannot be undone.")).toBeInTheDocument();
+    expect(screen.getByText("modal.warningDelete")).toBeInTheDocument();
   });
 
   it("confirms and closes modal", () => {
@@ -75,10 +65,10 @@ describe("DeleteUsersModal", () => {
 
     renderModal({ onConfirm, setDeleteUsersShowModal });
 
-    fireEvent.click(screen.getByText("Delete"));
+    fireEvent.click(screen.getByText("modal.deleteButton"));
     expect(onConfirm).toHaveBeenCalled();
 
-    fireEvent.click(screen.getByText("Cancel"));
+    fireEvent.click(screen.getByText("modal.cancelButton"));
     expect(setDeleteUsersShowModal).toHaveBeenCalledWith(false);
   });
 });

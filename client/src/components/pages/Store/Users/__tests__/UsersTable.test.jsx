@@ -2,16 +2,8 @@ import { render, screen, fireEvent } from "@testing-library/react";
 
 import { UsersTable } from "../UsersTable";
 
-const translations = {
-  name: "Name",
-  role: "Role",
-  email: "Email",
-  phone: "Phone",
-  actions: "Actions",
-};
-
 jest.mock("next-intl", () => ({
-  useTranslations: () => (key) => translations[key] ?? key,
+  useTranslations: () => (key) => key,
 }));
 
 jest.mock("framer-motion", () => {

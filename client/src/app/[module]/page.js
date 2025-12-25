@@ -1,8 +1,8 @@
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
-import DynamicModuleRenderer from "../../components/DynamicModuleRenderer";
-import { modules, findRouteConfig, matchesBusiness } from "../../lib/modules";
+import DynamicModuleRenderer from "@/components/DynamicModuleRenderer";
+import { modules, findRouteConfig, matchesBusiness } from "@lib/modules";
 
 export const dynamic = "force-dynamic";
 
@@ -39,7 +39,6 @@ export default async function ModulePage({ params }) {
       componentBase={componentBase}
       componentPath={componentPath}
       componentFile={routeConfig.route.component}
-      loadingMessage={`Loading ${modules[routeConfig.module].name}...`}
       passProps={{
         moduleKey: routeConfig.module,
         moduleName: routeConfig.moduleConfig.name,

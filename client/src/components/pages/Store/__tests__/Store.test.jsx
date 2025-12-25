@@ -1,8 +1,8 @@
 import { render, screen, act } from "@testing-library/react";
-import { I18nProvider } from "../../../../i18n/I18nProvider";
+import { I18nProvider } from "@/i18n/I18nProvider";
 import { Store } from "../Store";
-import * as useModulesHook from "../../../../hooks/useModules";
-import * as configurationsProvider from "../../../../providers/configurations/configurationsProvider";
+import * as useModulesHook from "@/hooks/useModules";
+import * as configurationsProvider from "@/providers/configurations/configurationsProvider";
 import * as useUsersHook from "../hooks/useUsers";
 import * as useProductsHook from "../hooks/useProducts";
 import * as useOrdersHook from "../hooks/useOrders";
