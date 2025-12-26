@@ -1,14 +1,16 @@
-import { render, screen, fireEvent, act } from "@testing-library/react";
-import { I18nProvider } from "../../../../../i18n/I18nProvider";
-import * as useModulesHook from "../../../../../hooks/useModules";
-import * as configurationsProvider from "../../../../../providers/configurations/configurationsProvider";
+import { render, screen, act } from "@testing-library/react";
+
+import * as useModulesHook from "@hooks/useModules";
+import { I18nProvider } from "@i18n/I18nProvider";
+import * as configurationsProvider from "@providers/configurations/configurationsProvider";
+
 import { Settings } from "../Settings";
 
 function renderCart() {
   return render(
     <I18nProvider>
       <Settings />
-    </I18nProvider>
+    </I18nProvider>,
   );
 }
 
