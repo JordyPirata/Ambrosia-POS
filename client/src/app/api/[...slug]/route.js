@@ -14,7 +14,7 @@ export async function GET(request, { params }) {
 
   const cookies = request.headers.get("cookie");
   if (cookies) {
-    headers["cookie"] = cookies;
+    headers.cookie = cookies;
   }
 
   try {
@@ -155,7 +155,7 @@ export async function PUT(request, { params }) {
 
   const cookies = request.headers.get("cookie");
   if (cookies) {
-    headers["cookie"] = cookies;
+    headers.cookie = cookies;
   }
 
   try {
@@ -225,7 +225,7 @@ export async function DELETE(request, { params }) {
 
   const cookies = request.headers.get("cookie");
   if (cookies) {
-    headers["cookie"] = cookies;
+    headers.cookie = cookies;
   }
 
   try {

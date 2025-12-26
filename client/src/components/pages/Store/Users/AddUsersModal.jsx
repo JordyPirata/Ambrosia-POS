@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
+
+import { Button, Input, Select, SelectItem, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@heroui/react";
+import { Eye, EyeOff } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Eye, EyeOff } from 'lucide-react';
-import { Button, Input, Select, SelectItem, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, } from "@heroui/react";
 
 export function AddUsersModal({ data, setData, roles, onChange, addUsersShowModal, setAddUsersShowModal, addUser }) {
   const t = useTranslations("users");
-  const [showPin, setShowPin] = useState(false)
+  const [showPin, setShowPin] = useState(false);
   return (
     <Modal
       isOpen={addUsersShowModal}
@@ -73,13 +74,15 @@ export function AddUsersModal({ data, setData, roles, onChange, addUsersShowModa
                 onChange({ ...data, userPin: onlyNumbers });
               }}
               endContent={
-                <button
-                  type="button"
-                  onClick={() => setShowPin(!showPin)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                >
-                  {showPin ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
+                (
+                  <button
+                    type="button"
+                    onClick={() => setShowPin(!showPin)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  >
+                    {showPin ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
+                )
               }
             />
             <Select

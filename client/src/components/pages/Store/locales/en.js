@@ -1,4 +1,4 @@
-const store_en = {
+const storeEn = {
   navbar: {
     users: "Users",
     products: "Products",
@@ -142,19 +142,19 @@ const store_en = {
         title: "Pay with Bitcoin",
         subtitle: "Ask the customer to scan the QR to complete the payment",
         generating: "Generating invoice...",
-      retry: "Retry",
-      totalLabel: "Total",
-      cancel: "Cancel",
-      confirm: "Confirm payment",
-      close: "Close",
-      complete: "Payment received",
-      confirmed: "Payment confirmed",
-      waitingPayment: "Waiting for payment confirmation...",
-      paidAt: "Confirmed at {time}",
-      websocket: {
-        paymentReceivedTitle: "Payment received",
-        paymentReceivedDescription: "Hash: {hash}",
-      },
+        retry: "Retry",
+        totalLabel: "Total",
+        cancel: "Cancel",
+        confirm: "Confirm payment",
+        close: "Close",
+        complete: "Payment received",
+        confirmed: "Payment confirmed",
+        waitingPayment: "Waiting for payment confirmation...",
+        paidAt: "Confirmed at {time}",
+        websocket: {
+          paymentReceivedTitle: "Payment received",
+          paymentReceivedDescription: "Hash: {hash}",
+        },
       },
       cash: {
         title: "Cash Payment",
@@ -241,13 +241,13 @@ const store_en = {
       receive: {
         tabTitle: "Receive",
         invoiceAmountLabel: "Amount in satoshis",
-      invoiceDescriptionLabel: "Description (optional)",
-      invoiceDescriptionPlaceholder: "Payment concept",
-      invoiceLightningButton: "Create Lightning Invoice",
-      invoiceLightningLoading: "Creating Invoice...",
-      invoiceSuccessTitle: "Invoice created",
-      invoiceSuccessDescription: "Lightning invoice generated successfully",
-    },
+        invoiceDescriptionLabel: "Description (optional)",
+        invoiceDescriptionPlaceholder: "Payment concept",
+        invoiceLightningButton: "Create Lightning Invoice",
+        invoiceLightningLoading: "Creating Invoice...",
+        invoiceSuccessTitle: "Invoice created",
+        invoiceSuccessDescription: "Lightning invoice generated successfully",
+      },
       send: {
         tabTitle: "Send",
         payInvoiceLabel: "Invoice BOLT11",
@@ -335,4 +335,4 @@ const store_en = {
   },
 };
 
-export default store_en;
+export default storeEn;
