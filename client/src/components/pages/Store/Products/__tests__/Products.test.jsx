@@ -1,8 +1,9 @@
 import { render, screen, fireEvent, act } from "@testing-library/react";
 
-import * as useModulesHook from "../../../../../hooks/useModules";
-import { I18nProvider } from "../../../../../i18n/I18nProvider";
-import * as configurationsProvider from "../../../../../providers/configurations/configurationsProvider";
+import * as useModulesHook from "@/hooks/useModules";
+import { I18nProvider } from "@/i18n/I18nProvider";
+import * as configurationsProvider from "@/providers/configurations/configurationsProvider";
+
 import { Products } from "../Products";
 
 function renderProducts() {

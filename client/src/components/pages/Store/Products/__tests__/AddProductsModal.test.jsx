@@ -1,39 +1,8 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 
+import { I18nProvider } from "@/i18n/I18nProvider";
+
 import { AddProductsModal } from "../AddProductsModal";
-
-const translations = {
-  modal: {
-    titleAdd: "Add Product",
-    titleEdit: "Edit Product",
-    titleDelete: "Delete Product",
-    subtitleDelete: "Are you sure you want to delete",
-    warningDelete: "This action cannot be undone.",
-    productNameLabel: "Product Name",
-    productNamePlaceholder: "Product Name",
-    productDescriptionLabel: "Product Description",
-    productDescriptionPlaceholder: "Product Description",
-    productCategoryLabel: "Product Category",
-    categorySelectPlaceholder: "Choose a category",
-    createCategoryLabel: "Create a new category",
-    createCategoryPlaceholder: "New Category",
-    createCategoryButton: "Add category",
-    productSKULabel: "SKU",
-    productSKUPlaceholder: "SKU",
-    productPriceLabel: "Price",
-    productPricePlaceholder: "0.00",
-    productStockLabel: "Stock",
-    productStockPlaceholder: "0",
-    productImageUpload: "Upload image",
-    productImageUploadMessage: "PNG, JPG or GIF",
-    submitButton: "Add",
-    cancelButton: "Cancel",
-  },
-};
-
-jest.mock("next-intl", () => ({
-  useTranslations: () => (key) => key.split(".").reduce((acc, k) => acc?.[k], translations) ?? key,
-}));
 
 jest.mock("@/components/hooks/useCurrency", () => ({
   useCurrency: () => ({
@@ -57,19 +26,21 @@ const baseData = {
 };
 
 const renderModal = (props = {}) => render(
-  <AddProductsModal
-    data={baseData}
-    setData={jest.fn()}
-    addProduct={jest.fn()}
-    onChange={jest.fn()}
-    onProductCreated={jest.fn()}
-    categories={categories}
-    categoriesLoading={false}
-    createCategory={jest.fn()}
-    addProductsShowModal
-    setAddProductsShowModal={jest.fn()}
-    {...props}
-  />,
+  <I18nProvider>
+    <AddProductsModal
+      data={baseData}
+      setData={jest.fn()}
+      addProduct={jest.fn()}
+      onChange={jest.fn()}
+      onProductCreated={jest.fn()}
+      categories={categories}
+      categoriesLoading={false}
+      createCategory={jest.fn()}
+      addProductsShowModal
+      setAddProductsShowModal={jest.fn()}
+      {...props}
+    />
+  </I18nProvider>,
 );
 
 describe("AddProductsModal", () => {
@@ -80,10 +51,10 @@ describe("AddProductsModal", () => {
   it("renders form fields and labels", () => {
     renderModal();
 
-    expect(screen.getByText("Add Product")).toBeInTheDocument();
-    expect(screen.getByLabelText("Product Name")).toBeInTheDocument();
-    expect(screen.getByLabelText("Product Description")).toBeInTheDocument();
-    expect(screen.getByText("Upload image")).toBeInTheDocument();
+    expect(screen.getByText("modal.titleAdd")).toBeInTheDocument();
+    expect(screen.getByLabelText("modal.productNameLabel")).toBeInTheDocument();
+    expect(screen.getByLabelText("modal.productDescriptionLabel")).toBeInTheDocument();
+    expect(screen.getByText("modal.productImageUpload")).toBeInTheDocument();
   });
 
   it("creates category when clicking add category", async () => {
@@ -91,8 +62,8 @@ describe("AddProductsModal", () => {
     const onChange = jest.fn();
     renderModal({ createCategory, onChange });
 
-    fireEvent.change(screen.getByLabelText("Create a new category"), { target: { value: "New Cat" } });
-    fireEvent.click(screen.getByText("Add category"));
+    fireEvent.change(screen.getByLabelText("modal.createCategoryLabel"), { target: { value: "New Cat" } });
+    fireEvent.click(screen.getByText("modal.createCategoryButton"));
 
     await waitFor(() => expect(createCategory).toHaveBeenCalledWith("New Cat"));
     expect(onChange).toHaveBeenCalledWith({ productCategory: "cat-2" });
@@ -111,7 +82,7 @@ describe("AddProductsModal", () => {
       onProductCreated,
     });
 
-    fireEvent.click(screen.getByText("Add"));
+    fireEvent.click(screen.getByText("modal.submitButton"));
 
     await waitFor(() => expect(addProduct).toHaveBeenCalledWith(baseData));
     expect(setData).toHaveBeenCalledWith({

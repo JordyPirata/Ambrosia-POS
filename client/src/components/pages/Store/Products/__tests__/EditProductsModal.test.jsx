@@ -1,39 +1,8 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 
+import { I18nProvider } from "@/i18n/I18nProvider";
+
 import { EditProductsModal } from "../EditProductsModal";
-
-const translations = {
-  modal: {
-    titleAdd: "Add Product",
-    titleEdit: "Edit Product",
-    titleDelete: "Delete Product",
-    subtitleDelete: "Are you sure you want to delete",
-    warningDelete: "This action cannot be undone.",
-    productNameLabel: "Product Name",
-    productNamePlaceholder: "Product Name",
-    productDescriptionLabel: "Product Description",
-    productDescriptionPlaceholder: "Product Description",
-    productCategoryLabel: "Product Category",
-    categorySelectPlaceholder: "Choose a category",
-    createCategoryLabel: "Create a new category",
-    createCategoryPlaceholder: "New Category",
-    createCategoryButton: "Add category",
-    productSKULabel: "SKU",
-    productSKUPlaceholder: "SKU",
-    productPriceLabel: "Price",
-    productPricePlaceholder: "0.00",
-    productStockLabel: "Stock",
-    productStockPlaceholder: "0",
-    productImageUpload: "Upload image",
-    productImageUploadMessage: "PNG, JPG or GIF",
-    editButton: "Save",
-    cancelButton: "Cancel",
-  },
-};
-
-jest.mock("next-intl", () => ({
-  useTranslations: () => (key) => key.split(".").reduce((acc, k) => acc?.[k], translations) ?? key,
-}));
 
 jest.mock("@/components/hooks/useCurrency", () => ({
   useCurrency: () => ({
@@ -58,19 +27,21 @@ const baseData = {
 };
 
 const renderModal = (props = {}) => render(
-  <EditProductsModal
-    data={baseData}
-    setData={jest.fn()}
-    onChange={jest.fn()}
-    updateProduct={jest.fn()}
-    onProductUpdated={jest.fn()}
-    categories={categories}
-    categoriesLoading={false}
-    createCategory={jest.fn()}
-    editProductsShowModal
-    setEditProductsShowModal={jest.fn()}
-    {...props}
-  />,
+  <I18nProvider>
+    <EditProductsModal
+      data={baseData}
+      setData={jest.fn()}
+      onChange={jest.fn()}
+      updateProduct={jest.fn()}
+      onProductUpdated={jest.fn()}
+      categories={categories}
+      categoriesLoading={false}
+      createCategory={jest.fn()}
+      editProductsShowModal
+      setEditProductsShowModal={jest.fn()}
+      {...props}
+    />
+  </I18nProvider>,
 );
 
 describe("EditProductsModal", () => {
@@ -81,7 +52,7 @@ describe("EditProductsModal", () => {
   it("renders product data and translations", () => {
     renderModal();
 
-    expect(screen.getByText("Edit Product")).toBeInTheDocument();
+    expect(screen.getByText("modal.titleEdit")).toBeInTheDocument();
     expect(screen.getByDisplayValue("Jade Wallet")).toBeInTheDocument();
     expect(screen.getByDisplayValue("Hardware wallet")).toBeInTheDocument();
   });
@@ -92,7 +63,7 @@ describe("EditProductsModal", () => {
 
     renderModal({ setData, setEditProductsShowModal });
 
-    fireEvent.click(screen.getByText("Cancel"));
+    fireEvent.click(screen.getByText("modal.cancelButton"));
 
     expect(setData).toHaveBeenCalledWith({
       productId: "",
@@ -115,7 +86,7 @@ describe("EditProductsModal", () => {
 
     renderModal({ setEditProductsShowModal, updateProduct, onProductUpdated });
 
-    fireEvent.click(screen.getByText("Save"));
+    fireEvent.click(screen.getByText("modal.editButton"));
 
     await waitFor(() => expect(updateProduct).toHaveBeenCalledWith(baseData));
     expect(setEditProductsShowModal).toHaveBeenCalledWith(false);

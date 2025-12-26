@@ -2,19 +2,8 @@ import { render, screen, fireEvent } from "@testing-library/react";
 
 import { ProductsTable } from "../ProductsTable";
 
-const translations = {
-  image: "Image",
-  name: "Name",
-  description: "Description",
-  category: "Category",
-  sku: "SKU",
-  price: "Price",
-  stock: "Stock",
-  actions: "Actions",
-};
-
 jest.mock("next-intl", () => ({
-  useTranslations: () => (key) => translations[key] ?? key,
+  useTranslations: () => (key) => key,
 }));
 
 jest.mock("@/components/hooks/useCurrency", () => ({
@@ -23,7 +12,7 @@ jest.mock("@/components/hooks/useCurrency", () => ({
   }),
 }));
 
-jest.mock("../../../../utils/storedAssetUrl", () => ({
+jest.mock("@/components/utils/storedAssetUrl", () => ({
   storedAssetUrl: (url) => url,
 }));
 
