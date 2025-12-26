@@ -1,4 +1,5 @@
 import { render, screen, fireEvent, act } from "@testing-library/react";
+
 import { WizardSummary } from "../StepsSummary";
 
 global.URL.createObjectURL = jest.fn(() => "blob:mock-url");
@@ -64,11 +65,11 @@ describe("Step 4 Summary", () => {
     expect(screen.getByText(`step4.sections.adminAccount.password: ${masked}`)).toBeInTheDocument();
   });
 
-  it("renders the store logo if provided",  async () => {
+  it("renders the store logo if provided", async () => {
     const file = new File(["fake"], "logo.png", { type: "image/png" });
     const dataWithLogo = { ...baseData, storeLogo: file };
 
-     await act(async () => {
+    await act(async () => {
       render(<WizardSummary data={dataWithLogo} onEdit={mockOnEdit} />);
     });
 

@@ -1,19 +1,21 @@
-"use client"
+"use client";
 
-import { useState } from "react"
+import { useState } from "react";
+
 import { Button, Progress, Divider, addToast } from "@heroui/react";
 import { useTranslations } from "next-intl";
-import { BusinessTypeStep } from "./SelectBusiness";
-import { UserAccountStep } from "./AddUserAccount";
+
+import { useUpload } from "@components/hooks/useUpload";
+import { submitInitialSetup } from "@services/initialSetupService";
+
 import { BusinessDetailsStep } from "./AddBusinessData";
+import { UserAccountStep } from "./AddUserAccount";
+import { BusinessTypeStep } from "./SelectBusiness";
 import { WizardSummary } from "./StepsSummary";
-import { submitInitialSetup } from "../../../services/initialSetupService";
-import { useRouter } from "next/navigation";
-import { useUpload } from "../../hooks/useUpload";
 
 export function Onboarding() {
   const t = useTranslations();
-  const [step, setStep] = useState(1)
+  const [step, setStep] = useState(1);
   const [data, setData] = useState({
     businessType: "store",
     userName: "",
@@ -26,8 +28,7 @@ export function Onboarding() {
     businessRFC: "",
     businessCurrency: "USD",
     businessLogo: null,
-  })
-  const router = useRouter();
+  });
   const { upload } = useUpload();
 
   function isPasswordStrong(password) {
@@ -38,25 +39,21 @@ export function Onboarding() {
     return /^\d{4}$/.test(pin);
   }
 
-  function isRFCValid(rfc) {
-    return /^[A-ZÑ&]{3,4}\d{6}[A-Z0-9]{3}$/i.test(rfc);
-  }
-
   const handleNext = () => {
     if (step < 4) {
-      setStep(step + 1)
+      setStep(step + 1);
     }
-  }
+  };
 
   const handlePrevious = () => {
     if (step > 1) {
-      setStep(step - 1)
+      setStep(step - 1);
     }
-  }
+  };
 
   const handleDataChange = (newData) => {
-    setData((prev) => ({ ...prev, ...newData }))
-  }
+    setData((prev) => ({ ...prev, ...newData }));
+  };
 
   const handleComplete = async () => {
     try {
@@ -85,7 +82,7 @@ export function Onboarding() {
         color: "danger",
       });
     }
-  }
+  };
 
   return (
     <div className="flex items-start justify-center min-h-screen gradient-fresh px-4 pb-4 pt-16">
@@ -183,5 +180,5 @@ export function Onboarding() {
         </div>
       </div>
     </div>
-  )
+  );
 }

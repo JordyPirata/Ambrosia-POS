@@ -1,16 +1,8 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
+import nextVitals from "eslint-config-next/core-web-vitals";
+import importPlugin from "eslint-plugin-import";
 
 const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
+  ...nextVitals,
   {
     ignores: [
       "node_modules/**",
@@ -19,7 +11,192 @@ const eslintConfig = [
       "build/**",
       "next-env.d.ts",
       "generate-env.cjs",
+      "src/app/**",
+      "src/hooks/**",
+      "src/lib/**",
+      "src/modules/**",
+      "src/providers/**",
+      "src/services/**",
+      "src/proxy.js",
+      "src/components/auth/**",
+      "src/components/dashboard/**",
+      "src/components/hooks/**",
+      "src/components/navigation/**",
+      "src/components/pages/Store/**",
+      "src/components/spaces/**",
+      "src/components/utils/**",
+      "src/components/ConfirmationPopup.jsx",
+      "src/components/DynamicModuleRenderer.jsx",
+      "src/components/Headers.jsx",
+      "src/components/LoadingCard.jsx",
+      "src/components/ModuleNavigation.js",
+      "src/components/PaginatedTable.jsx",
+      "src/components/Tabs.js",
+      "src/components/VirtualKeyboard.js",
     ],
+  },
+  {
+    plugins: {
+      import: importPlugin,
+    },
+    rules: {
+      // Airbnb-style code formatting rules
+      indent: ["error", 2, {
+        SwitchCase: 1,
+        VariableDeclarator: 1,
+        outerIIFEBody: 1,
+        MemberExpression: 1,
+        FunctionDeclaration: { parameters: 1, body: 1 },
+        FunctionExpression: { parameters: 1, body: 1 },
+        CallExpression: { arguments: 1 },
+        ArrayExpression: 1,
+        ObjectExpression: 1,
+        ImportDeclaration: 1,
+        flatTernaryExpressions: false,
+        ignoreComments: false,
+        ignoredNodes: ["TemplateLiteral *", "JSXElement", "JSXElement > *", "JSXAttribute", "JSXIdentifier", "JSXNamespacedName", "JSXMemberExpression", "JSXSpreadAttribute", "JSXExpressionContainer", "JSXOpeningElement", "JSXClosingElement", "JSXFragment", "JSXOpeningFragment", "JSXClosingFragment", "JSXText", "JSXEmptyExpression", "JSXSpreadChild"],
+        offsetTernaryExpressions: true,
+      }],
+      quotes: ["error", "double", { avoidEscape: true, allowTemplateLiterals: true }],
+      semi: ["error", "always"],
+      "comma-dangle": ["error", {
+        arrays: "always-multiline",
+        objects: "always-multiline",
+        imports: "always-multiline",
+        exports: "always-multiline",
+        functions: "always-multiline",
+      }],
+      "no-unused-vars": ["error", {
+        vars: "all",
+        args: "after-used",
+        ignoreRestSiblings: true,
+        argsIgnorePattern: "^_",
+        varsIgnorePattern: "^_",
+      }],
+      "no-console": ["warn", { allow: ["warn", "error"] }],
+      "prefer-const": "error",
+      "no-var": "error",
+      "object-shorthand": ["error", "always"],
+      "quote-props": ["error", "as-needed"],
+      "prefer-template": "error",
+      "template-curly-spacing": ["error", "never"],
+      "prefer-arrow-callback": ["error", { allowNamedFunctions: false }],
+      "arrow-spacing": ["error", { before: true, after: true }],
+      "arrow-parens": ["error", "always"],
+      "arrow-body-style": ["error", "as-needed"],
+      "no-confusing-arrow": ["error", { allowParens: true }],
+      "implicit-arrow-linebreak": ["error", "beside"],
+      "no-duplicate-imports": "error",
+      "dot-notation": "error",
+      "no-useless-escape": "error",
+      "no-multi-spaces": "error",
+      "space-before-blocks": "error",
+      "keyword-spacing": ["error", { before: true, after: true }],
+      "space-infix-ops": "error",
+      "eol-last": ["error", "always"],
+      "newline-per-chained-call": ["error", { ignoreChainWithDepth: 4 }],
+      "no-whitespace-before-property": "error",
+      "padded-blocks": ["error", "never"],
+      "no-multiple-empty-lines": ["error", { max: 1, maxBOF: 0, maxEOF: 0 }],
+      "space-in-parens": ["error", "never"],
+      "array-bracket-spacing": ["error", "never"],
+      "object-curly-spacing": ["error", "always"],
+      "block-spacing": ["error", "always"],
+      "comma-spacing": ["error", { before: false, after: true }],
+      "computed-property-spacing": ["error", "never"],
+      "func-call-spacing": ["error", "never"],
+      "key-spacing": ["error", { beforeColon: false, afterColon: true }],
+      "no-trailing-spaces": "error",
+      camelcase: ["error", { properties: "never", ignoreDestructuring: false }],
+      "new-cap": ["error", { newIsCap: true, capIsNew: false }],
+
+      // React-specific Airbnb rules
+      "react/jsx-uses-react": "error",
+      "react/jsx-uses-vars": "error",
+      "react/jsx-key": "error",
+      "react/jsx-no-duplicate-props": "error",
+      "react/jsx-no-undef": "error",
+      "react/jsx-pascal-case": "error",
+      "react/no-danger": "warn",
+      "react/no-deprecated": "error",
+      "react/no-direct-mutation-state": "error",
+      "react/no-unknown-property": "error",
+      "react/prop-types": "off", // Disabled as we might use TypeScript
+      "react/react-in-jsx-scope": "off", // Not needed in Next.js
+      "react/self-closing-comp": "error",
+      "react/jsx-boolean-value": ["error", "never"],
+      "react/jsx-closing-bracket-location": ["error", "line-aligned"],
+      "react/jsx-curly-spacing": ["error", { when: "never", children: true }],
+      "react/jsx-equals-spacing": ["error", "never"],
+      "react/jsx-first-prop-new-line": ["error", "multiline-multiprop"],
+      "react/jsx-indent": ["error", 2],
+      "react/jsx-indent-props": ["error", 2],
+      "react/jsx-max-props-per-line": ["error", { maximum: 1, when: "multiline" }],
+      "react/jsx-tag-spacing": ["error", {
+        closingSlash: "never",
+        beforeSelfClosing: "always",
+        afterOpening: "never",
+        beforeClosing: "never",
+      }],
+      "react/jsx-wrap-multilines": ["error", {
+        declaration: "parens-new-line",
+        assignment: "parens-new-line",
+        return: "parens-new-line",
+        arrow: "parens-new-line",
+        condition: "parens-new-line",
+        logical: "parens-new-line",
+        prop: "parens-new-line",
+      }],
+
+      // React Hooks rules (Airbnb style)
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn",
+
+      // Import organization (Airbnb style)
+      "import/order": ["error", {
+        groups: [
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index",
+        ],
+        pathGroups: [
+          {
+            pattern: "react",
+            group: "external",
+            position: "before",
+          },
+          {
+            pattern: "next/**",
+            group: "external",
+            position: "before",
+          },
+          {
+            pattern: "@/**",
+            group: "internal",
+          },
+        ],
+        pathGroupsExcludedImportTypes: ["react", "next"],
+        "newlines-between": "always",
+        alphabetize: {
+          order: "asc",
+          caseInsensitive: true,
+        },
+      }],
+      "import/newline-after-import": "error",
+      "import/no-duplicates": "error",
+      "import/no-unresolved": "off", // Next.js handles this
+      "import/extensions": ["error", "ignorePackages", {
+        js: "never",
+        jsx: "never",
+        ts: "never",
+        tsx: "never",
+      }],
+      "import/prefer-default-export": "off",
+      "import/no-anonymous-default-export": "off",
+    },
   },
 ];
 

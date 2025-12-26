@@ -1,42 +1,43 @@
-"use client"
+"use client";
 
-import { useState } from "react"
+import { useState } from "react";
+
+import { Input, Tooltip } from "@heroui/react";
+import { Eye, EyeOff } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Input, Tooltip } from "@heroui/react"
-import { Eye, EyeOff } from "lucide-react"
 
 export function UserAccountStep({ data, onChange }) {
   const t = useTranslations();
-  const [showPassword, setShowPassword] = useState(false)
-  const [showPin, setShowPin] = useState(false)
-  const [passwordStrength, setPasswordStrength] = useState(0)
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPin, setShowPin] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState(0);
 
   const handlePasswordChange = (password) => {
-    onChange({ ...data, userPassword: password })
+    onChange({ ...data, userPassword: password });
 
-    let strength = 0
-    if (password.length >= 8) strength++
-    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++
-    if (/\d/.test(password)) strength++
-    if (/[^a-zA-Z\d]/.test(password)) strength++
-    setPasswordStrength(strength)
-  }
+    let strength = 0;
+    if (password.length >= 8) strength++;
+    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+    if (/\d/.test(password)) strength++;
+    if (/[^a-zA-Z\d]/.test(password)) strength++;
+    setPasswordStrength(strength);
+  };
 
   const getPasswordStrengthColor = () => {
-    if (passwordStrength === 0) return "bg-muted"
-    if (passwordStrength === 1) return "bg-red-500"
-    if (passwordStrength === 2) return "bg-yellow-500"
-    if (passwordStrength === 3) return "bg-emerald-500"
-    return "bg-green-600"
-  }
+    if (passwordStrength === 0) return "bg-muted";
+    if (passwordStrength === 1) return "bg-red-500";
+    if (passwordStrength === 2) return "bg-yellow-500";
+    if (passwordStrength === 3) return "bg-emerald-500";
+    return "bg-green-600";
+  };
 
   const getPasswordStrengthText = () => {
-    if (passwordStrength === 0) return ""
-    if (passwordStrength === 1) return t("step2.strength.weak")
-    if (passwordStrength === 2) return t("step2.strength.regular")
-    if (passwordStrength === 3) return t("step2.strength.good")
-    return t("step2.strength.strong")
-  }
+    if (passwordStrength === 0) return "";
+    if (passwordStrength === 1) return t("step2.strength.weak");
+    if (passwordStrength === 2) return t("step2.strength.regular");
+    if (passwordStrength === 3) return t("step2.strength.good");
+    return t("step2.strength.strong");
+  };
 
   return (
     <div>
@@ -53,13 +54,13 @@ export function UserAccountStep({ data, onChange }) {
         />
 
         <Tooltip
-          content={
+          content={(
             <div className="px-1 py-2">
               <div className="text-small font-bold">{t("step2.fields.userPinLabel")}</div>
               <div className="text-tiny">{t("step2.tooltips.userPin")}</div>
             </div>
-          }
-          showArrow={true}
+          )}
+          showArrow
           delay={10}
           placement="top-end"
         >
@@ -74,7 +75,7 @@ export function UserAccountStep({ data, onChange }) {
                 const onlyNumbers = e.target.value.replace(/\D/g, "");
                 onChange({ ...data, userPin: onlyNumbers });
               }}
-              endContent={
+              endContent={(
                 <button
                   type="button"
                   onClick={() => setShowPin(!showPin)}
@@ -82,19 +83,19 @@ export function UserAccountStep({ data, onChange }) {
                 >
                   {showPin ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
-              }
+              )}
             />
           </div>
         </Tooltip>
 
         <Tooltip
-          content={
+          content={(
             <div className="px-1 py-2">
               <div className="text-small font-bold">{t("step2.fields.passwordLabel")}</div>
               <div className="text-tiny">{t("step2.tooltips.userPassword")}</div>
             </div>
-          }
-          showArrow={true}
+          )}
+          showArrow
           delay={10}
           placement="top-end"
         >
@@ -106,7 +107,7 @@ export function UserAccountStep({ data, onChange }) {
               placeholder={t("step2.fields.passwordPlaceholder")}
               value={data.userPassword}
               onChange={(e) => handlePasswordChange(e.target.value)}
-              endContent={
+              endContent={(
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
@@ -114,7 +115,7 @@ export function UserAccountStep({ data, onChange }) {
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
-              }
+              )}
             />
           </div>
         </Tooltip>
@@ -143,5 +144,5 @@ export function UserAccountStep({ data, onChange }) {
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -1,6 +1,8 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+
+import { I18nProvider } from "@i18n/I18nProvider";
+
 import { BusinessDetailsStep } from "../AddBusinessData";
-import { I18nProvider } from "../../../../i18n/I18nProvider";
 
 describe("Step 3 Business Details", () => {
   const mockChange = jest.fn();
@@ -19,7 +21,7 @@ describe("Step 3 Business Details", () => {
     return render(
       <I18nProvider>
         <BusinessDetailsStep data={data} onChange={mockChange} />
-      </I18nProvider>
+      </I18nProvider>,
     );
   }
 
@@ -40,7 +42,7 @@ describe("Step 3 Business Details", () => {
     const input = screen.getByPlaceholderText("step3.fields.businessNamePlaceholder");
     fireEvent.change(input, { target: { value: "Mi tienda" } });
     expect(mockChange).toHaveBeenCalledWith(
-      expect.objectContaining({ businessName: "Mi tienda" })
+      expect.objectContaining({ businessName: "Mi tienda" }),
     );
   });
 
@@ -49,7 +51,7 @@ describe("Step 3 Business Details", () => {
     const rfcInput = screen.getByPlaceholderText("step3.fields.businessRFCPlaceholder");
     fireEvent.change(rfcInput, { target: { value: "abc123" } });
     expect(mockChange).toHaveBeenCalledWith(
-      expect.objectContaining({ businessRFC: "ABC123" })
+      expect.objectContaining({ businessRFC: "ABC123" }),
     );
   });
 
@@ -58,7 +60,7 @@ describe("Step 3 Business Details", () => {
     const select = screen.getAllByLabelText("step3.fields.businessCurrency");
     fireEvent.change(select[0], { target: { value: "USD" } });
     expect(mockChange).toHaveBeenCalledWith(
-      expect.objectContaining({ businessCurrency: "USD" })
+      expect.objectContaining({ businessCurrency: "USD" }),
     );
   });
 
@@ -84,7 +86,7 @@ describe("Step 3 Business Details", () => {
           data={{ ...defaultData, storeLogo: new File(["x"], "logo.png") }}
           onChange={mockChange}
         />
-      </I18nProvider>
+      </I18nProvider>,
     );
 
     const removeButton = container.querySelector("button.bg-destructive");

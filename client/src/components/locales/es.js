@@ -1,4 +1,4 @@
-const components_es = {
+const componentsEs = {
   loadingCard: {
     message: "Cargando...",
   },
@@ -25,4 +25,4 @@ const components_es = {
   },
 };
 
-export default components_es;
+export default componentsEs;

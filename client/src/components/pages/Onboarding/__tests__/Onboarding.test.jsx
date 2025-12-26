@@ -1,4 +1,5 @@
 import { render, screen, fireEvent, act } from "@testing-library/react";
+
 import { I18nProvider } from "../../../../i18n/I18nProvider";
 import { Onboarding } from "../Onboarding";
 
@@ -6,7 +7,7 @@ function renderOnboarding() {
   return render(
     <I18nProvider>
       <Onboarding />
-    </I18nProvider>
+    </I18nProvider>,
   );
 }
 
@@ -71,7 +72,7 @@ describe("Onboarding Wizard", () => {
     await act(async () => {
       fireEvent.click(backButton);
     });
-    
+
     expect(screen.getByText("1")).toHaveClass("bg-primary");
   });
 
