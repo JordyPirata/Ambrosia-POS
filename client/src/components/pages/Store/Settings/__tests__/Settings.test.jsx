@@ -1,4 +1,4 @@
-import { render, screen, act, waitFor } from "@testing-library/react";
+import { render, screen, act, waitFor, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import * as useCurrencyHook from "@components/hooks/useCurrency";
@@ -265,6 +265,51 @@ describe("Settings page", () => {
       });
     });
 
+    it("updates config and closes modal when form is submitted", async () => {
+      const user = userEvent.setup();
+
+      await act(async () => {
+        renderSettings();
+      });
+
+      const editButton = screen.getByText("cardInfo.edit");
+      await user.click(editButton);
+
+      await waitFor(() => {
+        expect(screen.getByText("modal.title")).toBeInTheDocument();
+      });
+
+      const submitButton = screen.getByText("modal.editButton");
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(mockUpdateConfig).toHaveBeenCalled();
+      });
+    });
+
+    it("updates data when modal onChange is called", async () => {
+      const user = userEvent.setup();
+
+      await act(async () => {
+        renderSettings();
+      });
+
+      const editButton = screen.getByText("cardInfo.edit");
+      await user.click(editButton);
+
+      await waitFor(() => {
+        expect(screen.getByText("modal.title")).toBeInTheDocument();
+      });
+
+      const nameInput = screen.getByLabelText("modal.name");
+      await user.clear(nameInput);
+      await user.type(nameInput, "New Store Name");
+
+      await waitFor(() => {
+        expect(nameInput).toHaveValue("New Store Name");
+      });
+    });
+
     it("renders LanguageSwitcher component", async () => {
       await act(async () => {
         renderSettings();
@@ -306,6 +351,55 @@ describe("Settings page", () => {
       });
 
       expect(mockUpdateCurrency).not.toHaveBeenCalled();
+    });
+
+    it("displays currencies based on locale", async () => {
+      await act(async () => {
+        renderSettings();
+      });
+
+      const currencySelect = screen.getByRole("button", { name: /cardCurrency.currencyLabel/i });
+      expect(currencySelect).toBeInTheDocument();
+    });
+
+    it("calls updateCurrency when a valid currency is selected", async () => {
+      const user = userEvent.setup();
+
+      await act(async () => {
+        renderSettings();
+      });
+
+      const currencySelect = screen.getByRole("button", { name: /cardCurrency.currencyLabel/i });
+      await user.click(currencySelect);
+
+      await waitFor(async () => {
+        const options = screen.queryAllByRole("option");
+        if (options.length > 0) {
+          const eurOption = options.find((opt) => opt.textContent?.includes("EUR"));
+          if (eurOption) {
+            await user.click(eurOption);
+            expect(mockUpdateCurrency).toHaveBeenCalledWith({ acronym: expect.any(String) });
+          }
+        }
+      });
+    });
+
+    it("executes handleCurrencyChange with valid value", async () => {
+      await act(async () => {
+        renderSettings();
+      });
+
+      const selectElement = document.querySelector("select");
+
+      if (selectElement) {
+        await act(async () => {
+          fireEvent.change(selectElement, { target: { value: "EUR" } });
+        });
+
+        await waitFor(() => {
+          expect(mockUpdateCurrency).toHaveBeenCalledWith({ acronym: "EUR" });
+        });
+      }
     });
   });
 

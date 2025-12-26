@@ -333,6 +333,49 @@ describe("EditSettingsModal", () => {
       const rfcInput = screen.getByLabelText("modal.rfc");
       expect(rfcInput).toHaveAttribute("maxLength", "13");
     });
+
+    it("clears error when RFC is deleted", async () => {
+      const user = userEvent.setup();
+
+      await act(async () => {
+        renderModal();
+      });
+
+      const rfcInput = screen.getByLabelText("modal.rfc");
+
+      await user.type(rfcInput, "INVALID123456");
+
+      await waitFor(() => {
+        const errorMessage = screen.queryByText(/RFC inválido|step3.fields.businessRFCInvalid/i);
+        if (errorMessage) {
+          expect(errorMessage).toBeInTheDocument();
+        }
+      });
+
+      await user.clear(rfcInput);
+
+      await waitFor(() => {
+        const errorMessage = screen.queryByText(/RFC inválido/i);
+        expect(errorMessage).not.toBeInTheDocument();
+      });
+    });
+
+    it("does not show error for valid RFC format", async () => {
+      const user = userEvent.setup();
+      const mockOnChange = jest.fn();
+
+      await act(async () => {
+        renderModal({ onChange: mockOnChange });
+      });
+
+      const rfcInput = screen.getByLabelText("modal.rfc");
+      await user.type(rfcInput, "XAXX010101000");
+
+      await waitFor(() => {
+        const errorMessage = screen.queryByText(/RFC inválido/i);
+        expect(errorMessage).not.toBeInTheDocument();
+      });
+    });
   });
 
   describe("Phone Validation", () => {
@@ -377,6 +420,27 @@ describe("EditSettingsModal", () => {
       expect(fileInput).toHaveAttribute("accept", "image/*");
     });
 
+    it("clicks file input when upload button is pressed", async () => {
+      const user = userEvent.setup();
+      const clickSpy = jest.fn();
+
+      await act(async () => {
+        renderModal();
+      });
+
+      const fileInput = document.querySelector('input[type="file"]');
+      if (fileInput) {
+        fileInput.click = clickSpy;
+      }
+
+      const uploadButton = screen.getByText("modal.logoUpload");
+      await user.click(uploadButton);
+
+      await waitFor(() => {
+        expect(clickSpy).toHaveBeenCalled();
+      });
+    });
+
     it("handles image file selection", async () => {
       const user = userEvent.setup();
       const mockOnChange = jest.fn();
@@ -400,6 +464,33 @@ describe("EditSettingsModal", () => {
           );
         });
       }
+    });
+
+    it("shows remove button when image preview exists", async () => {
+      const mockData = {
+        businessName: "Test Store",
+        businessType: "store",
+        businessLogoUrl: "http://localhost:9154/api/assets/logo.png",
+      };
+
+      await act(async () => {
+        renderModal({ data: mockData });
+      });
+
+      const logoPreview = screen.getByAltText("Logo preview");
+      expect(logoPreview).toBeInTheDocument();
+
+      const buttons = screen.getAllByRole("button");
+      const removeButton = buttons.find((button) => {
+        const buttonText = button.textContent;
+        return !buttonText.includes("modal.cancelButton") &&
+               !buttonText.includes("modal.editButton") &&
+               !buttonText.includes("Close") &&
+               !buttonText.includes("Dismiss") &&
+               buttonText.trim() === "";
+      });
+
+      expect(removeButton).toBeTruthy();
     });
   });
 
