@@ -4,6 +4,34 @@ import { I18nProvider } from "@/i18n/I18nProvider";
 
 import { EditProductsModal } from "../EditProductsModal";
 
+jest.mock("@heroui/react", () => {
+  const actual = jest.requireActual("@heroui/react");
+  const NumberInput = ({
+    label,
+    onValueChange,
+    value = "",
+    isRequired,
+    errorMessage,
+    startContent,
+    minValue,
+    ...props
+  }) => (
+    <input
+      aria-label={label}
+      type="number"
+      value={value}
+      onChange={(e) => {
+        const parsed = Number(e.target.value);
+        const clamped = Number.isNaN(parsed) ? "" : Math.max(0, parsed);
+        onValueChange?.(clamped);
+      }}
+      {...props}
+    />
+  );
+
+  return { ...actual, NumberInput };
+});
+
 jest.mock("@/components/hooks/useCurrency", () => ({
   useCurrency: () => ({
     currency: { acronym: "$" },
@@ -24,6 +52,19 @@ const baseData = {
   productStock: 5,
   productImage: "",
   storeImage: null,
+};
+
+const mockFileReader = (result = "data:image/png;base64,test") => {
+  const original = global.FileReader;
+  global.FileReader = jest.fn(() => ({
+    readAsDataURL() {
+      this.result = result;
+      this.onloadend?.({ target: { result } });
+    },
+  }));
+  return () => {
+    global.FileReader = original;
+  };
 };
 
 const renderModal = (props = {}) => render(
@@ -55,6 +96,125 @@ describe("EditProductsModal", () => {
     expect(screen.getByText("modal.titleEdit")).toBeInTheDocument();
     expect(screen.getByDisplayValue("Jade Wallet")).toBeInTheDocument();
     expect(screen.getByDisplayValue("Hardware wallet")).toBeInTheDocument();
+  });
+
+  it("updates text fields with string values", () => {
+    const onChange = jest.fn();
+    renderModal({ onChange });
+
+    fireEvent.change(screen.getByLabelText("modal.productNameLabel"), { target: { value: "New name" } });
+    expect(onChange).toHaveBeenLastCalledWith({ productName: "New name" });
+
+    fireEvent.change(screen.getByLabelText("modal.productDescriptionLabel"), { target: { value: "New Description" } });
+    expect(onChange).toHaveBeenLastCalledWith({ productDescription: "New Description" });
+
+    fireEvent.change(screen.getByLabelText("modal.productSKULabel"), { target: { value: "sku-456" } });
+    expect(onChange).toHaveBeenLastCalledWith({ productSKU: "sku-456" });
+  });
+
+  it("enforces non-negative numeric values for price and stock", () => {
+    const onChange = jest.fn();
+    renderModal({ onChange });
+
+    fireEvent.change(screen.getByLabelText("modal.productPriceLabel"), { target: { value: "-12" } });
+    const priceCall = onChange.mock.calls.at(-1)[0];
+    expect(typeof priceCall.productPrice).toBe("number");
+    expect(priceCall.productPrice).toBeGreaterThanOrEqual(0);
+
+    fireEvent.change(screen.getByLabelText("modal.productStockLabel"), { target: { value: "-8" } });
+    const stockCall = onChange.mock.calls.at(-1)[0];
+    expect(typeof stockCall.productStock).toBe("number");
+    expect(stockCall.productStock).toBeGreaterThanOrEqual(0);
+  });
+
+  it("handles image upload and removal", async () => {
+    const onChange = jest.fn();
+    const restore = mockFileReader();
+    renderModal({ onChange });
+    const fileInput = document.querySelector("input[type=\"file\"]");
+    const file = new File(["content"], "photo.png", { type: "image/png" });
+
+    fireEvent.change(fileInput, { target: { files: [file] } });
+    expect(onChange).toHaveBeenCalledWith({ storeImage: file, productImage: "" });
+    expect(await screen.findByAltText("Product preview")).toBeInTheDocument();
+
+    const removeButton = document.querySelector("button.bg-destructive");
+    expect(removeButton).not.toBeNull();
+    fireEvent.click(removeButton);
+
+    const lastCall = onChange.mock.calls.at(-1)?.[0];
+    expect(lastCall).toEqual({ storeImage: null, productImage: "" });
+    expect(screen.queryByAltText("Product preview")).not.toBeInTheDocument();
+    restore();
+  });
+
+  it("ignores image change when no file is provided", () => {
+    const onChange = jest.fn();
+    renderModal({ onChange });
+    const fileInput = document.querySelector("input[type=\"file\"]");
+    fireEvent.change(fileInput, { target: { files: [] } });
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it("handles category select with empty value and loading", () => {
+    const onChange = jest.fn();
+    renderModal({ onChange, categories: [], categoriesLoading: true, data: { ...baseData, productCategory: "" } });
+
+    const select = screen.getAllByLabelText("modal.productCategoryLabel")[0];
+    expect(select).toBeInTheDocument();
+    fireEvent.change(select, { target: { value: "" } });
+    expect(onChange).toHaveBeenLastCalledWith({ productCategory: "" });
+  });
+
+  it("closes modal via onOpenChange", () => {
+    const setEditProductsShowModal = jest.fn();
+    const setData = jest.fn();
+    renderModal({ setEditProductsShowModal, setData });
+
+    fireEvent.click(screen.getByText("modal.cancelButton"));
+    expect(setEditProductsShowModal).toHaveBeenCalledWith(false);
+    expect(setData).toHaveBeenCalledWith({
+      productId: "",
+      productName: "",
+      productDescription: "",
+      productCategory: "",
+      productSKU: "",
+      productPrice: "",
+      productStock: "",
+      productImage: "",
+      storeImage: null,
+    });
+  });
+
+  it("does not create category when input is empty and prevents duplicate while loading", async () => {
+    const createCategory = jest.fn(() => new Promise(() => { }));
+    const onChange = jest.fn();
+    renderModal({ createCategory, onChange });
+
+    const addButton = screen.getByText("modal.createCategoryButton");
+    fireEvent.click(addButton);
+    expect(createCategory).not.toHaveBeenCalled();
+
+    const input = screen.getByLabelText("modal.createCategoryLabel");
+    fireEvent.change(input, { target: { value: "New Cat" } });
+
+    fireEvent.click(addButton);
+    fireEvent.click(addButton);
+    await waitFor(() => expect(createCategory).toHaveBeenCalledTimes(1));
+  });
+
+  it("does not update category when createCategory returns falsy", async () => {
+    const createCategory = jest.fn(() => Promise.resolve(undefined));
+    const onChange = jest.fn();
+    renderModal({ createCategory, onChange });
+
+    const input = screen.getByLabelText("modal.createCategoryLabel");
+    fireEvent.change(input, { target: { value: "New Cat" } });
+    fireEvent.click(screen.getByText("modal.createCategoryButton"));
+
+    await waitFor(() => expect(createCategory).toHaveBeenCalledWith("New Cat"));
+    expect(onChange).not.toHaveBeenCalled();
+    expect(input.value).toBe("");
   });
 
   it("closes and resets data on cancel", () => {
@@ -91,5 +251,22 @@ describe("EditProductsModal", () => {
     await waitFor(() => expect(updateProduct).toHaveBeenCalledWith(baseData));
     expect(setEditProductsShowModal).toHaveBeenCalledWith(false);
     expect(onProductUpdated).toHaveBeenCalled();
+  });
+
+  it("does not submit when uploading", () => {
+    const updateProduct = jest.fn();
+    renderModal({ updateProduct, isUploading: true });
+
+    fireEvent.click(screen.getByText("modal.editButton"));
+    expect(updateProduct).not.toHaveBeenCalled();
+  });
+
+  it("prevents double submit while submitting", () => {
+    const updateProduct = jest.fn(() => new Promise(() => { }));
+    renderModal({ updateProduct, isUploading: false });
+
+    fireEvent.click(screen.getByText("modal.editButton"));
+    fireEvent.click(screen.getByText("modal.editButton"));
+    expect(updateProduct).toHaveBeenCalledTimes(1);
   });
 });

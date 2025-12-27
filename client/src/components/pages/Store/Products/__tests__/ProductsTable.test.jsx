@@ -12,8 +12,11 @@ jest.mock("@/components/hooks/useCurrency", () => ({
   }),
 }));
 
+const mockStoredAssetUrl = jest.fn((url) => `cdn${url}`);
+
 jest.mock("@/components/utils/storedAssetUrl", () => ({
-  storedAssetUrl: (url) => url,
+  __esModule: true,
+  storedAssetUrl: (...args) => mockStoredAssetUrl(...args),
 }));
 
 const categories = [
@@ -38,6 +41,15 @@ const products = [
     price_cents: 4000,
     quantity: 5,
     image_url: "/images/jade-plus.png",
+  },
+  {
+    sku: "unknown-cat",
+    name: "No Cat",
+    description: "Missing category",
+    category_id: "missing",
+    price_cents: 0,
+    quantity: 1,
+    image_url: "/images/no-cat.png",
   },
 ];
 
@@ -71,6 +83,24 @@ describe("ProductsTable", () => {
     expect(screen.getByText("$16.00")).toBeInTheDocument();
   });
 
+  it("falls back to category id and formats image src via storedAssetUrl", () => {
+    renderTable();
+
+    expect(screen.getByText("missing")).toBeInTheDocument();
+    expect(mockStoredAssetUrl).toHaveBeenCalledWith("/images/no-cat.png");
+    const img = screen.getByAltText("No Cat");
+    expect(img.getAttribute("src")).toBe("cdn/images/no-cat.png");
+  });
+
+  it("handles missing image url gracefully", () => {
+    const productsWithoutImage = [
+      { ...products[0], image_url: undefined },
+    ];
+
+    renderTable({ products: productsWithoutImage });
+    expect(mockStoredAssetUrl).toHaveBeenCalledWith(undefined);
+  });
+
   it("calls edit and delete callbacks", () => {
     const onEditProduct = jest.fn();
     const onDeleteProduct = jest.fn();
@@ -80,7 +110,7 @@ describe("ProductsTable", () => {
     fireEvent.click(screen.getAllByRole("button", { name: "Edit Product" })[0]);
     expect(onEditProduct).toHaveBeenCalledWith(products[0]);
 
-    fireEvent.click(screen.getAllByRole("button", { name: "Delete Product" })[1]);
-    expect(onDeleteProduct).toHaveBeenCalledWith(products[1]);
+    fireEvent.click(screen.getAllByRole("button", { name: "Delete Product" })[2]);
+    expect(onDeleteProduct).toHaveBeenCalledWith(products[2]);
   });
 });

@@ -1,7 +1,23 @@
 import React from "react";
 
+const cleanMotionProps = (props) => {
+  const sanitized = { ...props };
+  [
+    "initial",
+    "animate",
+    "exit",
+    "variants",
+    "transition",
+    "whileTap",
+    "whileHover",
+    "onAnimationComplete",
+    "onAnimationStart",
+  ].forEach((key) => delete sanitized[key]);
+  return sanitized;
+};
+
 const Mock = React.forwardRef(({ children, ...props }, ref) => (
-  <div ref={ref} {...props}>{children}</div>
+  <div ref={ref} {...cleanMotionProps(props)}>{children}</div>
 ));
 Mock.displayName = "FramerMotionMock";
 

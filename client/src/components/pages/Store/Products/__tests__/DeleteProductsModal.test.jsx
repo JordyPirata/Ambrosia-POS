@@ -39,4 +39,20 @@ describe("DeleteProductsModal", () => {
     fireEvent.click(screen.getByText("modal.cancelButton"));
     expect(setDeleteProductsShowModal).toHaveBeenCalledWith(false);
   });
+
+  it("cancel does not trigger confirm", () => {
+    const onConfirm = jest.fn();
+    const setDeleteProductsShowModal = jest.fn();
+    renderModal({ onConfirm, setDeleteProductsShowModal });
+
+    fireEvent.click(screen.getByText("modal.cancelButton"));
+    expect(onConfirm).not.toHaveBeenCalled();
+    expect(setDeleteProductsShowModal).toHaveBeenCalledWith(false);
+  });
+
+  it("renders safely without product data", () => {
+    renderModal({ product: null });
+    expect(screen.getByText("modal.titleDelete")).toBeInTheDocument();
+    expect(screen.getByText("modal.warningDelete")).toBeInTheDocument();
+  });
 });
