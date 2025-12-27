@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { useTranslations } from "next-intl";
+
 import {
   Button,
   Input,
@@ -14,8 +14,11 @@ import {
   ModalFooter,
   Select,
   SelectItem,
+  Image,
 } from "@heroui/react";
 import { Upload, X } from "lucide-react";
+import { useTranslations } from "next-intl";
+
 import { useCurrency } from "@/components/hooks/useCurrency";
 
 export function AddProductsModal({
@@ -114,8 +117,7 @@ export function AddProductsModal({
               isRequired
               errorMessage={t("modal.errorMsgInputFieldEmpty")}
               value={data.productName}
-              onChange={(e) =>
-                onChange({ productName: e.target.value })
+              onChange={(e) => onChange({ productName: e.target.value })
               }
             />
 
@@ -125,8 +127,7 @@ export function AddProductsModal({
               value={data.productDescription}
               isRequired
               errorMessage={t("modal.errorMsgInputFieldEmpty")}
-              onChange={(e) =>
-                onChange({ productDescription: e.target.value })
+              onChange={(e) => onChange({ productDescription: e.target.value })
               }
             />
 
@@ -137,8 +138,7 @@ export function AddProductsModal({
                 selectedKeys={data.productCategory ? [data.productCategory] : []}
                 isRequired
                 errorMessage={t("modal.errorMsgInputFieldEmpty")}
-                onChange={(e) =>
-                  onChange({ productCategory: e.target.value })
+                onChange={(e) => onChange({ productCategory: e.target.value })
                 }
                 isLoading={categoriesLoading}
               >
@@ -173,8 +173,7 @@ export function AddProductsModal({
               isRequired
               errorMessage={t("modal.errorMsgInputFieldEmpty")}
               value={data.productSKU}
-              onChange={(e) =>
-                onChange({ productSKU: e.target.value })
+              onChange={(e) => onChange({ productSKU: e.target.value })
               }
             />
 
@@ -185,9 +184,11 @@ export function AddProductsModal({
                 isRequired
                 errorMessage={t("modal.errorMsgInputFieldEmpty")}
                 startContent={
-                  <span className="text-default-400 text-small">
-                    {currency?.acronym || "$"}
-                  </span>
+                  (
+                    <span className="text-default-400 text-small">
+                      {currency?.acronym || "$"}
+                    </span>
+                  )
                 }
                 minValue={0}
                 value={data.productPrice}
@@ -218,7 +219,7 @@ export function AddProductsModal({
             <div>
               {imagePreview ? (
                 <div className="relative w-32 h-32 rounded-lg border border-border overflow-hidden bg-muted">
-                  <img
+                  <Image
                     src={imagePreview}
                     alt="Product preview"
                     className="w-full h-full object-cover"

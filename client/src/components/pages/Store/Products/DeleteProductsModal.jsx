@@ -1,7 +1,7 @@
 "use client";
 
-import { useTranslations } from "next-intl";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from "@heroui/react";
+import { useTranslations } from "next-intl";
 
 export function DeleteProductsModal({ product, deleteProductsShowModal, setDeleteProductsShowModal, onConfirm }) {
   const t = useTranslations("products");
