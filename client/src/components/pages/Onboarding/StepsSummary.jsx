@@ -86,11 +86,6 @@ export function WizardSummary({ data, onEdit }) {
               {data.storeLogo && (
                 <div className="mt-3">
                   <p className="text-xs text-muted-foreground mb-2">Logo</p>
-                  {/* <img
-                    src={URL.createObjectURL(data.storeLogo) || "/placeholder.svg"}
-                    alt="Store logo"
-                    className="w-16 h-16 object-cover rounded border border-border"
-                  /> */}
                   <Image
                     src={URL.createObjectURL(data.storeLogo) || "/placeholder.svg"}
                     alt="Store logo"
