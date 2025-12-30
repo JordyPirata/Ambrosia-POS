@@ -1,8 +1,8 @@
 import { render, screen, fireEvent, act } from "@testing-library/react";
-import { I18nProvider } from "../../../../../i18n/I18nProvider";
-import * as useModulesHook from "../../../../../hooks/useModules";
-import * as useAuthHook from "../../../../../modules/auth/useAuth";
-import * as configurationsProvider from "../../../../../providers/configurations/configurationsProvider";
+import { I18nProvider } from "@/i18n/I18nProvider";
+import * as useModulesHook from "@/hooks/useModules";
+import * as useAuthHook from "@/modules/auth/useAuth";
+import * as configurationsProvider from "@/providers/configurations/configurationsProvider";
 import { Cart } from "../Cart";
 
 const mockSetCart = jest.fn();
