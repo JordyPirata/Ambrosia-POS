@@ -111,4 +111,77 @@ describe("EditUsersModal", () => {
     });
     expect(setEditUsersShowModal).toHaveBeenCalledWith(false);
   });
+
+  it("normalizes phone and pin to digits and toggles pin visibility", () => {
+    const onChange = jest.fn();
+
+    renderModal({ onChange });
+
+    fireEvent.change(screen.getByLabelText("modal.userPhoneLabel"), { target: { value: "55-6a" } });
+    expect(onChange).toHaveBeenLastCalledWith({ ...baseData, userPhone: "556" });
+
+    fireEvent.change(screen.getByLabelText("modal.userPinLabel"), { target: { value: "9x8y" } });
+    expect(onChange).toHaveBeenLastCalledWith({ ...baseData, userPin: "98" });
+
+    const pinInput = screen.getByLabelText("modal.userPinLabel");
+    expect(pinInput).toHaveAttribute("type", "password");
+
+    fireEvent.click(screen.getByRole("button", { name: "Show PIN" }));
+    expect(pinInput).toHaveAttribute("type", "text");
+  });
+
+  it("updates name, email, and role values", () => {
+    const onChange = jest.fn();
+    renderModal({ onChange });
+
+    fireEvent.change(screen.getByLabelText("modal.userNameLabel"), { target: { value: "Updated Name" } });
+    expect(onChange).toHaveBeenLastCalledWith({ ...baseData, userName: "Updated Name" });
+
+    fireEvent.change(screen.getByLabelText("modal.userEmailLabel"), { target: { value: "updated@test.com" } });
+    expect(onChange).toHaveBeenLastCalledWith({ ...baseData, userEmail: "updated@test.com" });
+
+    const roleSelect = screen.getAllByLabelText("modal.userRoleLabel")[0];
+    fireEvent.change(roleSelect, { target: { value: "seller" } });
+    expect(onChange).toHaveBeenLastCalledWith({ ...baseData, userRole: "seller" });
+  });
+
+  it("renders empty values when data fields are null", () => {
+    renderModal({
+      data: {
+        userId: 1,
+        userName: null,
+        userPin: null,
+        userPhone: null,
+        userEmail: null,
+        userRole: "",
+      },
+      roles: [],
+    });
+
+    expect(screen.getByLabelText("modal.userNameLabel")).toHaveValue("");
+    expect(screen.getByLabelText("modal.userEmailLabel")).toHaveValue("");
+    expect(screen.getByLabelText("modal.userPhoneLabel")).toHaveValue("");
+    expect(screen.getByLabelText("modal.userPinLabel")).toHaveValue("");
+    const roleSelect = screen.getAllByLabelText("modal.userRoleLabel")[0];
+    expect(roleSelect).toHaveValue("");
+  });
+
+  it("resets role to empty when no roles are available", () => {
+    const setData = jest.fn();
+    const setEditUsersShowModal = jest.fn();
+
+    renderModal({ roles: [], setData, setEditUsersShowModal });
+
+    fireEvent.click(screen.getByText("modal.cancelButton"));
+
+    expect(setData).toHaveBeenCalledWith({
+      userId: "",
+      userName: "",
+      userPin: "",
+      userPhone: "",
+      userEmail: "",
+      userRole: "",
+    });
+    expect(setEditUsersShowModal).toHaveBeenCalledWith(false);
+  });
 });
