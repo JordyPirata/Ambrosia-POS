@@ -9,7 +9,7 @@ export function ProductList({ products, onAddProduct, categories }) {
 
   const getCategoryName = (categoryId) => {
     const category = categories.find((category) => category.id === categoryId);
-    return category ? category.name : "Categoría Desconocida";
+    return category ? category.name : t("card.errors.unknownCategory");
   };
 
   return (

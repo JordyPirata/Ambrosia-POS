@@ -105,6 +105,9 @@ const storeEs = {
     card: {
       add: "Agregar",
       stock: "en almacén",
+      errors: {
+        unknownCategory: "Categoría desconocida",
+      },
     },
     summary: {
       title: "Resumen",
@@ -246,7 +249,8 @@ const storeEs = {
         invoiceLightningButton: "Crear Factura Lightning",
         invoiceLightningLoading: "Creando Factura...",
         invoiceSuccessTitle: "Factura creada",
-        invoiceSuccessDescription: "La factura Lightning se ha generado correctamente",
+        invoiceSuccessDescription:
+          "La factura Lightning se ha generado correctamente",
       },
       send: {
         tabTitle: "Enviar",
