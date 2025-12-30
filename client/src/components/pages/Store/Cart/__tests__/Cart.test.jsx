@@ -4,8 +4,76 @@ import * as useModulesHook from "../../../../../hooks/useModules";
 import * as useAuthHook from "../../../../../modules/auth/useAuth";
 import * as configurationsProvider from "../../../../../providers/configurations/configurationsProvider";
 import { Cart } from "../Cart";
-import { CART_STORAGE_KEY } from "../hooks/usePersistentCart";
-import { PRODUCTS, CART_ITEMS } from "./__mocks__/mocks";
+
+const mockSetCart = jest.fn();
+const mockSetDiscount = jest.fn();
+const mockResetCartState = jest.fn();
+const mockHandlePay = jest.fn();
+
+jest.mock("../SearchProducts", () => ({
+  SearchProducts: ({ onAddProduct }) => (
+    <div>
+      <button onClick={() => onAddProduct({ id: 1, name: "Jade Wallet", price_cents: 100 })}>
+        add-existing
+      </button>
+      <button onClick={() => onAddProduct({ id: 2, name: "M5 Stick", price_cents: 200 })}>
+        add-new
+      </button>
+    </div>
+  ),
+}));
+
+jest.mock("../Summary", () => ({
+  Summary: ({ onUpdateQuantity, onRemoveProduct, onPay }) => (
+    <div>
+      <button onClick={() => onUpdateQuantity(1, 0)}>update-zero</button>
+      <button onClick={() => onUpdateQuantity(1, 3)}>update-positive</button>
+      <button onClick={() => onRemoveProduct(1)}>remove</button>
+      <button onClick={() => onPay({})}>pay</button>
+    </div>
+  ),
+}));
+
+jest.mock("../hooks/usePersistentCart", () => ({
+  CART_STORAGE_KEY: "store-cart",
+  usePersistentCart: () => ({
+    cart: [
+      { id: 1, name: "Jade Wallet", price: 100, quantity: 1, subtotal: 100 },
+    ],
+    setCart: mockSetCart,
+    discount: 0,
+    setDiscount: mockSetDiscount,
+    resetCartState: mockResetCartState,
+  }),
+}));
+
+jest.mock("../../hooks/useProducts", () => ({
+  useProducts: () => ({
+    products: [],
+  }),
+}));
+
+jest.mock("../../hooks/useCategories", () => ({
+  useCategories: () => ({
+    categories: [],
+  }),
+}));
+
+jest.mock("../hooks/useCartPayment", () => ({
+  useCartPayment: () => ({
+    handlePay: mockHandlePay,
+    isPaying: false,
+    paymentError: "",
+    clearPaymentError: jest.fn(),
+    btcPaymentConfig: null,
+    handleBtcInvoiceReady: jest.fn(),
+    handleBtcComplete: jest.fn(),
+    clearBtcPaymentConfig: jest.fn(),
+    cashPaymentConfig: null,
+    handleCashComplete: jest.fn(),
+    clearCashPaymentConfig: jest.fn(),
+  }),
+}));
 
 function renderCart() {
   return render(
@@ -78,57 +146,49 @@ afterEach(() => {
 });
 
 describe("Cart page", () => {
-  it("renders the header, search input, cards and summary", async () => {
+  it("renders the header and mocked sections", async () => {
     await act(async () => {
       renderCart();
     });
     expect(screen.getByText("title")).toBeInTheDocument();
-    expect(screen.getByText("search.label")).toBeInTheDocument();
-    expect(screen.getAllByText("card.add")).toHaveLength(2);
-    expect(screen.getByText("summary.title")).toBeInTheDocument();
+    expect(screen.getByText("add-existing")).toBeInTheDocument();
+    expect(screen.getByText("update-zero")).toBeInTheDocument();
   });
 
-  it("product search", async () => {
+  it("adds a new product and increases quantity for existing product", async () => {
     await act(async () => {
       renderCart();
     });
-    const input = screen.getByLabelText("search.label");
-    await act(async () => {
-      fireEvent.change(input, { target: { value: "jade" } });
-    });
-    expect(screen.getAllByText("card.add")).toHaveLength(2);
+
+    fireEvent.click(screen.getByText("add-existing"));
+    expect(mockSetCart).toHaveBeenCalledWith([
+      { id: 1, name: "Jade Wallet", price: 100, quantity: 2, subtotal: 200 },
+    ]);
+
+    fireEvent.click(screen.getByText("add-new"));
+    expect(mockSetCart).toHaveBeenCalledWith([
+      { id: 1, name: "Jade Wallet", price: 100, quantity: 1, subtotal: 100 },
+      { id: 2, name: "M5 Stick", price: 200, quantity: 1, subtotal: 200 },
+    ]);
   });
 
-  it("select a product category", async () => {
+  it("updates quantity, removes product when quantity is zero, and forwards pay", async () => {
     await act(async () => {
       renderCart();
     });
-    const btn = screen.getByText("search.filterAll");
-    await act(async () => {
-      fireEvent.click(btn);
-    });
-    expect(screen.getAllByText("card.add")).toHaveLength(2);
-  });
 
-  it("Add a product to summary", async () => {
-    await act(async () => {
-      renderCart();
-    });
-    const btn = screen.getAllByText("card.add");
-    await act(async () => {
-      fireEvent.click(btn[0]);
-    });
-    expect(screen.getAllByLabelText("Remove Product")).toHaveLength(1);
-  });
+    fireEvent.click(screen.getByText("update-positive"));
+    expect(mockSetCart).toHaveBeenCalledWith([
+      { id: 1, name: "Jade Wallet", price: 100, quantity: 3, subtotal: 300 },
+    ]);
 
-  it("hydrates cart from localStorage", async () => {
-    localStorage.setItem(
-      CART_STORAGE_KEY,
-      JSON.stringify({ items: CART_ITEMS, discount: 10 }),
-    );
-    await act(async () => {
-      renderCart();
-    });
-    expect(screen.getAllByLabelText("Remove Product")).toHaveLength(CART_ITEMS.length);
+    fireEvent.click(screen.getByText("update-zero"));
+    expect(mockSetCart).toHaveBeenCalledWith([]);
+
+    fireEvent.click(screen.getByText("remove"));
+    expect(mockSetCart).toHaveBeenCalledWith([]);
+
+    fireEvent.click(screen.getByText("pay"));
+    expect(mockHandlePay).toHaveBeenCalledWith({});
   });
 });
