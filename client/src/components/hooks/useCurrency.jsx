@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+
 import { apiClient } from "@/services/apiClient";
 
 const DEFAULT_CURRENCY = {
@@ -18,36 +19,48 @@ function deriveLocale(countryCode) {
   return `${countryCode.toLowerCase()}-${countryCode.toUpperCase()}`;
 }
 
+function parseCurrencyData(base) {
+  const currencyId = base?.currency_id || base?.id;
+  const baseAcronym = base?.acronym;
+
+  return {
+    id: currencyId || null,
+    acronym: baseAcronym || DEFAULT_CURRENCY.acronym,
+    symbol: base?.symbol || DEFAULT_CURRENCY.symbol,
+    name: base?.name || DEFAULT_CURRENCY.name,
+    country_code: base?.country_code || null,
+    country_name: base?.country_name || null,
+    locale:
+      deriveLocale(base?.country_code) ||
+      base?.locale ||
+      (typeof navigator !== "undefined" ? navigator.language : DEFAULT_CURRENCY.locale),
+  };
+}
+
 export function useCurrency() {
   const [currency, setCurrency] = useState(DEFAULT_CURRENCY);
 
   const fetchCurrency = useCallback(async () => {
     try {
       const base = await apiClient("/base-currency");
-
-      const currencyId = base?.currency_id || base?.id;
-      const baseAcronym = base?.acronym;
-
-      setCurrency({
-        id: currencyId || null,
-        acronym: baseAcronym || DEFAULT_CURRENCY.acronym,
-        symbol: base?.symbol || DEFAULT_CURRENCY.symbol,
-        name: base?.name || DEFAULT_CURRENCY.name,
-        country_code: base?.country_code || null,
-        country_name: base?.country_name || null,
-        locale:
-          deriveLocale(base?.country_code) ||
-          base?.locale ||
-          (typeof navigator !== "undefined" ? navigator.language : DEFAULT_CURRENCY.locale),
-      });
-    } catch (_err) {
+      setCurrency(parseCurrencyData(base));
+    } catch {
       setCurrency(DEFAULT_CURRENCY);
     }
   }, []);
 
   useEffect(() => {
-    fetchCurrency();
-  }, [fetchCurrency]);
+    const loadCurrency = async () => {
+      try {
+        const base = await apiClient("/base-currency");
+        setCurrency(parseCurrencyData(base));
+      } catch {
+        setCurrency(DEFAULT_CURRENCY);
+      }
+    };
+
+    loadCurrency();
+  }, []);
 
   const formatAmount = useCallback(
     (cents) => {
@@ -75,20 +88,23 @@ export function useCurrency() {
     [currency],
   );
 
-  const updateCurrency = async (acronymOrObj) => {
-    const acronym =
-      typeof acronymOrObj === "string"
-        ? acronymOrObj
-        : acronymOrObj?.acronym || DEFAULT_CURRENCY.acronym;
+  const updateCurrency = useCallback(
+    async (acronymOrObj) => {
+      const acronym =
+        typeof acronymOrObj === "string"
+          ? acronymOrObj
+          : acronymOrObj?.acronym || DEFAULT_CURRENCY.acronym;
 
-    const updateConfigResponse = await apiClient(`/base-currency`, {
-      method: "PUT",
-      body: { acronym },
-    });
+      const updateConfigResponse = await apiClient(`/base-currency`, {
+        method: "PUT",
+        body: { acronym },
+      });
 
-    fetchCurrency();
-    return updateConfigResponse
-  }
+      fetchCurrency();
+      return updateConfigResponse;
+    },
+    [fetchCurrency],
+  );
 
   return useMemo(
     () => ({

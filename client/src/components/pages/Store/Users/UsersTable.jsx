@@ -1,6 +1,5 @@
 "use client";
 
-import { useTranslations } from "next-intl";
 import {
   Table,
   TableHeader,
@@ -9,9 +8,10 @@ import {
   TableRow,
   TableCell,
   Button,
-  Chip
+  Chip,
 } from "@heroui/react";
-import { Pencil, Trash } from 'lucide-react';
+import { Pencil, Trash } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export function UsersTable({ users, onEditUser, onDeleteUser }) {
   const t = useTranslations("users");
@@ -27,7 +27,7 @@ export function UsersTable({ users, onEditUser, onDeleteUser }) {
           <TableColumn className="py-2 px-3 text-right">{t("actions")}</TableColumn>
         </TableHeader>
         <TableBody>
-          {users.map((user, idx) => (
+          {users.map((user) => (
             <TableRow
               key={user.id}
             >

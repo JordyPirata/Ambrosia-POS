@@ -9,7 +9,8 @@
     "start": "node generate-env.cjs && next start",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "jest"
+    "test": "jest",
+    "test:coverage": "jest --coverage --watchAll=false"
   },
   "dependencies": {
     "@heroui/react": "^2.8.5",

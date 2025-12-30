@@ -129,7 +129,6 @@ export function BusinessDetailsStep({ data, onChange }) {
           </label>
           {logoPreview ? (
             <div className="relative w-32 h-32 rounded-lg border-2 border-border overflow-hidden bg-muted">
-              {/* <img src={logoPreview || "/placeholder.svg"} alt="Logo preview" className="w-full h-full object-cover" /> */}
               <Image src={logoPreview || "/placeholder.svg"} alt="Logo preview" className="w-full h-full object-cover" />
               <button
                 onClick={handleRemoveLogo}
