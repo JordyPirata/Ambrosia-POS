@@ -30,7 +30,6 @@ import {
   Bitcoin,
   History,
   CheckCircle,
-  AlertCircle,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { QRCode } from "react-qr-code";
@@ -45,6 +44,7 @@ import {
   payInvoiceFromService,
 } from "@modules/cashier/cashierService";
 
+import { NodeError } from "./NodeError";
 import { NodeInfo } from "./NodeInfo";
 
 function WalletInner() {
@@ -297,14 +297,7 @@ function WalletInner() {
   return (
     <div className="">
       {error && (
-        <Card className="mb-6 bg-red-50 border-red-200">
-          <CardBody>
-            <div className="flex items-center space-x-2">
-              <AlertCircle className="w-5 h-5 text-red-600" />
-              <p className="text-red-600 font-semibold">{error}</p>
-            </div>
-          </CardBody>
-        </Card>
+        <NodeError error={error} />
       )}
 
       <NodeInfo info={info} />
