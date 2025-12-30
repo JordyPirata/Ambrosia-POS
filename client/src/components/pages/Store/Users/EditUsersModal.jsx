@@ -91,6 +91,7 @@ export function EditUsersModal({ data, setData, roles, onChange, editUsersShowMo
                 (
                   <button
                     type="button"
+                    aria-label={showPin ? "Hide PIN" : "Show PIN"}
                     onClick={() => setShowPin(!showPin)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                   >

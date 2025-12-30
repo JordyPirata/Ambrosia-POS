@@ -1,10 +1,8 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 
-import { AddUsersModal } from "../AddUsersModal";
+import { I18nProvider } from "@/i18n/I18nProvider";
 
-jest.mock("next-intl", () => ({
-  useTranslations: () => (key) => key,
-}));
+import { AddUsersModal } from "../AddUsersModal";
 
 jest.mock("framer-motion", () => {
   const React = require("react");
@@ -45,16 +43,18 @@ const localStorageMock = {
 global.localStorage = localStorageMock;
 
 const renderModal = (props = {}) => render(
-  <AddUsersModal
-    data={baseData}
-    setData={jest.fn()}
-    roles={roles}
-    addUser={jest.fn()}
-    onChange={jest.fn()}
-    addUsersShowModal
-    setAddUsersShowModal={jest.fn()}
-    {...props}
-  />,
+  <I18nProvider>
+    <AddUsersModal
+      data={baseData}
+      setData={jest.fn()}
+      roles={roles}
+      addUser={jest.fn()}
+      onChange={jest.fn()}
+      addUsersShowModal
+      setAddUsersShowModal={jest.fn()}
+      {...props}
+    />
+  </I18nProvider>,
 );
 
 describe("AddUsersModal", () => {
@@ -83,6 +83,51 @@ describe("AddUsersModal", () => {
     expect(onChange).toHaveBeenLastCalledWith({ ...baseData, userPin: "98" });
   });
 
+  it("updates name, email, and role values", () => {
+    const onChange = jest.fn();
+    renderModal({ onChange });
+
+    fireEvent.change(screen.getByLabelText("modal.userNameLabel"), { target: { value: "Maria" } });
+    expect(onChange).toHaveBeenLastCalledWith({ ...baseData, userName: "Maria" });
+
+    fireEvent.change(screen.getByLabelText("modal.userEmailLabel"), { target: { value: "maria@test.com" } });
+    expect(onChange).toHaveBeenLastCalledWith({ ...baseData, userEmail: "maria@test.com" });
+
+    const roleSelect = screen.getAllByLabelText("modal.userRoleLabel")[0];
+    fireEvent.change(roleSelect, { target: { value: "admin" } });
+    expect(onChange).toHaveBeenLastCalledWith({ ...baseData, userRole: "admin" });
+  });
+
+  it("renders empty values when data fields are null", () => {
+    renderModal({
+      data: {
+        userName: null,
+        userPin: null,
+        userPhone: null,
+        userEmail: null,
+        userRole: "",
+      },
+      roles: [],
+    });
+
+    expect(screen.getByLabelText("modal.userNameLabel")).toHaveValue("");
+    expect(screen.getByLabelText("modal.userEmailLabel")).toHaveValue("");
+    expect(screen.getByLabelText("modal.userPhoneLabel")).toHaveValue("");
+    expect(screen.getByLabelText("modal.userPinLabel")).toHaveValue("");
+    const roleSelect = screen.getAllByLabelText("modal.userRoleLabel")[0];
+    expect(roleSelect).toHaveValue("");
+  });
+
+  it("uses first role when userRole is empty", () => {
+    renderModal({
+      data: { ...baseData, userRole: "" },
+      roles: [{ id: "admin", role: "Admin" }],
+    });
+
+    const roleSelect = screen.getAllByLabelText("modal.userRoleLabel")[0];
+    expect(roleSelect).toHaveValue("admin");
+  });
+
   it("submits form, calls addUser and resets data", async () => {
     const addUser = jest.fn(() => Promise.resolve());
     const setData = jest.fn();
@@ -104,6 +149,23 @@ describe("AddUsersModal", () => {
       userEmail: "",
       userRole: "Vendedor",
     });
+    expect(setAddUsersShowModal).toHaveBeenCalledWith(false);
+  });
+
+  it("toggles pin visibility and closes on cancel", () => {
+    const setAddUsersShowModal = jest.fn();
+    renderModal({ setAddUsersShowModal });
+
+    const pinInput = screen.getByLabelText("modal.userPinLabel");
+    expect(pinInput).toHaveAttribute("type", "password");
+
+    fireEvent.click(screen.getByRole("button", { name: "Show PIN" }));
+    expect(pinInput).toHaveAttribute("type", "text");
+
+    fireEvent.click(screen.getByRole("button", { name: "Hide PIN" }));
+    expect(pinInput).toHaveAttribute("type", "password");
+
+    fireEvent.click(screen.getByText("modal.cancelButton"));
     expect(setAddUsersShowModal).toHaveBeenCalledWith(false);
   });
 });
