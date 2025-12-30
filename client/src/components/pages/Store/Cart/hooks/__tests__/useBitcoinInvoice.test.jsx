@@ -1,16 +1,16 @@
+import { act, useEffect } from "react";
+
 import { render, screen, waitFor } from "@testing-library/react";
-import { act } from "react";
 
 import { useBitcoinInvoice } from "../useBitcoinInvoice";
 
-var mockFiatToSatoshis;
-var mockCreateInvoice;
+let mockFiatToSatoshis;
+let mockCreateInvoice;
 
-jest.mock("@/services/bitcoinPriceService", () => {
-  return jest.fn().mockImplementation(() => ({
-    fiatToSatoshis: (...args) => mockFiatToSatoshis(...args),
-  }));
-});
+jest.mock("@/services/bitcoinPriceService", () => jest.fn().mockImplementation(() => ({
+  fiatToSatoshis: (...args) => mockFiatToSatoshis(...args),
+})),
+);
 
 jest.mock("@/modules/cashier/cashierService", () => ({
   createInvoice: (...args) => mockCreateInvoice(...args),
@@ -20,7 +20,9 @@ let latestState = {};
 
 function TestComponent(props) {
   const state = useBitcoinInvoice(props);
-  latestState = state;
+  useEffect(() => {
+    latestState = state;
+  }, [state]);
   return (
     <div>
       <span data-testid="loading">{state.loading ? "yes" : "no"}</span>

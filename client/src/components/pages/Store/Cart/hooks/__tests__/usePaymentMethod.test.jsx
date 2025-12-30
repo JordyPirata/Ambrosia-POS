@@ -1,7 +1,8 @@
 import { render, screen, waitFor } from "@testing-library/react";
 
-import { usePaymentMethods } from "../usePaymentMethod";
 import { apiClient } from "@/services/apiClient";
+
+import { usePaymentMethods } from "../usePaymentMethod";
 
 jest.mock("@/services/apiClient", () => ({
   apiClient: jest.fn(),

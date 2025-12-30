@@ -1,8 +1,10 @@
 import { render, screen, fireEvent, act } from "@testing-library/react";
-import { I18nProvider } from "@/i18n/I18nProvider";
+
 import * as useModulesHook from "@/hooks/useModules";
+import { I18nProvider } from "@/i18n/I18nProvider";
 import * as useAuthHook from "@/modules/auth/useAuth";
 import * as configurationsProvider from "@/providers/configurations/configurationsProvider";
+
 import { Cart } from "../Cart";
 
 const mockSetCart = jest.fn();
@@ -79,7 +81,7 @@ function renderCart() {
   return render(
     <I18nProvider>
       <Cart />
-    </I18nProvider>
+    </I18nProvider>,
   );
 }
 

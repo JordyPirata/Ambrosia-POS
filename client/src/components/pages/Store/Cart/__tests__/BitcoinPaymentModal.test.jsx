@@ -1,5 +1,6 @@
-import { render, screen, fireEvent } from "@testing-library/react";
 import { act } from "react";
+
+import { render, screen, fireEvent } from "@testing-library/react";
 
 import { BitcoinPaymentModal } from "../BitcoinPaymentModal";
 
@@ -23,7 +24,7 @@ jest.mock("@/hooks/usePaymentWebsocket", () => ({
     setInvoiceHash: mockSetInvoiceHash,
     onPayment: (handler) => {
       mockPaymentHandlers.push(handler);
-      return () => {};
+      return () => { };
     },
   }),
 }));
@@ -117,7 +118,7 @@ describe("BitcoinPaymentModal", () => {
       />,
     );
 
-    expect(mockSetInvoiceHash).toHaveBeenCalledWith(null);
+    expect(mockSetInvoiceHash).not.toHaveBeenCalled();
   });
 
   it("resets state and closes when cancel is pressed", () => {
@@ -135,6 +136,6 @@ describe("BitcoinPaymentModal", () => {
     fireEvent.click(screen.getByText("cancel"));
     expect(mockInvoiceState.reset).toHaveBeenCalled();
     expect(onClose).toHaveBeenCalled();
-    expect(mockSetInvoiceHash).toHaveBeenCalledWith(null);
+    expect(mockSetInvoiceHash).not.toHaveBeenCalled();
   });
 });

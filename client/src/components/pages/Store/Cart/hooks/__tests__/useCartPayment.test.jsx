@@ -1,9 +1,9 @@
-import { render, waitFor } from "@testing-library/react";
 import { act } from "react";
+
+import { waitFor, renderHook } from "@testing-library/react";
 
 import { useCartPayment } from "../useCartPayment";
 
-let latestState = {};
 let mockPaymentMethods;
 
 jest.mock("@/modules/auth/useAuth", () => ({
@@ -44,14 +44,8 @@ jest.mock("../../../hooks/useTickets", () => ({
   }),
 }));
 
-function TestComponent(props) {
-  latestState = useCartPayment(props);
-  return null;
-}
-
 describe("useCartPayment", () => {
   beforeEach(() => {
-    latestState = {};
     mockPaymentMethods = [
       { id: "btc", name: "BTC" },
       { id: "cash", name: "Cash" },
@@ -59,10 +53,10 @@ describe("useCartPayment", () => {
   });
 
   it("handles BTC payment config and clearing", async () => {
-    render(<TestComponent />);
+    const { result } = renderHook(() => useCartPayment());
 
     await act(async () => {
-      await latestState.handlePay({
+      await result.current.handlePay({
         items: [{ id: 1, subtotal: 100 }],
         subtotal: 100,
         discount: 0,
@@ -73,7 +67,7 @@ describe("useCartPayment", () => {
     });
 
     await waitFor(() => {
-      expect(latestState.btcPaymentConfig).toEqual(
+      expect(result.current.btcPaymentConfig).toEqual(
         expect.objectContaining({
           amountFiat: 1,
           currencyAcronym: "usd",
@@ -84,17 +78,17 @@ describe("useCartPayment", () => {
     });
 
     act(() => {
-      latestState.clearBtcPaymentConfig();
+      result.current.clearBtcPaymentConfig();
     });
 
-    expect(latestState.btcPaymentConfig).toBeNull();
+    expect(result.current.btcPaymentConfig).toBeNull();
   });
 
   it("handles cash payment config and clearing", async () => {
-    render(<TestComponent />);
+    const { result } = renderHook(() => useCartPayment());
 
     await act(async () => {
-      await latestState.handlePay({
+      await result.current.handlePay({
         items: [{ id: 1, subtotal: 100 }],
         subtotal: 100,
         discount: 0,
@@ -105,7 +99,7 @@ describe("useCartPayment", () => {
     });
 
     await waitFor(() => {
-      expect(latestState.cashPaymentConfig).toEqual(
+      expect(result.current.cashPaymentConfig).toEqual(
         expect.objectContaining({
           amountDue: 1,
           displayTotal: "fmt-100",
@@ -114,16 +108,16 @@ describe("useCartPayment", () => {
     });
 
     act(() => {
-      latestState.clearCashPaymentConfig();
+      result.current.clearCashPaymentConfig();
     });
 
-    expect(latestState.cashPaymentConfig).toBeNull();
+    expect(result.current.cashPaymentConfig).toBeNull();
   });
 
   it("handles missing payment methods without crashing", () => {
     mockPaymentMethods = undefined;
-    render(<TestComponent />);
+    const { result } = renderHook(() => useCartPayment());
 
-    expect(typeof latestState.handlePay).toBe("function");
+    expect(typeof result.current.handlePay).toBe("function");
   });
 });

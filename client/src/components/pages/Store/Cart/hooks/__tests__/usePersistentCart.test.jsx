@@ -1,13 +1,18 @@
+import { act, useEffect } from "react";
+
 import { render, screen, waitFor } from "@testing-library/react";
-import { act } from "react";
 
 import { usePersistentCart, CART_STORAGE_KEY } from "../usePersistentCart";
 
-let handlers = {};
+const handlers = {};
 
 function TestComponent() {
   const { cart, discount, setCart, setDiscount, resetCartState } = usePersistentCart();
-  handlers = { setCart, setDiscount, resetCartState };
+  useEffect(() => {
+    handlers.setCart = setCart;
+    handlers.setDiscount = setDiscount;
+    handlers.resetCartState = resetCartState;
+  }, [setCart, setDiscount, resetCartState]);
   return (
     <div>
       <span data-testid="count">{cart.length}</span>
