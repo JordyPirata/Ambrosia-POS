@@ -1,7 +1,8 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 
-import { ProductList } from "../ProductList";
 import { I18nProvider } from "@/i18n/I18nProvider";
+
+import { ProductList } from "../ProductList";
 
 jest.mock("@/components/hooks/useCurrency", () => ({
   useCurrency: () => ({
