@@ -14,8 +14,9 @@ import {
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
+import { formatSats } from "./utils/formatters";
+
 export function NodeInfo({ info }) {
-  const formatSats = (amount) => (new Intl.NumberFormat().format(amount));
   const getTotalBalance = () => {
     if (!info?.channels) return 0;
     return info.channels.reduce((total, ch) => total + ch.balanceSat, 0);

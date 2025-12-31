@@ -33,6 +33,8 @@ import {
   payInvoiceFromService,
 } from "@modules/cashier/cashierService";
 
+import { formatSats, copyToClipboard } from "./utils/formatters";
+
 export function Transactions({
   transactions,
   loading,
@@ -127,8 +129,6 @@ export function Transactions({
       <ArrowDownLeft className="w-4 h-4 text-green-600" />
     )
   );
-
-  const formatSats = (amount) => (new Intl.NumberFormat().format(amount));
 
   return (
     <Card className="rounded-lg mb-6 p-6">

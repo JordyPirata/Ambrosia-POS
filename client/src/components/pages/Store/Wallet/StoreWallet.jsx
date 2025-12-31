@@ -18,7 +18,7 @@ import {
   getOutgoingTransactions,
 } from "@modules/cashier/cashierService";
 
-import { InvoiceModdal } from "./InvoiceModal";
+import { InvoiceModal } from "./InvoiceModal";
 import { NodeError } from "./NodeError";
 import { NodeInfo } from "./NodeInfo";
 import { Transactions } from "./Transactions";
@@ -166,7 +166,7 @@ function WalletInner() {
         setInvoiceCompletedAt={setInvoiceCompletedAt}
       />
 
-      <InvoiceModdal
+      <InvoiceModal
         showInvoiceModal={showInvoiceModal}
         handleCloseInvoiceModal={handleCloseInvoiceModal}
         createdInvoice={createdInvoice}
