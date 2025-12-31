@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 
 import { ProductList } from "../ProductList";
+import { I18nProvider } from "@/i18n/I18nProvider";
 
 jest.mock("@/components/hooks/useCurrency", () => ({
   useCurrency: () => ({
@@ -31,14 +32,23 @@ const categories = [
   { id: "cat-1", name: "Hardware" },
 ];
 
+const localStorageMock = {
+  getItem: jest.fn(),
+  setItem: jest.fn(),
+  clear: jest.fn(),
+};
+global.localStorage = localStorageMock;
+
 describe("ProductList", () => {
   it("renders product details and category names", () => {
     render(
-      <ProductList
-        products={products}
-        categories={categories}
-        onAddProduct={jest.fn()}
-      />,
+      <I18nProvider>
+        <ProductList
+          products={products}
+          categories={categories}
+          onAddProduct={jest.fn()}
+        />
+      </I18nProvider>,
     );
 
     expect(screen.getByText("Jade Wallet")).toBeInTheDocument();
@@ -46,17 +56,19 @@ describe("ProductList", () => {
     expect(screen.getByText("fmt-1600")).toBeInTheDocument();
     expect(screen.getAllByText("SKU:")).toHaveLength(2);
     expect(screen.getByText("jade-wallet")).toBeInTheDocument();
-    expect(screen.getByText("Categoría Desconocida")).toBeInTheDocument();
+    expect(screen.getByText("card.errors.unknownCategory")).toBeInTheDocument();
   });
 
   it("calls onAddProduct when add button is clicked", () => {
     const onAddProduct = jest.fn();
     render(
-      <ProductList
-        products={products}
-        categories={categories}
-        onAddProduct={onAddProduct}
-      />,
+      <I18nProvider>
+        <ProductList
+          products={products}
+          categories={categories}
+          onAddProduct={onAddProduct}
+        />
+      </I18nProvider>,
     );
 
     const addButtons = screen.getAllByText("card.add");
