@@ -1,6 +1,9 @@
 "use client";
-import { render, screen, fireEvent } from "@testing-library/react";
+
 import { act } from "react";
+
+import { render, screen, fireEvent } from "@testing-library/react";
+
 import { CashPaymentModal } from "../CashPaymentModal";
 
 jest.mock("next-intl", () => ({
@@ -9,8 +12,9 @@ jest.mock("next-intl", () => ({
 
 jest.mock("@/components/hooks/useCurrency", () => ({
   useCurrency: () => ({
-    formatAmount: (cents) =>
-      typeof cents === "number" ? `$${(cents / 100).toFixed(2)}` : String(cents),
+    formatAmount: (cents) => (typeof cents === "number"
+      ? `$${(cents / 100).toFixed(2)}`
+      : String(cents)),
   }),
 }));
 

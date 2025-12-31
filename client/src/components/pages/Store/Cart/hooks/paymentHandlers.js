@@ -1,4 +1,5 @@
 import { addToast } from "@heroui/react";
+
 import { createOrderAndTicket } from "./paymentFlows";
 
 export function buildHandlePay({
@@ -87,21 +88,23 @@ export function buildHandlePay({
         return;
       }
 
-      const { paymentResult, orderPayload, orderId } = await processBasePayment({
-        items,
-        amounts,
-        selectedPaymentMethod,
-        currencyId,
-        user,
-        createOrder,
-        createTicket,
-        createPayment,
-        linkPaymentToTicket,
-        buildOrderPayload,
-        buildTicketPayload,
-        buildPaymentPayload,
-        t,
-      });
+      const { paymentResult, orderPayload, orderId } = await processBasePayment(
+        {
+          items,
+          amounts,
+          selectedPaymentMethod,
+          currencyId,
+          user,
+          createOrder,
+          createTicket,
+          createPayment,
+          linkPaymentToTicket,
+          buildOrderPayload,
+          buildTicketPayload,
+          buildPaymentPayload,
+          t,
+        },
+      );
 
       if (methodName.includes("cash") || methodName.includes("efectivo")) {
         setCashPaymentConfig({
@@ -138,10 +141,12 @@ export function buildHandlePay({
 }
 
 export function buildHandleBtcInvoiceReady({ setBtcPaymentConfig }) {
-  return (data) =>
-    setBtcPaymentConfig((prev) =>
-      prev ? { ...prev, invoiceData: data } : prev,
-    );
+  return (data) => {
+    setBtcPaymentConfig((prev) => {
+      if (!prev) return prev;
+      return { ...prev, invoiceData: data };
+    });
+  };
 }
 
 export function buildHandleBtcComplete({
@@ -212,9 +217,10 @@ export function buildHandleBtcComplete({
       console.error("Error completing BTC payment:", err);
       notifyError(err?.message || t("errors.btcComplete"));
     } finally {
-      setBtcPaymentConfig((prev) =>
-        prev ? { ...prev, paymentCompleted: true } : prev,
-      );
+      setBtcPaymentConfig((prev) => {
+        if (!prev) return prev;
+        return { ...prev, paymentCompleted: true };
+      });
       dispatch({ type: "stop" });
     }
   };

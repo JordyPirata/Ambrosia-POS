@@ -1,1 +1,1 @@
-export * from "./Cart.jsx";
+export * from "./Cart";

@@ -1,5 +1,6 @@
-import { useTranslations } from "next-intl";
 import { Button, Card, CardBody, CardFooter, CardHeader, Chip } from "@heroui/react";
+import { useTranslations } from "next-intl";
+
 import { useCurrency } from "@/components/hooks/useCurrency";
 
 export function ProductList({ products, onAddProduct, categories }) {
@@ -7,8 +8,8 @@ export function ProductList({ products, onAddProduct, categories }) {
   const { formatAmount } = useCurrency();
 
   const getCategoryName = (categoryId) => {
-    const category = categories.find(category => category.id === categoryId);
-    return category ? category.name : 'Categoría Desconocida';
+    const category = categories.find((category) => category.id === categoryId);
+    return category ? category.name : t("card.errors.unknownCategory");
   };
 
   return (

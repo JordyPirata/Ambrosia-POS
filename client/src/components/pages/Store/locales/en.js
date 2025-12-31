@@ -105,6 +105,9 @@ const storeEn = {
     card: {
       add: "Add",
       stock: "in stock",
+      errors: {
+        unknownCategory: "Unknown category",
+      },
     },
     summary: {
       title: "Summary",
