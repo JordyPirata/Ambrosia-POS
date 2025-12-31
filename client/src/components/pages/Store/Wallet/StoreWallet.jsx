@@ -78,7 +78,7 @@ function WalletInner() {
         setError(t("history.getTransactionsError"));
         addToast({
           title: "Error",
-          description: "No se pudo cargar el historial de transacciones",
+          description: t("history.getTransactionsErrorDescription"),
           variant: "solid",
           color: "danger",
         });

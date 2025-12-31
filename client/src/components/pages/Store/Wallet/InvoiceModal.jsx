@@ -84,7 +84,7 @@ export function InvoiceModal({ showInvoiceModal, handleCloseInvoiceModal, create
                       <Button
                         size="sm"
                         variant="outline"
-                        onPress={() => copyToClipboard(createdInvoice.serialized)}
+                        onPress={() => copyToClipboard(createdInvoice.serialized, t)}
                       >
                         <Copy className="w-3 h-3 mr-1" />
                         {t("invoiceModal.copyButton")}
@@ -109,7 +109,7 @@ export function InvoiceModal({ showInvoiceModal, handleCloseInvoiceModal, create
                       <Button
                         size="sm"
                         variant="outline"
-                        onPress={() => copyToClipboard(createdInvoice.paymentHash)}
+                        onPress={() => copyToClipboard(createdInvoice.paymentHash, t)}
                       >
                         <Copy className="w-3 h-3 mr-1" />
                         {t("invoiceModal.copyButton")}

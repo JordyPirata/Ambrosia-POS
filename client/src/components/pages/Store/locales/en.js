@@ -221,6 +221,12 @@ const storeEn = {
     title: "Wallet",
     subtitle: "Track your BTC balance and transactions",
     loadingMessage: "Loading wallet info...",
+    clipboard: {
+      successTitle: "Copied",
+      successDescription: "Text copied to clipboard",
+      errorTitle: "Error",
+      errorDescription: "Could not copy to clipboard",
+    },
     access: {
       title: "Confirm Wallet Access",
       passwordLabel: "Password",

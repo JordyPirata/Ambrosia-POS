@@ -295,7 +295,7 @@ export function Transactions({
                           <Button
                             size="sm"
                             variant="outline"
-                            onPress={() => copyToClipboard(paymentResult.paymentHash)}
+                            onPress={() => copyToClipboard(paymentResult.paymentHash, t)}
                           >
                             <Copy className="w-3 h-3 mr-1" />
                             {t("payments.send.copyButton")}
