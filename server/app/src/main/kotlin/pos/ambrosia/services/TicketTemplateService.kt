@@ -7,13 +7,12 @@ import pos.ambrosia.models.ElementStyle
 import pos.ambrosia.models.ElementType
 import pos.ambrosia.models.Justification
 import pos.ambrosia.models.FontSize
-import pos.ambrosia.models.TicketTemplateCreateRequest
-import pos.ambrosia.models.TicketTemplateUpdateRequest
+import pos.ambrosia.models.TicketTemplateRequest
 import java.sql.Connection
 import java.sql.ResultSet
 import java.util.UUID
 
-class TicketTemplateService(private val connection: Connection) {
+open class TicketTemplateService(private val connection: Connection) {
 
     companion object {
         private const val ADD_TEMPLATE = "INSERT INTO ticket_templates (id, name) VALUES (?, ?)"
@@ -51,7 +50,7 @@ class TicketTemplateService(private val connection: Connection) {
         }
     }
 
-    suspend fun addTemplate(request: TicketTemplateCreateRequest): String? {
+    suspend fun addTemplate(request: TicketTemplateRequest): String? {
         if (templateNameExists(request.name)) {
             logger.error("Template name already exists: ${request.name}")
             return null
@@ -122,7 +121,7 @@ class TicketTemplateService(private val connection: Connection) {
         }
     }
 
-    suspend fun getTemplateByName(name: String): TicketTemplate? {
+    open suspend fun getTemplateByName(name: String): TicketTemplate? {
         connection.prepareStatement(GET_TEMPLATE_BY_NAME).use { stmt ->
             stmt.setString(1, name)
             val rs = stmt.executeQuery()
@@ -135,7 +134,7 @@ class TicketTemplateService(private val connection: Connection) {
         }
     }
 
-    suspend fun updateTemplate(id: String, request: TicketTemplateUpdateRequest): Boolean {
+    suspend fun updateTemplate(id: String, request: TicketTemplateRequest): Boolean {
         val templateId = try {
             UUID.fromString(id)
         } catch (e: IllegalArgumentException) {

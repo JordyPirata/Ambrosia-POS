@@ -7,6 +7,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import pos.ambrosia.models.TicketTemplate
+import pos.ambrosia.models.TicketTemplateRequest
 import pos.ambrosia.services.TicketTemplateService
 import pos.ambrosia.db.DatabaseConnection
 
@@ -23,7 +24,7 @@ fun Application.configureTicketTemplates() {
 fun Route.ticketTemplatesApi(ticketTemplateService: TicketTemplateService) {
     route("/templates") {
         post {
-            val templateRequest = call.receive<TicketTemplate>()
+            val templateRequest = call.receive<TicketTemplateRequest>()
             val templateId = ticketTemplateService.addTemplate(templateRequest)
             if (templateId != null) {
                 call.respond(HttpStatusCode.Created, mapOf("id" to templateId))
@@ -49,7 +50,7 @@ fun Route.ticketTemplatesApi(ticketTemplateService: TicketTemplateService) {
 
         put("/{id}") {
             val id = call.parameters["id"] ?: return@put call.respond(HttpStatusCode.BadRequest)
-            val templateRequest = call.receive<TicketTemplate>()
+            val templateRequest = call.receive<TicketTemplateRequest>()
             val success = ticketTemplateService.updateTemplate(id, templateRequest)
             if (success) {
                 call.respond(HttpStatusCode.OK)

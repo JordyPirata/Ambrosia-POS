@@ -49,3 +49,16 @@ enum class Justification { LEFT, CENTER, RIGHT }
 
 @Serializable
 enum class FontSize { NORMAL, LARGE, EXTRA_LARGE }
+
+@Serializable
+data class TicketTemplateRequest(
+    val name: String,
+    val elements: List<TicketElementCreateRequest>
+)
+
+@Serializable
+data class TicketElementCreateRequest(
+    val type: ElementType,
+    val value: String,
+    val style: ElementStyle? = null
+)

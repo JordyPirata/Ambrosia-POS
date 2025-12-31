@@ -10,7 +10,7 @@ import pos.ambrosia.models.TicketData
 import pos.ambrosia.models.TicketTemplate
 import pos.ambrosia.models.PrinterType
 import pos.ambrosia.models.Config
-
+import pos.ambrosia.logger
 
 class PrintService(private val ticketTemplateService: TicketTemplateService) {
   private var kitchenPrinter: PrintService? = null
@@ -18,11 +18,17 @@ class PrintService(private val ticketTemplateService: TicketTemplateService) {
   private var barPrinter: PrintService? = null
 
   fun getAvailablePrinters(): Array<String> {
-    return PrinterOutputStream.getListPrintServicesNames()
+    val printerNames = PrinterOutputStream.getListPrintServicesNames()
+    logger.info("Found ${printerNames.size} available printers: ${printerNames.joinToString(", ")}")
+    return printerNames
   }
 
   fun setPrinter(type: PrinterType, printerName: String) {
+    logger.info("Setting printer '$printerName' for $type")
     val printService = PrinterOutputStream.getPrintServiceByName(printerName)
+    if (printService == null) {
+      logger.error("Printer '$printerName' not found on this system.")
+    }
     when (type) {
       PrinterType.KITCHEN -> kitchenPrinter = printService
       PrinterType.CUSTOMER -> customerPrinter = printService
@@ -36,6 +42,7 @@ class PrintService(private val ticketTemplateService: TicketTemplateService) {
       type: PrinterType,
       config: Config?
   ) {
+    logger.info("Starting print job for $type using template '$templateName'")
     val printerService =
         when (type) {
           PrinterType.KITCHEN -> kitchenPrinter
@@ -57,7 +64,9 @@ class PrintService(private val ticketTemplateService: TicketTemplateService) {
 
       escpos.feed(5).cut(EscPos.CutMode.FULL)
       escpos.close()
+      logger.info("Successfully sent print job to $type printer.")
     } catch (e: Exception) {
+      logger.error("Failed to print ticket: ${e.message}", e)
       throw IOException("Failed to print ticket: ${e.message}", e)
     }
   }
