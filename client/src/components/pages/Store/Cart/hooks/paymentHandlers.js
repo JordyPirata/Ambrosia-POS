@@ -2,6 +2,21 @@ import { addToast } from "@heroui/react";
 
 import { createOrderAndTicket } from "./paymentFlows";
 
+function buildInvoiceDescription(items = []) {
+  if (!Array.isArray(items) || items.length === 0) return "";
+
+  const lines = items
+    .map((item) => {
+      const name = typeof item?.name === "string" ? item.name.trim() : "";
+      if (!name) return null;
+      const quantity = Number(item?.quantity) || 1;
+      return `${quantity}x ${name}`;
+    })
+    .filter(Boolean);
+
+  return lines.join(", ");
+}
+
 export function buildHandlePay({
   t,
   currency,
@@ -71,6 +86,7 @@ export function buildHandlePay({
           currency?.acronym ||
           "MXN"
         ).toLowerCase();
+        const invoiceDescription = buildInvoiceDescription(items);
 
         setBtcPaymentConfig({
           paymentId: `btc-${Date.now()}`,
@@ -82,6 +98,7 @@ export function buildHandlePay({
           discountAmount: amounts.discountAmount,
           total: amounts.total,
           items,
+          invoiceDescription,
           selectedPaymentMethod,
           currencyId,
         });

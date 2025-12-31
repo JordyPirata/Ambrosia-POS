@@ -142,7 +142,7 @@ const storeEs = {
     },
     paymentModal: {
       bitcoin: {
-        title: "Pago con Bitcoin",
+        title: "Pago con Bitcoin (Lightning)",
         subtitle: "Pídele al cliente que escanee el QR para completar el pago",
         generating: "Generando invoice...",
         retry: "Reintentar",
