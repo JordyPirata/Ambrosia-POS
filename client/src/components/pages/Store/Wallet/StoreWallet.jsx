@@ -46,15 +46,15 @@ function WalletInner() {
       setError("");
     } catch (err) {
       console.error(err);
-      setError("Error al obtener la información de la wallet");
+      setError(t("nodeInfo.fetchInfoError"));
       addToast({
         title: "Error",
-        description: "No se pudo cargar la información de la wallet",
+        description: t("nodeInfo.getInfoErrorDescription"),
         variant: "solid",
         color: "danger",
       });
     }
-  }, []);
+  }, [t]);
 
   const fetchTransactions = useCallback(
     async () => {
@@ -74,9 +74,8 @@ function WalletInner() {
           (a, b) => b.completedAt - a.completedAt,
         );
         setTransactions(allTx);
-      } catch (err) {
-        console.error("Error al obtener transacciones:", err);
-        setError("Error al cargar historial");
+      } catch {
+        setError(t("history.getTransactionsError"));
         addToast({
           title: "Error",
           description: "No se pudo cargar el historial de transacciones",
@@ -86,7 +85,7 @@ function WalletInner() {
       } finally {
         setLoading(false);
       }
-    }, [filter]);
+    }, [filter, t]);
 
   useEffect(() => {
     fetchInfo();

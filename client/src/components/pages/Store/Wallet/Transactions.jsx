@@ -57,7 +57,7 @@ export function Transactions({
 
   const handleCreateInvoice = async () => {
     if (!invoiceAmount) {
-      setError("Debes ingresar un monto para la invoice");
+      setError(t("payments.receive.invoiceAmountError"));
       return;
     }
     try {
@@ -79,10 +79,10 @@ export function Transactions({
       });
     } catch (err) {
       console.error(err);
-      setError("Error al crear la invoice");
+      setError(t("payments.receive.invoiceCreateError"));
       addToast({
         title: "Error",
-        description: "No se pudo crear la invoice",
+        description: t("payments.receive.invoiceCreateError"),
         variant: "solid",
         color: "danger",
       });
@@ -93,7 +93,7 @@ export function Transactions({
 
   const handlePayInvoice = async () => {
     if (!payInvoice.trim()) {
-      setError("Debes ingresar una invoice para pagar");
+      setError(t("payments.send.noInvoiceToPay"));
       return;
     }
     try {
@@ -103,17 +103,17 @@ export function Transactions({
       setPayInvoice("");
       setError("");
       addToast({
-        title: "Pago Enviado",
-        description: "El pago Lightning se ha enviado correctamente",
+        title: t("payments.send.paySuccessTitle"),
+        description: t("payments.send.paySuccessDescription"),
         variant: "solid",
         color: "success",
       });
     } catch (err) {
       console.error(err);
-      setError("Error al pagar la invoice");
+      setError(t("payments.send.paymentError"));
       addToast({
         title: "Error",
-        description: "No se pudo procesar el pago",
+        description: t("payments.send.paymentErrorDescription"),
         variant: "solid",
         color: "danger",
       });
