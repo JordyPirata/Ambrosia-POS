@@ -39,8 +39,8 @@ export const copyToClipboard = async (text, t) => {
         variant: "solid",
         color: "success",
       });
-    } catch (err) {
-      console.error("Error al copiar con clipboard API", err);
+    } catch {
+      console.error(t("clipboard.errorDescription"));
       fallbackCopy(text);
     }
   } else {

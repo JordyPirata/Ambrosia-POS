@@ -18,13 +18,13 @@ import { QRCode } from "react-qr-code";
 
 import { copyToClipboard } from "./utils/formatters";
 
-export function InvoiceModal({ showInvoiceModal, handleCloseInvoiceModal, createdInvoice, invoicePaid, invoiceCompletedAt, invoiceAwaitingPayment }) {
+export function InvoiceModal({ invoiceState, onClose }) {
   const t = useTranslations("wallet");
 
   return (
     <Modal
-      isOpen={showInvoiceModal}
-      onClose={handleCloseInvoiceModal}
+      isOpen={invoiceState.showModal}
+      onClose={onClose}
       size="2xl"
     >
       <ModalContent>
@@ -35,7 +35,7 @@ export function InvoiceModal({ showInvoiceModal, handleCloseInvoiceModal, create
           </div>
         </ModalHeader>
         <ModalBody>
-          {invoicePaid ? (
+          {invoiceState.paid ? (
             <div className="flex flex-col items-center justify-center py-8 space-y-4">
               <div className="h-20 w-20 rounded-full bg-green-100 flex items-center justify-center shadow-inner">
                 <svg
@@ -57,21 +57,21 @@ export function InvoiceModal({ showInvoiceModal, handleCloseInvoiceModal, create
                 <p className="text-xl font-semibold text-green-900">
                   {t("invoiceModal.paymentReceived")}
                 </p>
-                {invoiceCompletedAt && (
+                {invoiceState.completedAt && (
                   <p className="text-sm text-green-700">
                     {t("invoiceModal.paidAt", {
-                      time: new Date(invoiceCompletedAt).toLocaleTimeString(),
+                      time: new Date(invoiceState.completedAt).toLocaleTimeString(),
                     })}
                   </p>
                 )}
               </div>
             </div>
           ) : (
-            createdInvoice && (
+            invoiceState.created && (
               <div className="space-y-6">
                 <div className="flex justify-center">
                   <div className="bg-white p-4 rounded-lg border">
-                    <QRCode value={createdInvoice.serialized} size={200} />
+                    <QRCode value={invoiceState.created.serialized} size={200} />
                   </div>
                 </div>
 
@@ -84,14 +84,14 @@ export function InvoiceModal({ showInvoiceModal, handleCloseInvoiceModal, create
                       <Button
                         size="sm"
                         variant="outline"
-                        onPress={() => copyToClipboard(createdInvoice.serialized, t)}
+                        onPress={() => copyToClipboard(invoiceState.created.serialized, t)}
                       >
                         <Copy className="w-3 h-3 mr-1" />
                         {t("invoiceModal.copyButton")}
                       </Button>
                     </div>
                     <div className="bg-gray-50 p-3 rounded text-xs break-all">
-                      {createdInvoice.serialized}
+                      {invoiceState.created.serialized}
                     </div>
                   </div>
 
@@ -100,7 +100,7 @@ export function InvoiceModal({ showInvoiceModal, handleCloseInvoiceModal, create
                       <span className="font-medium text-deep">
                         {t("invoiceModal.paymentHash")}
                       </span>
-                      {invoiceAwaitingPayment ? (
+                      {invoiceState.awaitingPayment ? (
                         <div className="flex items-center space-x-2 text-sm text-forest">
                           <Spinner size="sm" color="success" />
                           <span>{t("invoiceModal.waitingPayment")}</span>
@@ -109,14 +109,14 @@ export function InvoiceModal({ showInvoiceModal, handleCloseInvoiceModal, create
                       <Button
                         size="sm"
                         variant="outline"
-                        onPress={() => copyToClipboard(createdInvoice.paymentHash, t)}
+                        onPress={() => copyToClipboard(invoiceState.created.paymentHash, t)}
                       >
                         <Copy className="w-3 h-3 mr-1" />
                         {t("invoiceModal.copyButton")}
                       </Button>
                     </div>
                     <div className="bg-gray-50 p-3 rounded text-xs break-all">
-                      {createdInvoice.paymentHash}
+                      {invoiceState.created.paymentHash}
                     </div>
                   </div>
                 </div>
@@ -125,7 +125,7 @@ export function InvoiceModal({ showInvoiceModal, handleCloseInvoiceModal, create
           )}
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" onPress={handleCloseInvoiceModal}>
+          <Button color="primary" onPress={onClose}>
             {t("invoiceModal.closeButton")}
           </Button>
         </ModalFooter>

@@ -18,6 +18,7 @@ import {
   getOutgoingTransactions,
 } from "@modules/cashier/cashierService";
 
+import { useInvoiceState } from "./hooks/useInvoiceState";
 import { InvoiceModal } from "./InvoiceModal";
 import { NodeError } from "./NodeError";
 import { NodeInfo } from "./NodeInfo";
@@ -26,18 +27,14 @@ import { Transactions } from "./Transactions";
 function WalletInner() {
   const t = useTranslations("wallet");
   const [info, setInfo] = useState(null);
-  const [createdInvoice, setCreatedInvoice] = useState(null);
   const [transactions, setTransactions] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [filter, setFilter] = useState("all");
-  const [showInvoiceModal, setShowInvoiceModal] = useState(false);
-  const [invoicePaid, setInvoicePaid] = useState(false);
-  const [invoiceAwaitingPayment, setInvoiceAwaitingPayment] = useState(false);
-  const [invoiceCompletedAt, setInvoiceCompletedAt] = useState(null);
   const fetchTransactionsRef = useRef(null);
   const invoiceHashRef = useRef(null);
   const { setInvoiceHash, setFetchers, onPayment } = usePaymentWebsocket();
+  const { invoiceState, actions: invoiceActions } = useInvoiceState();
 
   const fetchInfo = useCallback(async () => {
     try {
@@ -101,11 +98,9 @@ function WalletInner() {
   }, [fetchTransactions, fetchInfo, setFetchers]);
 
   useEffect(() => {
-    invoiceHashRef.current = createdInvoice?.paymentHash || null;
-    setInvoiceHash(createdInvoice?.paymentHash || null);
-    setInvoiceAwaitingPayment(Boolean(createdInvoice));
-    setInvoiceCompletedAt(null);
-  }, [createdInvoice, setInvoiceHash]);
+    invoiceHashRef.current = invoiceState.created?.paymentHash || null;
+    setInvoiceHash(invoiceState.created?.paymentHash || null);
+  }, [invoiceState.created, setInvoiceHash]);
 
   useEffect(() => {
     const off = onPayment((data) => {
@@ -114,19 +109,11 @@ function WalletInner() {
         data.paymentHash &&
         data.paymentHash === invoiceHashRef.current
       ) {
-        setInvoicePaid(true);
-        setInvoiceAwaitingPayment(false);
-        setInvoiceCompletedAt(Date.now());
+        invoiceActions.markAsPaid(Date.now());
       }
     });
     return () => off?.();
-  }, [onPayment]);
-
-  const handleCloseInvoiceModal = () => {
-    setShowInvoiceModal(false);
-    setInvoiceAwaitingPayment(false);
-    setInvoiceCompletedAt(null);
-  };
+  }, [onPayment, invoiceActions]);
 
   if (!info) {
     return (
@@ -155,23 +142,14 @@ function WalletInner() {
         setLoading={setLoading}
         error={error}
         setError={setError}
-        showInvoiceModal={showInvoiceModal}
-        setShowInvoiceModal={setShowInvoiceModal}
         filter={filter}
         setFilter={setFilter}
-        setCreatedInvoice={setCreatedInvoice}
-        setInvoicePaid={setInvoicePaid}
-        setInvoiceAwaitingPayment={setInvoiceAwaitingPayment}
-        setInvoiceCompletedAt={setInvoiceCompletedAt}
+        invoiceActions={invoiceActions}
       />
 
       <InvoiceModal
-        showInvoiceModal={showInvoiceModal}
-        handleCloseInvoiceModal={handleCloseInvoiceModal}
-        createdInvoice={createdInvoice}
-        invoicePaid={invoicePaid}
-        invoiceCompletedAt={invoiceCompletedAt}
-        invoiceAwaitingPayment={invoiceAwaitingPayment}
+        invoiceState={invoiceState}
+        onClose={invoiceActions.closeModal}
       />
 
     </div>

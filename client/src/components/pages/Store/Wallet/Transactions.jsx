@@ -40,13 +40,9 @@ export function Transactions({
   loading,
   setLoading,
   setError,
-  setShowInvoiceModal,
   filter,
   setFilter,
-  setCreatedInvoice,
-  setInvoicePaid,
-  setInvoiceAwaitingPayment,
-  setInvoiceCompletedAt,
+  invoiceActions,
 }) {
   const t = useTranslations("wallet");
   const [activeTab, setActiveTab] = useState("receive");
@@ -63,11 +59,7 @@ export function Transactions({
     try {
       setLoading(true);
       const res = await createInvoice(invoiceAmount, invoiceDesc);
-      setCreatedInvoice(res);
-      setInvoicePaid(false);
-      setInvoiceAwaitingPayment(true);
-      setInvoiceCompletedAt(null);
-      setShowInvoiceModal(true);
+      invoiceActions.createInvoice(res);
       setInvoiceAmount("");
       setInvoiceDesc("");
       setError("");
