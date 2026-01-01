@@ -59,18 +59,17 @@ jest.mock("../EmptyOrdersState", () => ({
 }));
 
 jest.mock("../OrderDetailsModal", () => ({
-  OrderDetailsModal: ({ order, isOpen, onClose, onEdit }) =>
-    isOpen ? (
-      <div>
-        <span>{`selected-${order?.id}`}</span>
-        <button type="button" onClick={onEdit}>
-          edit
-        </button>
-        <button type="button" onClick={onClose}>
-          close
-        </button>
-      </div>
-    ) : null,
+  OrderDetailsModal: ({ order, isOpen, onClose, onEdit }) => (isOpen ? (
+    <div>
+      <span>{`selected-${order?.id}`}</span>
+      <button type="button" onClick={onEdit}>
+        edit
+      </button>
+      <button type="button" onClick={onClose}>
+        close
+      </button>
+    </div>
+  ) : null),
 }));
 
 jest.mock("@heroui/react", () => {

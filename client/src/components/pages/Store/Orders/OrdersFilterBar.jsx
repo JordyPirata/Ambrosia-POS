@@ -60,13 +60,15 @@ export function OrdersFilterBar({
         <Tab
           key="paid"
           title={
-            <div className="flex items-center space-x-2">
-              <CheckCircle className="w-4 h-4" />
-              <span>{t("filter.tabPaid")}</span>
-              <div className="bg-green-100 text-green-800 rounded-full px-2 py-0.5 text-xs font-medium">
-                {paidCount}
+            (
+              <div className="flex items-center space-x-2">
+                <CheckCircle className="w-4 h-4" />
+                <span>{t("filter.tabPaid")}</span>
+                <div className="bg-green-100 text-green-800 rounded-full px-2 py-0.5 text-xs font-medium">
+                  {paidCount}
+                </div>
               </div>
-            </div>
+            )
           }
         />
       </Tabs>

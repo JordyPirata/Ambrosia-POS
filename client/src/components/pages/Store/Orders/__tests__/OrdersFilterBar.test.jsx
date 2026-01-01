@@ -22,12 +22,11 @@ jest.mock("@heroui/react", () => {
   );
   const Tabs = ({ selectedKey, onSelectionChange, children }) => (
     <div>
-      {React.Children.map(children, (child) =>
-        React.cloneElement(child, {
-          selectedKey,
-          onSelectionChange,
-          tabKey: child.key,
-        }),
+      {React.Children.map(children, (child) => React.cloneElement(child, {
+        selectedKey,
+        onSelectionChange,
+        tabKey: child.key,
+      }),
       )}
     </div>
   );

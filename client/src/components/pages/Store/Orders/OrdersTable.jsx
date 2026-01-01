@@ -1,10 +1,12 @@
 "use client";
 
-import formatDate from "@/lib/formatDate";
 import { Button, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/react";
 import { Eye, Users, Calendar } from "lucide-react";
-import { StatusChip } from "./StatusChip";
 import { useTranslations } from "next-intl";
+
+import formatDate from "@/lib/formatDate";
+
+import { StatusChip } from "./StatusChip";
 
 export function OrdersTable({ orders, formatAmount, onViewOrder }) {
   const t = useTranslations("orders");
