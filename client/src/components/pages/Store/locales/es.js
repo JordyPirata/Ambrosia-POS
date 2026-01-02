@@ -272,6 +272,7 @@ const storeEs = {
         paymentHash: "Payment Hash:",
         copyButton: "Copiar",
         noInvoiceToPay: "Debes ingresar una invoice para pagar",
+        invalidInvoiceFormat: "El formato de la invoice BOLT11 no es válido",
         paySuccessTitle: "Pago realizado",
         paySuccessDescription: "El pago Lightning se ha enviado correctamente",
         paymentError: "Error al pagar el invoice",

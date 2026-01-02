@@ -23,18 +23,44 @@ export function TransactionsSendTab({ loading, setLoading, setError }) {
   const t = useTranslations("wallet");
   const [payInvoice, setPayInvoice] = useState("");
   const [paymentResult, setPaymentResult] = useState(null);
+  const [invalidInvoice, setInvalidInvoice] = useState(false);
+
+  const validateBolt11 = (invoice) => {
+    if (!invoice || !invoice.trim()) {
+      return { valid: false, error: t("payments.send.noInvoiceToPay") };
+    }
+
+    const trimmed = invoice.trim().toLowerCase();
+    const validPrefixes = ["lnbc", "lntb", "lnbcrt"];
+    const hasValidPrefix = validPrefixes.some((prefix) => trimmed.startsWith(prefix));
+
+    if (!hasValidPrefix) {
+      return { valid: false, error: t("payments.send.invalidInvoiceFormat") };
+    }
+
+    if (trimmed.length < 20) {
+      return { valid: false, error: t("payments.send.invalidInvoiceFormat") };
+    }
+
+    return { valid: true };
+  };
 
   const handlePayInvoice = async () => {
-    if (!payInvoice.trim()) {
-      setError(t("payments.send.noInvoiceToPay"));
+    const validation = validateBolt11(payInvoice);
+
+    if (!validation.valid) {
+      setInvalidInvoice(true);
+      setError(validation.error);
       return;
     }
+
     try {
       setLoading(true);
       const res = await payInvoiceFromService(payInvoice);
       setPaymentResult(res);
       setPayInvoice("");
       setError("");
+      setInvalidInvoice(false);
       addToast({
         title: t("payments.send.paySuccessTitle"),
         description: t("payments.send.paySuccessDescription"),
@@ -62,7 +88,11 @@ export function TransactionsSendTab({ loading, setLoading, setError }) {
           label={t("payments.send.payInvoiceLabel")}
           placeholder="lnbc1..."
           value={payInvoice}
-          onChange={(e) => setPayInvoice(e.target.value)}
+          onChange={(e) => {
+            setPayInvoice(e.target.value);
+            setInvalidInvoice(false);
+            setError("");
+          }}
           variant="bordered"
           size="lg"
           startContent={<Zap className="w-4 h-4 text-gray-400" />}
@@ -71,13 +101,15 @@ export function TransactionsSendTab({ loading, setLoading, setError }) {
             label: "text-sm font-semibold text-deep",
           }}
           disabled={loading}
+          isInvalid={invalidInvoice}
+          errorMessage={invalidInvoice ? t("payments.send.invalidInvoiceFormat") : ""}
         />
         <Button
           onPress={handlePayInvoice}
           variant="solid"
           color="warning"
           size="lg"
-          disabled={loading || !payInvoice.trim()}
+          disabled={loading}
           className="w-full"
         >
           {loading ? (

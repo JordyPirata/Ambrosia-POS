@@ -272,6 +272,7 @@ const storeEn = {
         paymentHash: "Payment Hash:",
         copyButton: "Copy",
         noInvoiceToPay: "You must enter an invoice to pay",
+        invalidInvoiceFormat: "Invalid BOLT11 invoice format",
         paySuccessTitle: "Payment sent",
         paySuccessDescription: "Lightning payment sent successfully",
         paymentError: "Error paying the invoice",
