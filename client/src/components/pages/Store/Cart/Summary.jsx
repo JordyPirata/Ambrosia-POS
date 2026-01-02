@@ -171,6 +171,7 @@ export function Summary({
         amountFiat={btcPaymentConfig?.amountFiat}
         currencyAcronym={btcPaymentConfig?.currencyAcronym}
         paymentId={btcPaymentConfig?.paymentId}
+        invoiceDescription={btcPaymentConfig?.invoiceDescription}
         displayTotal={btcPaymentConfig?.displayTotal}
         onClose={onCloseBtcPayment}
         onInvoiceReady={onInvoiceReady}

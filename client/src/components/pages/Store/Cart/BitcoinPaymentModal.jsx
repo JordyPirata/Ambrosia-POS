@@ -24,6 +24,7 @@ export function BitcoinPaymentModal({
   amountFiat,
   currencyAcronym = "usd",
   paymentId,
+  invoiceDescription,
   displayTotal,
 }) {
   const t = useTranslations("cart.paymentModal.bitcoin");
@@ -46,6 +47,7 @@ export function BitcoinPaymentModal({
     amountFiat: isOpen ? amountFiat : null,
     currencyAcronym,
     paymentId,
+    invoiceDescription,
     autoGenerate: isOpen,
     onInvoiceReady,
   });
