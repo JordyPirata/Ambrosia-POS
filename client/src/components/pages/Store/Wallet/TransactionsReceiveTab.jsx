@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { addToast, Button, Input, Spinner } from "@heroui/react";
+import { addToast, Button, Input, NumberInput, Spinner } from "@heroui/react";
 import { Bitcoin, QrCode } from "lucide-react";
 import { useTranslations } from "next-intl";
 
@@ -12,10 +12,11 @@ export function TransactionsReceiveTab({ loading, setLoading, setError, invoiceA
   const t = useTranslations("wallet");
   const [invoiceAmount, setInvoiceAmount] = useState("");
   const [invoiceDesc, setInvoiceDesc] = useState("");
+  const [invalidNumberInput, setInvalidNumberInput] = useState(false);
 
   const handleCreateInvoice = async () => {
-    if (!invoiceAmount) {
-      setError(t("payments.receive.invoiceAmountError"));
+    if (invoiceAmount < 1) {
+      setInvalidNumberInput(true);
       return;
     }
     try {
@@ -48,20 +49,25 @@ export function TransactionsReceiveTab({ loading, setLoading, setError, invoiceA
   return (
     <div className="p-6 space-y-6">
       <div className="space-y-4">
-        <Input
-          type="number"
+        <NumberInput
           label={t("payments.receive.invoiceAmountLabel")}
           placeholder="1000"
+          minValue={0}
           value={invoiceAmount}
-          onChange={(e) => setInvoiceAmount(e.target.value)}
+          onValueChange={(value) => {
+            setInvoiceAmount(value === null ? "" : value);
+            setInvalidNumberInput(false);
+          }}
           variant="bordered"
           size="lg"
-          startContent={<Bitcoin className="w-4 h-4 text-gray-400" />}
+          startContent={<Bitcoin className="w-5 h-5 text-gray-400 pb-0.5" />}
           classNames={{
             input: "text-base",
             label: "text-sm font-semibold text-deep",
           }}
           disabled={loading}
+          isInvalid={invalidNumberInput}
+          errorMessage={invalidNumberInput ? t("payments.receive.invoiceAmountError") : ""}
         />
         <Input
           label={t("payments.receive.invoiceDescriptionLabel")}
@@ -81,7 +87,7 @@ export function TransactionsReceiveTab({ loading, setLoading, setError, invoiceA
           variant="solid"
           color="primary"
           size="lg"
-          disabled={loading || !invoiceAmount}
+          disabled={loading}
           className="w-full gradient-forest text-white"
         >
           {loading ? (
