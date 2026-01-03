@@ -15,7 +15,7 @@ export function TransactionsReceiveTab({ loading, setLoading, setError, invoiceA
   const [invalidNumberInput, setInvalidNumberInput] = useState(false);
 
   const handleCreateInvoice = async () => {
-    if (invoiceAmount < 1) {
+    if (invoiceAmount < 1 || !invoiceAmount) {
       setInvalidNumberInput(true);
       return;
     }
