@@ -13,15 +13,15 @@ import pos.ambrosia.services.ConfigService
 import pos.ambrosia.services.PrintService
 import pos.ambrosia.services.TicketTemplateService
 
-fun Application.configurePrinter() {
+fun Application.configurePrinters() {
   val connection = DatabaseConnection.getConnection()
   val ticketTemplateService = TicketTemplateService(connection)
   val printService = PrintService(ticketTemplateService)
   val configService = ConfigService(connection)
-  routing { route("/printers") { printer(printService, configService) } }
+  routing { route("/printers") { printers(printService, configService) } }
 }
 
-fun Route.printer(printService: PrintService, configService: ConfigService) {
+fun Route.printers(printService: PrintService, configService: ConfigService) {
   authenticate("auth-jwt") {
     get { call.respond(printService.getAvailablePrinters()) }
     post("/set") {

@@ -14,15 +14,11 @@ import pos.ambrosia.db.DatabaseConnection
 fun Application.configureTicketTemplates() {
     val connection = DatabaseConnection.getConnection()
     val ticketTemplateService = TicketTemplateService(connection)
-    routing {
-        authenticate("auth-jwt") {
-            ticketTemplatesApi(ticketTemplateService)
-        }
-    }
+    routing { route("/templates") { templatesAPI(ticketTemplateService) }}
 }
 
-fun Route.ticketTemplatesApi(ticketTemplateService: TicketTemplateService) {
-    route("/templates") {
+fun Route.templatesAPI(ticketTemplateService: TicketTemplateService) {
+    authenticate("auth-jwt") {
         post {
             val templateRequest = call.receive<TicketTemplateRequest>()
             val templateId = ticketTemplateService.addTemplate(templateRequest)
