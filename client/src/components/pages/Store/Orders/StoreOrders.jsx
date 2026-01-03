@@ -1,21 +1,26 @@
 "use client";
 
 import { useState } from "react";
+
 import { useRouter } from "next/navigation";
-import { Filter } from "lucide-react";
+
 import {
   Card,
   CardBody,
   CardHeader,
   Pagination,
 } from "@heroui/react";
+import { Filter } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useOrders } from "../hooks/useOrders";
+
 import { useCurrency } from "@/components/hooks/useCurrency";
+
+import { useOrders } from "../hooks/useOrders";
+
 import { EmptyOrdersState } from "./EmptyOrdersState";
+import { OrderDetailsModal } from "./OrderDetailsModal";
 import { OrdersFilterBar } from "./OrdersFilterBar";
 import { OrdersTable } from "./OrdersTable";
-import { OrderDetailsModal } from "./OrderDetailsModal";
 
 export default function StoreOrders() {
   const t = useTranslations("orders");

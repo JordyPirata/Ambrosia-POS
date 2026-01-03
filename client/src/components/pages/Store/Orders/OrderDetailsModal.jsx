@@ -1,13 +1,14 @@
 "use client";
 
-import formatDate from "@/lib/formatDate";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from "@heroui/react";
 import { useTranslations } from "next-intl";
+
+import formatDate from "@/lib/formatDate";
+
 import { StatusChip } from "./StatusChip";
 
-export function OrderDetailsModal({ order, isOpen, onClose, onEdit, formatAmount }) {
+export function OrderDetailsModal({ order, isOpen, onClose, formatAmount }) {
   const t = useTranslations("orders");
-  const tableLabel = order?.table_id ?? t("details.unassigned");
   const waiterLabel = order?.waiter ?? t("details.unassigned");
 
   return (

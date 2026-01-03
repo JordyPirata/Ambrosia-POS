@@ -1,7 +1,8 @@
-
-"use client"
+"use client";
 import { useTranslations } from "next-intl";
-import { StoreLayout } from "../StoreLayout"
+
+import { StoreLayout } from "../StoreLayout";
+
 import StoreOrders from "./StoreOrders";
 
 export function Orders() {
@@ -18,5 +19,5 @@ export function Orders() {
       </header>
       <StoreOrders />
     </StoreLayout>
-  )
+  );
 }
