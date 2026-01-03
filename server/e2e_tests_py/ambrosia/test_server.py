@@ -53,10 +53,15 @@ class AmbrosiaTestServer:
             "./gradlew",
             "run",
             "--no-daemon",
-            "--args=--phoenixd-url=http://localhost:9740 --phoenixd-password=test-password"
+            # Note: All application arguments must be in a single quoted string after --args
+            # Use shorter access token expiration (5 seconds) for faster E2E testing
+            "--args=--phoenixd-url=http://localhost:9740 "
             "--phoenixd-password=test-password "
-            "--phoenixd-webhook-secret=test-webhook-secret",
+            "--phoenixd-webhook-secret=test-webhook-secret "
+            "--jwt-access-token-expiration 5",
         ]
+
+        logger.info(f"Starting server with command: {' '.join(cmd)}")
 
         try:
             self.server_process = subprocess.Popen(
