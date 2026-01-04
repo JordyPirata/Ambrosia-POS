@@ -2,7 +2,6 @@ import * as heroui from "@heroui/react";
 
 import { formatSats, copyToClipboard } from "../formatters";
 
-// Mock addToast from @heroui/react
 jest.mock("@heroui/react", () => ({
   addToast: jest.fn(),
 }));
@@ -44,27 +43,19 @@ describe("copyToClipboard", () => {
   let mockT;
 
   beforeEach(() => {
-    // Store original clipboard
     originalClipboard = global.navigator.clipboard;
-
-    // Mock translation function
     mockT = jest.fn((key) => key);
-
-    // Clear all mocks
     jest.clearAllMocks();
 
-    // Mock document.execCommand
     document.execCommand = jest.fn(() => true);
   });
 
   afterEach(() => {
-    // Restore original clipboard
     global.navigator.clipboard = originalClipboard;
   });
 
   describe("with modern Clipboard API", () => {
     beforeEach(() => {
-      // Mock modern clipboard API
       global.navigator.clipboard = {
         writeText: jest.fn(() => Promise.resolve()),
       };
@@ -98,7 +89,6 @@ describe("copyToClipboard", () => {
 
   describe("with fallback method", () => {
     beforeEach(() => {
-      // Remove clipboard API to force fallback
       global.navigator.clipboard = undefined;
     });
 

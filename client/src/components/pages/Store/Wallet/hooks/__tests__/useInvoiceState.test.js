@@ -73,7 +73,6 @@ describe("useInvoiceState", () => {
     it("resets paid and completedAt when creating new invoice", () => {
       const { result } = renderHook(() => useInvoiceState());
 
-      // First create and mark as paid
       act(() => {
         result.current.actions.createInvoice({ invoice: "1" });
       });
@@ -82,7 +81,6 @@ describe("useInvoiceState", () => {
         result.current.actions.markAsPaid(Date.now());
       });
 
-      // Create new invoice
       act(() => {
         result.current.actions.createInvoice({ invoice: "2" });
       });
@@ -402,7 +400,6 @@ describe("useInvoiceState", () => {
       const invoice = { serialized: "lnbc...", paymentHash: "hash" };
       const completedAt = Date.now();
 
-      // Create invoice
       act(() => {
         result.current.actions.createInvoice(invoice);
       });
@@ -414,7 +411,6 @@ describe("useInvoiceState", () => {
         showModal: true,
       });
 
-      // Mark as paid
       act(() => {
         result.current.actions.markAsPaid(completedAt);
       });
@@ -425,7 +421,6 @@ describe("useInvoiceState", () => {
         completedAt,
       });
 
-      // Close modal
       act(() => {
         result.current.actions.closeModal();
       });
@@ -435,7 +430,6 @@ describe("useInvoiceState", () => {
         completedAt: null,
       });
 
-      // Reset
       act(() => {
         result.current.actions.reset();
       });
