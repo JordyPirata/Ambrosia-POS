@@ -2,7 +2,7 @@ package pos.ambrosia.services
 
 import pos.ambrosia.logger
 import pos.ambrosia.models.TicketTemplate
-import pos.ambrosia.models.TicketElement // Corrected import
+import pos.ambrosia.models.TicketElement
 import pos.ambrosia.models.ElementStyle
 import pos.ambrosia.models.ElementType
 import pos.ambrosia.models.Justification
@@ -206,11 +206,11 @@ open class TicketTemplateService(private val connection: Connection) {
         }
     }
 
-    private fun getElementsForTemplate(templateIdBytes: ByteArray): List<TicketElement> { // Changed to TicketElement
+    private fun getElementsForTemplate(templateIdBytes: ByteArray): List<TicketElement> {
         connection.prepareStatement(GET_ELEMENTS_BY_TEMPLATE_ID).use { stmt ->
             stmt.setBytes(1, templateIdBytes)
             val rs = stmt.executeQuery()
-            val elements = mutableListOf<TicketElement>() // Changed to TicketElement
+            val elements = mutableListOf<TicketElement>()
             while (rs.next()) {
                 elements.add(mapElement(rs))
             }
@@ -227,8 +227,8 @@ open class TicketTemplateService(private val connection: Connection) {
         )
     }
 
-    private fun mapElement(rs: ResultSet): TicketElement { // Changed to TicketElement
-        return TicketElement( // Changed to TicketElement
+    private fun mapElement(rs: ResultSet): TicketElement {
+        return TicketElement(
             id = rs.getBytes("id").toUUID().toString(),
             templateId = rs.getBytes("template_id").toUUID().toString(),
             order = rs.getInt("element_order"),
