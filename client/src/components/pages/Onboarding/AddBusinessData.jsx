@@ -132,7 +132,7 @@ export function BusinessDetailsStep({ data, onChange }) {
               <Image src={logoPreview || "/placeholder.svg"} alt="Logo preview" className="w-full h-full object-cover" />
               <button
                 onClick={handleRemoveLogo}
-                className="absolute top-1 right-1 p-0.5 bg-destructive text-destructive-foreground rounded-full hover:opacity-100 z-10 bg-red-400 opacity-90 cursor-pointer"
+                className="absolute top-1 right-1 p-0.5  rounded-full hover:opacity-100 z-10 bg-red-400 opacity-90 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
