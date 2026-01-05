@@ -81,7 +81,7 @@ class TicketTemplateServiceTest {
 
             whenever(mockConnection.prepareStatement(any())).thenReturn(mockElementsStmt) 
             whenever(mockElementsStmt.executeQuery()).thenReturn(mockElementsRs)
-            whenever(mockElementsRs.next()).thenReturn(false) // No elements for simplicity
+            whenever(mockElementsRs.next()).thenReturn(false)
 
             val templates = service.getTemplates()
 
@@ -133,7 +133,7 @@ class TicketTemplateServiceTest {
             val id = UUID.randomUUID().toString()
             
             whenever(mockConnection.prepareStatement(any())).thenReturn(mockPreparedStatement)
-            whenever(mockPreparedStatement.executeUpdate()).thenReturn(0) // 0 rows deleted
+            whenever(mockPreparedStatement.executeUpdate()).thenReturn(0)
 
             val success = service.deleteTemplate(id)
 
