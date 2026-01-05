@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-TAG="0.3.0-alpha"
+TAG="0.4.0-alpha"
 
 echo "=== Packaging Next.js application for distribution ==="
 
