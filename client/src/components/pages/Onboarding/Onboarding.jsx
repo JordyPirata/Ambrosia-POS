@@ -43,7 +43,7 @@ export function Onboarding() {
         if (status?.needsBusinessType) {
           setData((prev) => ({ ...prev, businessType: "" }));
         }
-      } catch (_error) {
+      } catch {
         if (!isMounted) return;
         setSetupStatus({ initialized: false, needsBusinessType: false });
       }
