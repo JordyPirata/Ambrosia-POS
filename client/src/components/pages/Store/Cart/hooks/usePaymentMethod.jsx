@@ -1,6 +1,7 @@
 "use client";
-import { useState, useEffect, useCallback } from 'react';
-import { apiClient } from '@/services/apiClient';
+import { useState, useEffect, useCallback } from "react";
+
+import { apiClient } from "@/services/apiClient";
 
 export function usePaymentMethods() {
   const [paymentMethods, setPaymentMethods] = useState([]);
@@ -15,7 +16,12 @@ export function usePaymentMethods() {
       const res = await apiClient("/payments/methods");
 
       if (Array.isArray(res)) {
-        setPaymentMethods(res);
+        const sorted = [...res].sort((a, b) => {
+          const nameA = a?.name || "";
+          const nameB = b?.name || "";
+          return nameA.localeCompare(nameB, undefined, { sensitivity: "base" });
+        });
+        setPaymentMethods(sorted);
       } else {
         setPaymentMethods([]);
       }

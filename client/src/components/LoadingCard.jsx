@@ -3,17 +3,17 @@ import { Card, CardBody, Spinner } from "@heroui/react";
 import { useTranslations } from "next-intl";
 
 
-export default function LoadingCard({ 
+export default function LoadingCard({
   message = "",
   size = "lg",
   color = "success",
-  fullScreen = true 
+  fullScreen = true
 }) {
   const t = useTranslations("loadingCard");
 
   message = t("message");
 
-  const containerClass = fullScreen 
+  const containerClass = fullScreen
     ? "min-h-screen gradient-fresh flex items-center justify-center p-4"
     : "flex items-center justify-center p-4";
 
@@ -22,7 +22,7 @@ export default function LoadingCard({
       <Card className="w-full max-w-md shadow-2xl border-0 bg-white">
         <CardBody className="flex flex-col items-center justify-center py-12">
           <Spinner size={size} color={color} />
-          <p className="text-lg font-semibold text-deep mt-4">
+          <p className="text-lg font-semibold text-deep mt-4" suppressHydrationWarning>
             {message}
           </p>
         </CardBody>

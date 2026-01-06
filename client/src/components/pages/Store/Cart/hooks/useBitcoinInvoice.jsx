@@ -1,7 +1,8 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
-import BitcoinPriceService from "@/services/bitcoinPriceService";
+
 import { createInvoice } from "@/modules/cashier/cashierService";
+import BitcoinPriceService from "@/services/bitcoinPriceService";
 
 const priceService = new BitcoinPriceService();
 
@@ -9,6 +10,7 @@ export function useBitcoinInvoice({
   amountFiat,
   currencyAcronym = "mxn",
   paymentId,
+  invoiceDescription,
   autoGenerate = true,
   onInvoiceReady,
 } = {}) {
@@ -34,9 +36,10 @@ export function useBitcoinInvoice({
         amountFiat,
         currencyAcronym.toLowerCase(),
       );
+      const fallbackDescription = paymentId || `btc-${Date.now()}`;
       const createdInvoice = await createInvoice(
         sats,
-        paymentId || `btc-${Date.now()}`,
+        invoiceDescription || fallbackDescription,
       );
 
       setInvoice(createdInvoice);
@@ -51,7 +54,7 @@ export function useBitcoinInvoice({
     } finally {
       setLoading(false);
     }
-  }, [amountFiat, currencyAcronym, paymentId, onInvoiceReady]);
+  }, [amountFiat, currencyAcronym, paymentId, invoiceDescription, onInvoiceReady]);
 
   useEffect(() => {
     if (!autoGenerate) {

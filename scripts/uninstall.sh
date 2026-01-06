@@ -57,11 +57,18 @@ if [ -f "$SERVICE_FILE" ]; then
   echo "✅ Systemd service removed"
 fi
 
-# Remove binary symlink
+# Remove ambrosia symlink
 if [ -L "$BIN_DIR/ambrosia" ]; then
   echo "Removing binary symlink..."
   rm -f "$BIN_DIR/ambrosia"
-  echo "✅ Binary symlink removed"
+  echo "✅ Ambrosia binary symlink removed"
+fi
+
+# Remove ambrosia-client symlink
+if [ -L "$BIN_DIR/ambrosia-client" ]; then
+  echo "Removing client binary symlink..."
+  rm -f "$BIN_DIR/ambrosia-client"
+  echo "✅ Client binary symlink removed"
 fi
 
 # Remove installation directory

@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { useTranslations } from "next-intl";
+
+import { Button, Input, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Image } from "@heroui/react";
 import { Upload, X } from "lucide-react";
-import { Button, Input, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@heroui/react";
+import { useTranslations } from "next-intl";
 
 export function EditSettingsModal({ data, setData, onChange, onSubmit, editSettingsShowModal, setEditSettingsShowModal }) {
   const t = useTranslations("settings");
@@ -13,7 +14,7 @@ export function EditSettingsModal({ data, setData, onChange, onSubmit, editSetti
   const handleOnCloseModal = () => {
     setData(data);
     setEditSettingsShowModal(false);
-  }
+  };
 
   const [imagePreview, setImagePreview] = useState(data.businessLogoUrl);
 
@@ -116,7 +117,7 @@ export function EditSettingsModal({ data, setData, onChange, onSubmit, editSetti
               </p>
               {imagePreview ? (
                 <div className="relative w-32 h-32 rounded-lg border border-border overflow-hidden bg-muted">
-                  <img
+                  <Image
                     src={imagePreview}
                     alt="Logo preview"
                     className="w-full h-full object-cover"
@@ -125,7 +126,7 @@ export function EditSettingsModal({ data, setData, onChange, onSubmit, editSetti
                   <button
                     type="button"
                     onClick={handleRemoveImage}
-                    className="absolute top-1 right-1 p-1 bg-destructive text-destructive-foreground rounded hover:opacity-90 cursor-pointer"
+                    className="absolute top-1 right-1 p-0.5 bg-red-400 rounded-full z-10 hover:opacity-100 opacity-90 cursor-pointer"
                   >
                     <X className="w-4 h-4" />
                   </button>

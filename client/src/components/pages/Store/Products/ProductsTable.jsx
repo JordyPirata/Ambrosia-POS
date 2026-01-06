@@ -1,7 +1,6 @@
 "use client";
-
 import { useMemo } from "react";
-import { useTranslations } from "next-intl";
+
 import {
   Table,
   TableHeader,
@@ -11,22 +10,23 @@ import {
   TableCell,
   Button,
   Chip,
-  Image
+  Image,
 } from "@heroui/react";
-import { Pencil, Trash } from 'lucide-react';
+import { Pencil, Trash } from "lucide-react";
+import { useTranslations } from "next-intl";
+
 import { useCurrency } from "@/components/hooks/useCurrency";
-import { storedAssetUrl } from "../../../utils/storedAssetUrl";
+import { storedAssetUrl } from "@/components/utils/storedAssetUrl";
 
 export function ProductsTable({ products, categories = [], onEditProduct, onDeleteProduct }) {
   const t = useTranslations("products");
   const { formatAmount } = useCurrency();
-  const categoryNameById = useMemo(() => {
-    return categories.reduce((map, category) => {
-      const categoryId = String(category.id);
-      map[categoryId] = category.name;
-      return map;
-    }, {});
-  }, [categories]);
+  const categoryNameById = useMemo(() => categories.reduce((map, category) => {
+    const categoryId = String(category.id);
+    map[categoryId] = category.name;
+    return map;
+  }, {})
+  , [categories]);
 
   return (
     <section>

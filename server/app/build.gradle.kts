@@ -1,4 +1,4 @@
-version = "0.3.0-alpha"
+version = "0.4.0-alpha"
 
 plugins {
   alias(libs.plugins.kotlin.jvm)
@@ -49,6 +49,13 @@ dependencies {
 
 tasks.named<JavaExec>("run") {
   jvmArgs("-Dlogback.configurationFile=Ambrosia-Logs.xml")
+}
+
+tasks.test {
+    testLogging {
+        // Define qué eventos quieres ver en el log
+        events("passed", "skipped", "failed")
+    }
 }
 
 tasks.named<Jar>("jar") {

@@ -148,5 +148,5 @@ export const CURRENCIES_EN = [
   { code: "YER", name: "Yemeni Rial" },
   { code: "ZAR", name: "South African Rand" },
   { code: "ZMW", name: "Zambian Kwacha" },
-  { code: "ZWL", name: "Zimbabwean Dollar" }
+  { code: "ZWL", name: "Zimbabwean Dollar" },
 ];

@@ -1,3 +1,5 @@
+import { useEffect, useRef, useState } from "react";
+
 import {
   Button,
   Modal,
@@ -7,11 +9,12 @@ import {
   ModalHeader,
   Spinner,
 } from "@heroui/react";
-import { QRCode } from "react-qr-code";
-import { useBitcoinInvoice } from "./hooks/useBitcoinInvoice";
 import { useTranslations } from "next-intl";
+import { QRCode } from "react-qr-code";
+
 import { usePaymentWebsocket } from "@/hooks/usePaymentWebsocket";
-import { useEffect, useRef, useState } from "react";
+
+import { useBitcoinInvoice } from "./hooks/useBitcoinInvoice";
 
 export function BitcoinPaymentModal({
   isOpen,
@@ -21,14 +24,18 @@ export function BitcoinPaymentModal({
   amountFiat,
   currencyAcronym = "usd",
   paymentId,
+  invoiceDescription,
   displayTotal,
 }) {
   const t = useTranslations("cart.paymentModal.bitcoin");
   const { setInvoiceHash, onPayment } = usePaymentWebsocket();
+
   const [paymentReceived, setPaymentReceived] = useState(false);
   const [paymentAwaiting, setPaymentAwaiting] = useState(false);
   const [paymentCompletedAt, setPaymentCompletedAt] = useState(null);
+  const [prevHash, setPrevHash] = useState(null);
   const completedRef = useRef(false);
+
   const {
     invoice,
     satsAmount,
@@ -40,49 +47,43 @@ export function BitcoinPaymentModal({
     amountFiat: isOpen ? amountFiat : null,
     currencyAcronym,
     paymentId,
+    invoiceDescription,
     autoGenerate: isOpen,
     onInvoiceReady,
   });
 
-  useEffect(() => {
-    if (invoice?.paymentHash) {
-      setPaymentReceived(false);
-      completedRef.current = false;
-      setInvoiceHash(invoice.paymentHash);
-      setPaymentAwaiting(true);
-      setPaymentCompletedAt(null);
-    } else if (!isOpen) {
-      setInvoiceHash(null);
-      completedRef.current = false;
-      setPaymentReceived(false);
-      setPaymentAwaiting(false);
-      setPaymentCompletedAt(null);
-    }
-  }, [invoice, isOpen, setInvoiceHash]);
+  const currentHash = invoice?.paymentHash;
+
+  if (currentHash !== prevHash) {
+    setPrevHash(currentHash);
+    setPaymentReceived(false);
+    setPaymentCompletedAt(null);
+    setPaymentAwaiting(!!currentHash);
+  }
 
   useEffect(() => {
-    const off = onPayment((data) => {
-      if (
-        invoice?.paymentHash &&
-        data.paymentHash === invoice.paymentHash &&
-        !completedRef.current
-      ) {
-        completedRef.current = true;
-        setPaymentReceived(true);
-        setPaymentAwaiting(false);
-        setPaymentCompletedAt(Date.now());
-        onComplete?.({ invoice, satoshis: satsAmount, paymentId, auto: true });
-      }
-    });
-    return () => off?.();
-  }, [invoice, satsAmount, paymentId, onComplete, onPayment]);
+    completedRef.current = false;
+
+    if (currentHash) {
+      setInvoiceHash(currentHash);
+      const off = onPayment((data) => {
+        if (data.paymentHash === currentHash && !completedRef.current) {
+          completedRef.current = true;
+          setPaymentReceived(true);
+          setPaymentAwaiting(false);
+          setPaymentCompletedAt(Date.now());
+          onComplete?.({ invoice, satoshis: satsAmount, paymentId, auto: true });
+        }
+      });
+
+      return () => {
+        setInvoiceHash(null);
+        off?.();
+      };
+    }
+  }, [currentHash, invoice, satsAmount, paymentId, onComplete, onPayment, setInvoiceHash]);
 
   const handleClose = () => {
-    setInvoiceHash(null);
-    completedRef.current = false;
-    setPaymentReceived(false);
-    setPaymentAwaiting(false);
-    setPaymentCompletedAt(null);
     reset();
     onClose?.();
   };
@@ -94,11 +95,11 @@ export function BitcoinPaymentModal({
           <span className="text-base font-semibold text-green-900">
             {t("title")}
           </span>
-          {!paymentReceived &&
+          {!paymentReceived && (
             <span className="text-sm text-gray-600">
               {t("subtitle")}
             </span>
-          }
+          )}
         </ModalHeader>
         <ModalBody className="space-y-4">
           {loading && !paymentReceived && (

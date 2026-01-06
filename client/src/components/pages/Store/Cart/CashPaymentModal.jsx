@@ -1,5 +1,6 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+
 import {
   Button,
   Input,
@@ -11,6 +12,7 @@ import {
   Chip,
 } from "@heroui/react";
 import { useTranslations } from "next-intl";
+
 import { useCurrency } from "@/components/hooks/useCurrency";
 
 export function CashPaymentModal({
@@ -24,13 +26,15 @@ export function CashPaymentModal({
   const { formatAmount } = useCurrency();
   const [cashReceived, setCashReceived] = useState("");
   const [error, setError] = useState("");
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
 
-  useEffect(() => {
+  if (isOpen !== prevIsOpen) {
+    setPrevIsOpen(isOpen);
     if (isOpen) {
       setCashReceived("");
       setError("");
     }
-  }, [isOpen]);
+  }
 
   const numericReceived = useMemo(() => {
     const value = parseFloat(cashReceived);

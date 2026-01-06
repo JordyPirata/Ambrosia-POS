@@ -1,12 +1,14 @@
 "use client";
 import { useTranslations } from "next-intl";
+
+import { useCategories } from "../hooks/useCategories";
+import { useProducts } from "../hooks/useProducts";
 import { StoreLayout } from "../StoreLayout";
-import { SearchProducts } from "./SearchProducts";
-import { Summary } from "./Summary";
-import { useProducts } from "../hooks/useProducts.jsx"
-import { useCategories } from "../hooks/useCategories.jsx"
+
 import { useCartPayment } from "./hooks/useCartPayment";
 import { usePersistentCart } from "./hooks/usePersistentCart";
+import { SearchProducts } from "./SearchProducts";
+import { Summary } from "./Summary";
 
 export function Cart() {
   const t = useTranslations("cart");
@@ -14,7 +16,6 @@ export function Cart() {
     cart,
     setCart,
     discount,
-    setDiscount,
     resetCartState,
   } = usePersistentCart();
   const { products } = useProducts();
@@ -41,16 +42,15 @@ export function Cart() {
 
     if (itemExist) {
       setCart(
-        cart.map((item) =>
-          item.id === product.id
-            ? {
+        cart.map((item) => (item.id === product.id
+          ? {
               ...item,
               quantity: item.quantity + 1,
               subtotal: (item.quantity + 1) * item.price,
             }
-            : item,
-        )
-      )
+          : item),
+        ),
+      );
     } else {
       setCart([
         ...cart,
@@ -60,8 +60,8 @@ export function Cart() {
           price: product.price_cents,
           quantity: 1,
           subtotal: product.price_cents,
-        }
-      ])
+        },
+      ]);
     }
   };
 
@@ -71,21 +71,20 @@ export function Cart() {
       return;
     }
     setCart(
-      cart.map((item) =>
-        item.id === id
-          ? {
+      cart.map((item) => (item.id === id
+        ? {
             ...item,
             quantity,
             subtotal: quantity * item.price,
           }
-          : item,
+        : item),
       ),
-    )
-  }
+    );
+  };
 
   const removeProduct = (id) => {
     setCart(cart.filter((item) => item.id !== id));
-  }
+  };
 
   return (
     <StoreLayout>

@@ -1,5 +1,21 @@
 import { addToast } from "@heroui/react";
+
 import { createOrderAndTicket } from "./paymentFlows";
+
+function buildInvoiceDescription(items = []) {
+  if (!Array.isArray(items) || items.length === 0) return "";
+
+  const lines = items
+    .map((item) => {
+      const name = typeof item?.name === "string" ? item.name.trim() : "";
+      if (!name) return null;
+      const quantity = Number(item?.quantity) || 1;
+      return `${quantity}x ${name}`;
+    })
+    .filter(Boolean);
+
+  return lines.join(", ");
+}
 
 export function buildHandlePay({
   t,
@@ -70,6 +86,7 @@ export function buildHandlePay({
           currency?.acronym ||
           "MXN"
         ).toLowerCase();
+        const invoiceDescription = buildInvoiceDescription(items);
 
         setBtcPaymentConfig({
           paymentId: `btc-${Date.now()}`,
@@ -81,27 +98,30 @@ export function buildHandlePay({
           discountAmount: amounts.discountAmount,
           total: amounts.total,
           items,
+          invoiceDescription,
           selectedPaymentMethod,
           currencyId,
         });
         return;
       }
 
-      const { paymentResult, orderPayload, orderId } = await processBasePayment({
-        items,
-        amounts,
-        selectedPaymentMethod,
-        currencyId,
-        user,
-        createOrder,
-        createTicket,
-        createPayment,
-        linkPaymentToTicket,
-        buildOrderPayload,
-        buildTicketPayload,
-        buildPaymentPayload,
-        t,
-      });
+      const { paymentResult, orderPayload, orderId } = await processBasePayment(
+        {
+          items,
+          amounts,
+          selectedPaymentMethod,
+          currencyId,
+          user,
+          createOrder,
+          createTicket,
+          createPayment,
+          linkPaymentToTicket,
+          buildOrderPayload,
+          buildTicketPayload,
+          buildPaymentPayload,
+          t,
+        },
+      );
 
       if (methodName.includes("cash") || methodName.includes("efectivo")) {
         setCashPaymentConfig({
@@ -138,10 +158,12 @@ export function buildHandlePay({
 }
 
 export function buildHandleBtcInvoiceReady({ setBtcPaymentConfig }) {
-  return (data) =>
-    setBtcPaymentConfig((prev) =>
-      prev ? { ...prev, invoiceData: data } : prev,
-    );
+  return (data) => {
+    setBtcPaymentConfig((prev) => {
+      if (!prev) return prev;
+      return { ...prev, invoiceData: data };
+    });
+  };
 }
 
 export function buildHandleBtcComplete({
@@ -212,9 +234,10 @@ export function buildHandleBtcComplete({
       console.error("Error completing BTC payment:", err);
       notifyError(err?.message || t("errors.btcComplete"));
     } finally {
-      setBtcPaymentConfig((prev) =>
-        prev ? { ...prev, paymentCompleted: true } : prev,
-      );
+      setBtcPaymentConfig((prev) => {
+        if (!prev) return prev;
+        return { ...prev, paymentCompleted: true };
+      });
       dispatch({ type: "stop" });
     }
   };

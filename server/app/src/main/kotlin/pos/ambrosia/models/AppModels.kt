@@ -264,13 +264,14 @@ data class Permission(
   val assigned: Int,
 )
 
-enum class TicketType {
+enum class PrinterType {
   KITCHEN,
   CUSTOMER,
+  BAR
 }
 
 @Serializable data class SetPrinterRequest(
-  val type: TicketType,
+  val printerType: PrinterType,
   val printerName: String,
 )
 
@@ -284,6 +285,7 @@ data class Config(
   val businessEmail: String?,
   val businessTaxId: String?,
   val businessLogoUrl: String?,
+  val businessTypeConfirmed: Boolean = false,
 )
 
 @Serializable
@@ -311,17 +313,17 @@ data class Product(
 
 @Serializable
 data class InitialSetupRequest(
-  val businessType: String,
-  val userName: String,
-  val userPassword: String,
-  val userPin: String,
-  val businessName: String,
+  val businessType: String? = null,
+  val userName: String? = null,
+  val userPassword: String? = null,
+  val userPin: String? = null,
+  val businessName: String? = null,
   val businessAddress: String? = null,
   val businessPhone: String? = null,
   val businessEmail: String? = null,
   val businessRFC: String? = null,
   val businessTaxId: String? = null,
-  val businessCurrency: String,
+  val businessCurrency: String? = null,
   val businessLogo: String? = null,
   val businessLogoUrl: String? = null,
 )
@@ -329,6 +331,7 @@ data class InitialSetupRequest(
 @Serializable
 data class InitialSetupStatus(
   val initialized: Boolean,
+  val needsBusinessType: Boolean = false,
 )
 
 @Serializable

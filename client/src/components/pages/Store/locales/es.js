@@ -1,4 +1,4 @@
-const store_es = {
+const storeEs = {
   navbar: {
     users: "Usuarios",
     products: "Productos",
@@ -105,6 +105,9 @@ const store_es = {
     card: {
       add: "Agregar",
       stock: "en almacén",
+      errors: {
+        unknownCategory: "Categoría desconocida",
+      },
     },
     summary: {
       title: "Resumen",
@@ -139,22 +142,22 @@ const store_es = {
     },
     paymentModal: {
       bitcoin: {
-        title: "Pago con Bitcoin",
+        title: "Pago con Bitcoin (Lightning)",
         subtitle: "Pídele al cliente que escanee el QR para completar el pago",
         generating: "Generando invoice...",
-      retry: "Reintentar",
-      totalLabel: "Total",
-      cancel: "Cancelar",
-      confirm: "Confirmar pago",
-      close: "Cerrar",
-      complete: "Pago recibido",
-      confirmed: "Pago confirmado",
-      waitingPayment: "Esperando la confirmación del pago...",
-      paidAt: "Confirmado a las {time}",
-      websocket: {
-        paymentReceivedTitle: "Pago recibido",
-        paymentReceivedDescription: "Hash: {hash}",
-      },
+        retry: "Reintentar",
+        totalLabel: "Total",
+        cancel: "Cancelar",
+        confirm: "Confirmar pago",
+        close: "Cerrar",
+        complete: "Pago recibido",
+        confirmed: "Pago confirmado",
+        waitingPayment: "Esperando la confirmación del pago...",
+        paidAt: "Confirmado a las {time}",
+        websocket: {
+          paymentReceivedTitle: "Pago recibido",
+          paymentReceivedDescription: "Hash: {hash}",
+        },
       },
       cash: {
         title: "Pago en Efectivo",
@@ -218,6 +221,12 @@ const store_es = {
     title: "Wallet",
     subtitle: "Supervisa tu saldo y tus transacciones en BTC",
     loadingMessage: "Cargando información de la wallet...",
+    clipboard: {
+      successTitle: "Copiado",
+      successDescription: "Texto copiado al portapapeles",
+      errorTitle: "Error",
+      errorDescription: "No se pudo copiar al portapapeles",
+    },
     access: {
       title: "Confirmar acceso a Wallet",
       passwordLabel: "Contraseña",
@@ -236,18 +245,22 @@ const store_es = {
       balanceSat: "Balance Local",
       capacitySat: "Capacidad Total:",
       inboundLiquidity: "Liquidez Entrante:",
+      fetchInfoError: "Error al obtener la información de la wallet",
+      getInfoErrorDescription: "No se pudo cargar la información de la wallet",
     },
     payments: {
       receive: {
         tabTitle: "Recibir",
         invoiceAmountLabel: "Monto en satoshis",
-      invoiceDescriptionLabel: "Descripción (opcional)",
-      invoiceDescriptionPlaceholder: "Concepto del pago",
-      invoiceLightningButton: "Crear Factura Lightning",
-      invoiceLightningLoading: "Creando Factura...",
-      invoiceSuccessTitle: "Factura creada",
-      invoiceSuccessDescription: "La factura Lightning se ha generado correctamente",
-    },
+        invoiceDescriptionLabel: "Descripción (opcional)",
+        invoiceDescriptionPlaceholder: "Concepto del pago",
+        invoiceLightningButton: "Crear Factura Lightning",
+        invoiceLightningLoading: "Creando Factura...",
+        invoiceSuccessTitle: "Factura creada",
+        invoiceSuccessDescription: "La factura Lightning se ha generado correctamente",
+        invoiceAmountError: "Debes ingresar un monto para para generar el invoice",
+        invoiceCreateError: "Error al crear el invoice",
+      },
       send: {
         tabTitle: "Enviar",
         payInvoiceLabel: "Factura BOLT11",
@@ -258,6 +271,12 @@ const store_es = {
         routingFee: "Tarifa de enrutamiento:",
         paymentHash: "Payment Hash:",
         copyButton: "Copiar",
+        noInvoiceToPay: "Debes ingresar una invoice para pagar",
+        invalidInvoiceFormat: "El formato de la invoice BOLT11 no es válido",
+        paySuccessTitle: "Pago realizado",
+        paySuccessDescription: "El pago Lightning se ha enviado correctamente",
+        paymentError: "Error al pagar el invoice",
+        paymentErrorDescription: "No se pudo procesar el pago",
       },
       history: {
         tabTitle: "Historial",
@@ -269,6 +288,8 @@ const store_es = {
           "Las transacciones aparecerán aquí una vez que comiences a usar la wallet",
         sent: "Enviado",
         received: "Recibido",
+        getTransactionsError: "Error al cargar historial",
+        getTransactionsErrorDescription: "No se pudo cargar el historial de transacciones",
       },
     },
     invoiceModal: {
@@ -335,4 +356,4 @@ const store_es = {
   },
 };
 
-export default store_es;
+export default storeEs;

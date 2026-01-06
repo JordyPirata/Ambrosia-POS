@@ -1,4 +1,4 @@
-const store_en = {
+const storeEn = {
   navbar: {
     users: "Users",
     products: "Products",
@@ -105,6 +105,9 @@ const store_en = {
     card: {
       add: "Add",
       stock: "in stock",
+      errors: {
+        unknownCategory: "Unknown category",
+      },
     },
     summary: {
       title: "Summary",
@@ -139,22 +142,22 @@ const store_en = {
     },
     paymentModal: {
       bitcoin: {
-        title: "Pay with Bitcoin",
+        title: "Pay with Bitcoin (Lightning)",
         subtitle: "Ask the customer to scan the QR to complete the payment",
         generating: "Generating invoice...",
-      retry: "Retry",
-      totalLabel: "Total",
-      cancel: "Cancel",
-      confirm: "Confirm payment",
-      close: "Close",
-      complete: "Payment received",
-      confirmed: "Payment confirmed",
-      waitingPayment: "Waiting for payment confirmation...",
-      paidAt: "Confirmed at {time}",
-      websocket: {
-        paymentReceivedTitle: "Payment received",
-        paymentReceivedDescription: "Hash: {hash}",
-      },
+        retry: "Retry",
+        totalLabel: "Total",
+        cancel: "Cancel",
+        confirm: "Confirm payment",
+        close: "Close",
+        complete: "Payment received",
+        confirmed: "Payment confirmed",
+        waitingPayment: "Waiting for payment confirmation...",
+        paidAt: "Confirmed at {time}",
+        websocket: {
+          paymentReceivedTitle: "Payment received",
+          paymentReceivedDescription: "Hash: {hash}",
+        },
       },
       cash: {
         title: "Cash Payment",
@@ -218,6 +221,12 @@ const store_en = {
     title: "Wallet",
     subtitle: "Track your BTC balance and transactions",
     loadingMessage: "Loading wallet info...",
+    clipboard: {
+      successTitle: "Copied",
+      successDescription: "Text copied to clipboard",
+      errorTitle: "Error",
+      errorDescription: "Could not copy to clipboard",
+    },
     access: {
       title: "Confirm Wallet Access",
       passwordLabel: "Password",
@@ -236,18 +245,22 @@ const store_en = {
       balanceSat: "Sats Balance",
       capacitySat: "Total Capacity:",
       inboundLiquidity: "Inbound Liquidity:",
+      fetchInfoError: "Error fetching wallet information",
+      getInfoErrorDescription: "Could not load wallet information",
     },
     payments: {
       receive: {
         tabTitle: "Receive",
         invoiceAmountLabel: "Amount in satoshis",
-      invoiceDescriptionLabel: "Description (optional)",
-      invoiceDescriptionPlaceholder: "Payment concept",
-      invoiceLightningButton: "Create Lightning Invoice",
-      invoiceLightningLoading: "Creating Invoice...",
-      invoiceSuccessTitle: "Invoice created",
-      invoiceSuccessDescription: "Lightning invoice generated successfully",
-    },
+        invoiceDescriptionLabel: "Description (optional)",
+        invoiceDescriptionPlaceholder: "Payment concept",
+        invoiceLightningButton: "Create Lightning Invoice",
+        invoiceLightningLoading: "Creating Invoice...",
+        invoiceSuccessTitle: "Invoice created",
+        invoiceSuccessDescription: "Lightning invoice generated successfully",
+        invoiceAmountError: "You must enter an amount to generate the invoice",
+        invoiceCreateError: "Error creating the invoice",
+      },
       send: {
         tabTitle: "Send",
         payInvoiceLabel: "Invoice BOLT11",
@@ -258,6 +271,12 @@ const store_en = {
         routingFee: "Routing Fee:",
         paymentHash: "Payment Hash:",
         copyButton: "Copy",
+        noInvoiceToPay: "You must enter an invoice to pay",
+        invalidInvoiceFormat: "Invalid BOLT11 invoice format",
+        paySuccessTitle: "Payment sent",
+        paySuccessDescription: "Lightning payment sent successfully",
+        paymentError: "Error paying the invoice",
+        paymentErrorDescription: "Could not process the payment",
       },
       history: {
         tabTitle: "History",
@@ -269,6 +288,8 @@ const store_en = {
           "Transactions will appear here once you'll starting to use the wallet",
         sent: "Sent",
         received: "Received",
+        getTransactionsError: "Error loading history",
+        getTransactionsErrorDescription: "Could not load transaction history",
       },
     },
     invoiceModal: {
@@ -335,4 +356,4 @@ const store_en = {
   },
 };
 
-export default store_en;
+export default storeEn;

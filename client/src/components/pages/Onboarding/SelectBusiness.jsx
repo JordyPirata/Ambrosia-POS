@@ -1,9 +1,8 @@
-"use client"
+"use client";
 
+import { Card, CardHeader, CardBody } from "@heroui/card";
 import { Store, UtensilsCrossed } from "lucide-react";
-import {Card, CardHeader, CardBody } from "@heroui/card";
 import { useTranslations } from "next-intl";
-
 
 export function BusinessTypeStep({ value, onChange }) {
   const t = useTranslations();
@@ -36,8 +35,9 @@ export function BusinessTypeStep({ value, onChange }) {
         </Card>
 
         <Card
+          aria-label="restaurant"
           isPressable
-          onPress={() => onChange("store")}
+          onPress={() => onChange("restaurant")}
           className={`hover:bg-green-200 py-4 ${
             value === "restaurant" ? "bg-green-100" : ""
           }`}
@@ -56,5 +56,5 @@ export function BusinessTypeStep({ value, onChange }) {
         </Card>
       </div>
     </div>
-  )
+  );
 }

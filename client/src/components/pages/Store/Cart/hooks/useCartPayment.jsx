@@ -1,17 +1,16 @@
 "use client";
 import { useCallback, useMemo, useReducer, useState } from "react";
+
 import { useTranslations } from "next-intl";
-import { useAuth } from "@/modules/auth/useAuth";
+
 import { useCurrency } from "@/components/hooks/useCurrency";
-import { usePaymentMethods } from "../hooks/usePaymentMethod";
+import { useAuth } from "@/modules/auth/useAuth";
+
 import { useOrders } from "../../hooks/useOrders";
 import { usePayments } from "../../hooks/usePayments";
 import { useTickets } from "../../hooks/useTickets";
-import {
-  initialPaymentState,
-  paymentStateReducer,
-  createErrorNotifier,
-} from "./paymentState";
+import { usePaymentMethods } from "../hooks/usePaymentMethod";
+
 import {
   ensureCartReady,
   buildOrderPayload,
@@ -26,6 +25,11 @@ import {
   buildHandleBtcComplete,
   buildHandleCashComplete,
 } from "./paymentHandlers";
+import {
+  initialPaymentState,
+  paymentStateReducer,
+  createErrorNotifier,
+} from "./paymentState";
 
 export function useCartPayment({ onPay, onResetCart } = {}) {
   const t = useTranslations("cart.payment");
@@ -48,41 +52,34 @@ export function useCartPayment({ onPay, onResetCart } = {}) {
   const notifyError = useMemo(() => createErrorNotifier(dispatch), [dispatch]);
 
   const paymentMethodMap = useMemo(
-    () =>
-      (paymentMethods || []).reduce((acc, method) => {
-        acc[method.id] = method;
-        return acc;
-      }, {}),
-    [paymentMethods],
-  );
+    () => (paymentMethods || []).reduce((acc, method) => { acc[method.id] = method; return acc; }, {}), [paymentMethods]);
 
   const handlePay = useMemo(
-    () =>
-      buildHandlePay({
-        t,
-        currency,
-        formatAmount,
-        paymentMethodMap,
-        getPaymentCurrencyById,
-        setBtcPaymentConfig,
-        setCashPaymentConfig,
-        processBasePayment,
-        updateOrder,
-        onResetCart,
-        onPay,
-        notifyError,
-        dispatch,
-        user,
-        ensureCartReady,
-        normalizeAmounts,
-        buildOrderPayload,
-        buildTicketPayload,
-        buildPaymentPayload,
-        createOrder,
-        createTicket,
-        createPayment,
-        linkPaymentToTicket,
-      }),
+    () => buildHandlePay({
+      t,
+      currency,
+      formatAmount,
+      paymentMethodMap,
+      getPaymentCurrencyById,
+      setBtcPaymentConfig,
+      setCashPaymentConfig,
+      processBasePayment,
+      updateOrder,
+      onResetCart,
+      onPay,
+      notifyError,
+      dispatch,
+      user,
+      ensureCartReady,
+      normalizeAmounts,
+      buildOrderPayload,
+      buildTicketPayload,
+      buildPaymentPayload,
+      createOrder,
+      createTicket,
+      createPayment,
+      linkPaymentToTicket,
+    }),
     [
       currency,
       formatAmount,
@@ -91,7 +88,6 @@ export function useCartPayment({ onPay, onResetCart } = {}) {
       onPay,
       onResetCart,
       paymentMethodMap,
-      processBasePayment,
       t,
       updateOrder,
       user,
@@ -108,25 +104,24 @@ export function useCartPayment({ onPay, onResetCart } = {}) {
   );
 
   const handleBtcComplete = useMemo(
-    () =>
-      buildHandleBtcComplete({
-        btcPaymentConfig,
-        dispatch,
-        createOrderAndTicket,
-        buildOrderPayload,
-        buildTicketPayload,
-        createOrder,
-        createTicket,
-        buildPaymentPayload,
-        createPayment,
-        linkPaymentToTicket,
-        onPay,
-        onResetCart,
-        notifyError,
-        t,
-        user,
-        setBtcPaymentConfig,
-      }),
+    () => buildHandleBtcComplete({
+      btcPaymentConfig,
+      dispatch,
+      createOrderAndTicket,
+      buildOrderPayload,
+      buildTicketPayload,
+      createOrder,
+      createTicket,
+      buildPaymentPayload,
+      createPayment,
+      linkPaymentToTicket,
+      onPay,
+      onResetCart,
+      notifyError,
+      t,
+      user,
+      setBtcPaymentConfig,
+    }),
     [
       btcPaymentConfig,
       dispatch,
@@ -147,17 +142,16 @@ export function useCartPayment({ onPay, onResetCart } = {}) {
   }, []);
 
   const handleCashComplete = useMemo(
-    () =>
-      buildHandleCashComplete({
-        cashPaymentConfig,
-        dispatch,
-        updateOrder,
-        onPay,
-        onResetCart,
-        notifyError,
-        t,
-        setCashPaymentConfig,
-      }),
+    () => buildHandleCashComplete({
+      cashPaymentConfig,
+      dispatch,
+      updateOrder,
+      onPay,
+      onResetCart,
+      notifyError,
+      t,
+      setCashPaymentConfig,
+    }),
     [cashPaymentConfig, dispatch, notifyError, onPay, onResetCart, t, updateOrder],
   );
 

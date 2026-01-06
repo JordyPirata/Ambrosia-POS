@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+
 import { Input, Button } from "@heroui/react";
 import { Search } from "lucide-react";
+import { useTranslations } from "next-intl";
+
 import { ProductList } from "./ProductList";
 
 export function SearchProducts({ products, onAddProduct, categories }) {
@@ -11,14 +13,14 @@ export function SearchProducts({ products, onAddProduct, categories }) {
   const [categoryFilter, setCategoryFilter] = useState(null);
 
   const filteredProducts = products.filter((product) => {
-    const categoryObject = categories.find(cat => cat.id === product.category_id);
-    const categoryName = categoryObject ? categoryObject.name : '';
+    const categoryObject = categories.find((cat) => cat.id === product.category_id);
+    const categoryName = categoryObject ? categoryObject.name : "";
 
     const searchMatch = product.name.toLowerCase().includes(search.toLowerCase())
       || product.SKU.toLowerCase().includes(search.toLowerCase())
       || categoryName.toLowerCase().includes(search.toLowerCase());
     const categoryMatch = !categoryFilter || product.category_id === categoryFilter;
-    return searchMatch && categoryMatch && product.quantity > 0
+    return searchMatch && categoryMatch && product.quantity > 0;
   });
 
   return (

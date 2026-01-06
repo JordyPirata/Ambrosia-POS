@@ -1,11 +1,14 @@
-import { useTranslations } from "next-intl";
+import { useMemo, useState } from "react";
+
 import { Button, Card, CardBody, CardFooter, CardHeader, Divider, NumberInput, Select, SelectItem } from "@heroui/react";
 import { Trash } from "lucide-react";
+import { useTranslations } from "next-intl";
+
 import { useCurrency } from "@/components/hooks/useCurrency";
-import { usePaymentMethods } from "./hooks/usePaymentMethod";
-import { useMemo, useState } from "react";
+
 import { BitcoinPaymentModal } from "./BitcoinPaymentModal";
 import { CashPaymentModal } from "./CashPaymentModal";
+import { usePaymentMethods } from "./hooks/usePaymentMethod";
 
 export function Summary({
   cartItems,
@@ -28,10 +31,11 @@ export function Summary({
   const { formatAmount } = useCurrency();
   const { paymentMethods } = usePaymentMethods();
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
-
   const items = cartItems || [];
+
   const { subtotal, discountAmount, total } = useMemo(() => {
-    const subtotalValue = items.reduce((sum, item) => sum + item.subtotal, 0);
+    const itemsToProcess = cartItems || [];
+    const subtotalValue = itemsToProcess.reduce((sum, item) => sum + item.subtotal, 0);
     const discountValue = Number(discount) || 0;
     const discountTotal = (subtotalValue * discountValue) / 100;
     const totalValue = subtotalValue - discountTotal;
@@ -41,7 +45,7 @@ export function Summary({
       discountAmount: discountTotal,
       total: totalValue,
     };
-  }, [items, discount]);
+  }, [cartItems, discount]);
 
   const handlePay = () => {
     onClearPaymentError?.();
@@ -162,10 +166,12 @@ export function Summary({
       </Card>
 
       <BitcoinPaymentModal
+        key={btcPaymentConfig ? `btc-${btcPaymentConfig.paymentId}` : "closed"}
         isOpen={!!btcPaymentConfig}
         amountFiat={btcPaymentConfig?.amountFiat}
         currencyAcronym={btcPaymentConfig?.currencyAcronym}
         paymentId={btcPaymentConfig?.paymentId}
+        invoiceDescription={btcPaymentConfig?.invoiceDescription}
         displayTotal={btcPaymentConfig?.displayTotal}
         onClose={onCloseBtcPayment}
         onInvoiceReady={onInvoiceReady}

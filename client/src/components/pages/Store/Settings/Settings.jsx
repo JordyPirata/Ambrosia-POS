@@ -1,52 +1,49 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useTranslations, useLocale } from "next-intl";
-import { Button, Card, CardBody, CardFooter, CardHeader, Select, SelectItem } from "@heroui/react";
-import { StoreLayout } from "../StoreLayout";
-import { EditSettingsModal } from "./EditSettingsModal";
-import { useConfigurations } from "../../../../providers/configurations/configurationsProvider";
+import { useState, useMemo } from "react";
+
 import Image from "next/image";
-import { storedAssetUrl } from "../../../utils/storedAssetUrl";
+
+import { Button, Card, CardBody, CardFooter, CardHeader, Select, SelectItem } from "@heroui/react";
+import { useTranslations, useLocale } from "next-intl";
+
+import { LanguageSwitcher } from "@i18n/I18nProvider";
+import { useConfigurations } from "@providers/configurations/configurationsProvider";
+
 import { useCurrency } from "../../../hooks/useCurrency";
-import { CURRENCIES_ES } from "../../Onboarding/utils/currencies_es";
+import { storedAssetUrl } from "../../../utils/storedAssetUrl";
 import { CURRENCIES_EN } from "../../Onboarding/utils/currencies_en";
-import { LanguageSwitcher } from "../../../../i18n/I18nProvider";
+import { CURRENCIES_ES } from "../../Onboarding/utils/currencies_es";
+import { StoreLayout } from "../StoreLayout";
+
+import { EditSettingsModal } from "./EditSettingsModal";
 
 export function Settings() {
   const { config, updateConfig } = useConfigurations();
   const [data, setData] = useState(config);
-  const [CURRENCIES, setCURRENCIES] = useState(CURRENCIES_ES);
   const [editSettingsShowModal, setEditSettingsShowModal] = useState(false);
   const t = useTranslations("settings");
   const locale = useLocale();
   const { currency, updateCurrency } = useCurrency();
 
   const handleDataChange = (newData) => {
-    setData((prev) => ({ ...prev, ...newData }))
-
-  }
+    setData((prev) => ({ ...prev, ...newData }));
+  };
 
   const srcLogo = storedAssetUrl(data?.businessLogoUrl);
 
-  useEffect(() => {
-    if (locale === "en") {
-      setCURRENCIES(CURRENCIES_EN);
-    } else {
-      setCURRENCIES(CURRENCIES_ES);
-    }
-  }, [locale]);
+  const CURRENCIES = useMemo(() => (locale === "en" ? CURRENCIES_EN : CURRENCIES_ES), [locale]);
 
   const handleEditSumbit = (e) => {
-    e.preventDefault()
-    updateConfig(data)
+    e.preventDefault();
+    updateConfig(data);
     setEditSettingsShowModal(false);
-  }
+  };
 
   const handleCurrencyChange = (e) => {
-    if (!e.target.value) { return }
+    if (!e.target.value) { return; }
     updateCurrency({ acronym: e.target.value });
-  }
+  };
 
   return (
     <StoreLayout>
@@ -78,7 +75,7 @@ export function Settings() {
                 <div className="w-1/2">
                   <div className="font-semibold text-gray-600">{t("cardInfo.rfc")}</div>
                   <div className="text-xl mt-0.5 font-medium text-green-800">
-                    { data.businessTaxId ?
+                    {data.businessTaxId ?
                       data.businessTaxId :
                       <span className="text-gray-400 italic">---</span>
                     }
@@ -92,7 +89,7 @@ export function Settings() {
                 <div className="w-1/2">
                   <div className="font-semibold text-gray-600">{t("cardInfo.address")}</div>
                   <div className="text-xl mt-0.5 font-medium text-green-800">
-                    { data.businessAddress ?
+                    {data.businessAddress ?
                       data.businessAddress :
                       <span className="text-gray-400 italic">---</span>
                     }
@@ -104,7 +101,7 @@ export function Settings() {
                 <div className="w-1/2">
                   <div className="font-semibold text-gray-600">{t("cardInfo.email")}</div>
                   <div className="text-xl mt-0.5 font-medium text-green-800">
-                    { data.businessEmail ?
+                    {data.businessEmail ?
                       data.businessEmail :
                       <span className="text-gray-400 italic">---</span>
                     }
@@ -114,7 +111,7 @@ export function Settings() {
                 <div className="w-1/2">
                   <div className="font-semibold text-gray-600">{t("cardInfo.phone")}</div>
                   <div className="text-xl mt-0.5 font-medium text-green-800">
-                    { data.businessPhone ?
+                    {data.businessPhone ?
                       data.businessPhone :
                       <span className="text-gray-400 italic">---</span>
                     }
@@ -125,15 +122,21 @@ export function Settings() {
               <div className="w-1/2">
                 <div className="font-semibold text-gray-600 mb-4">{t("cardInfo.logo")}</div>
                 {srcLogo ?
-                  <Image
-                    src={srcLogo}
-                    width={200}
-                    height={0}
-                    alt="Logo"
-                  /> :
-                  <div className="w-40 h-40 bg-slate-100 rounded-lg border-2 border-dashed border-gray-400 flex items-center justify-center">
-                    <span className="text-sm text-slate-500">{t("cardInfo.noLogo")}</span>
-                  </div>
+                    (
+                      <Image
+                        src={srcLogo}
+                        width={200}
+                        height={0}
+                        alt="Logo"
+                      />
+
+                    )
+                  :
+                    (
+                      <div className="w-40 h-40 bg-slate-100 rounded-lg border-2 border-dashed border-gray-400 flex items-center justify-center">
+                        <span className="text-sm text-slate-500">{t("cardInfo.noLogo")}</span>
+                      </div>
+                    )
                 }
               </div>
             </div>
@@ -208,14 +211,16 @@ export function Settings() {
       </div>
 
       {editSettingsShowModal &&
-        <EditSettingsModal
-          data={data}
-          setData={setData}
-          onChange={handleDataChange}
-          onSubmit={handleEditSumbit}
-          editSettingsShowModal={editSettingsShowModal}
-          setEditSettingsShowModal={setEditSettingsShowModal}
-        />
+        (
+          <EditSettingsModal
+            data={data}
+            setData={setData}
+            onChange={handleDataChange}
+            onSubmit={handleEditSumbit}
+            editSettingsShowModal={editSettingsShowModal}
+            setEditSettingsShowModal={setEditSettingsShowModal}
+          />
+        )
       }
     </StoreLayout>
   );
