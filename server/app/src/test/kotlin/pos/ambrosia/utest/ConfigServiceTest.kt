@@ -27,6 +27,7 @@ class ConfigServiceTest {
         whenever(mockResultSet.getString("business_email")).thenReturn(config.businessEmail)
         whenever(mockResultSet.getString("business_tax_id")).thenReturn(config.businessTaxId)
         whenever(mockResultSet.getString("business_logo_url")).thenReturn(config.businessLogoUrl)
+        whenever(mockResultSet.getBoolean("business_type_confirmed")).thenReturn(config.businessTypeConfirmed)
     }
 
     // Helper function to set up mock behavior for when `getConfig` finds no data.
@@ -38,7 +39,7 @@ class ConfigServiceTest {
 
     @Test
     fun `getConfig returns config when found`() = runBlocking {
-        val expectedConfig = Config(1, "restaurant", "Test Cafe", "123 Lane", "555", "a@b.com", "T123", null) // Arrange
+        val expectedConfig = Config(1, "restaurant", "Test Cafe", "123 Lane", "555", "a@b.com", "T123", null, true) // Arrange
         setupGetConfigMock(expectedConfig) // Arrange
         val service = ConfigService(mockConnection) // Arrange
         val result = service.getConfig() // Act
