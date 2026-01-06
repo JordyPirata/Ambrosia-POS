@@ -35,8 +35,9 @@ export function BusinessTypeStep({ value, onChange }) {
         </Card>
 
         <Card
+          aria-label="restaurant"
           isPressable
-          onPress={() => onChange("store")}
+          onPress={() => onChange("restaurant")}
           className={`hover:bg-green-200 py-4 ${
             value === "restaurant" ? "bg-green-100" : ""
           }`}

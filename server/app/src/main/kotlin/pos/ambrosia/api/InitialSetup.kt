@@ -30,16 +30,63 @@ fun Application.configureInitialSetup() {
 private fun Route.initialSetupRoutes(connection: Connection) {
   get("") {
     val configService = ConfigService(connection)
-    val exists = configService.getConfig() != null
-    call.respond(HttpStatusCode.OK, InitialSetupStatus(initialized = exists))
+    val config = configService.getConfig()
+    val needsBusinessType = config != null && !config.businessTypeConfirmed
+    call.respond(
+      HttpStatusCode.OK,
+      InitialSetupStatus(initialized = config != null, needsBusinessType = needsBusinessType),
+    )
   }
 
   post("") {
     val req = call.receive<InitialSetupRequest>()
 
     val configService = ConfigService(connection)
-    if (configService.getConfig() != null) {
+    val existingConfig = configService.getConfig()
+    if (existingConfig != null) {
+      if (!existingConfig.businessTypeConfirmed) {
+        val businessType = req.businessType
+        if (businessType != "store" && businessType != "restaurant") {
+          call.respond(HttpStatusCode.BadRequest, mapOf("message" to "Invalid business type"))
+          return@post
+        }
+
+        val saved = configService.updateConfig(
+          existingConfig.copy(businessType = businessType, businessTypeConfirmed = true),
+        )
+        if (!saved) {
+          call.respond(HttpStatusCode.InternalServerError, mapOf("message" to "Failed to update business type"))
+          return@post
+        }
+
+        call.respond(HttpStatusCode.OK, mapOf("message" to "Business type updated"))
+        return@post
+      }
+
       call.respond(HttpStatusCode.Conflict, mapOf("message" to "Initial setup already completed"))
+      return@post
+    }
+
+    val businessType = req.businessType
+    val userName = req.userName?.trim()
+    val userPassword = req.userPassword
+    val userPin = req.userPin
+    val businessName = req.businessName?.trim()
+    val businessCurrency = req.businessCurrency
+
+    if (
+      businessType != "store" &&
+      businessType != "restaurant"
+    ) {
+      call.respond(HttpStatusCode.BadRequest, mapOf("message" to "Invalid business type"))
+      return@post
+    }
+    if (userName.isNullOrEmpty() || userPassword.isNullOrEmpty() || userPin.isNullOrEmpty()) {
+      call.respond(HttpStatusCode.BadRequest, mapOf("message" to "Missing user data"))
+      return@post
+    }
+    if (businessName.isNullOrEmpty() || businessCurrency.isNullOrEmpty()) {
+      call.respond(HttpStatusCode.BadRequest, mapOf("message" to "Missing business data"))
       return@post
     }
 
@@ -52,9 +99,9 @@ private fun Route.initialSetupRoutes(connection: Connection) {
     val permissionsService = PermissionsService(env, connection)
     val currencyService = CurrencyService(connection)
 
-    val currency = currencyService.getByAcronym(req.businessCurrency)
+    val currency = currencyService.getByAcronym(businessCurrency)
     if (currency == null) {
-      call.respond(HttpStatusCode.BadRequest, mapOf("message" to "Unknown currency acronym: ${req.businessCurrency}"))
+      call.respond(HttpStatusCode.BadRequest, mapOf("message" to "Unknown currency acronym: ${businessCurrency}"))
       return@post
     }
     
@@ -62,23 +109,24 @@ private fun Route.initialSetupRoutes(connection: Connection) {
     try {
       connection.autoCommit = false
 
-      val roleId = rolesService.addRole(Role(role = "Admin", password = req.userPassword, isAdmin = true))
+      val roleId = rolesService.addRole(Role(role = "Admin", password = userPassword, isAdmin = true))
         ?: throw IllegalStateException("Failed to create admin role")
 
       permissionsService.assignAllEnabledToRole(roleId)
 
-      val userId = usersService.addUser(User(name = req.userName, pin = req.userPin, role = roleId))
+      val userId = usersService.addUser(User(name = userName, pin = userPin, role = roleId))
         ?: throw IllegalStateException("Failed to create user")
 
       val saved = configService.updateConfig(
         Config(
-          businessType = req.businessType,
-          businessName = req.businessName,
+          businessType = businessType,
+          businessName = businessName,
           businessAddress = req.businessAddress,
           businessPhone = req.businessPhone,
           businessEmail = req.businessEmail,
           businessTaxId = taxId,
           businessLogoUrl = logoUrl,
+          businessTypeConfirmed = true,
         ),
       )
       if (!saved) throw IllegalStateException("Failed to save config")

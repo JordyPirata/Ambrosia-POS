@@ -17,6 +17,8 @@ export default async function proxy(request) {
   }
 
   let setupIncomplete = false;
+  let initialized = null;
+  let needsBusinessType = false;
   try {
     const headers = { cookie: request.headers.get("cookie") || "" };
     const urls = [
@@ -33,7 +35,9 @@ export default async function proxy(request) {
       }
       if (res.ok) {
         const data = await res.json();
-        setupIncomplete = data?.initialized === false;
+        initialized = data?.initialized;
+        needsBusinessType = data?.needsBusinessType === true;
+        setupIncomplete = initialized === false || needsBusinessType;
         evaluated = true;
         break;
       }
@@ -46,11 +50,15 @@ export default async function proxy(request) {
     console.error(error);
   }
 
-  if (setupIncomplete && !isOnboardingRoute) {
+  if (initialized === false && !isOnboardingRoute) {
     return NextResponse.redirect(new URL("/onboarding", request.url));
   }
 
-  if (!setupIncomplete && isOnboardingRoute) {
+  if (needsBusinessType && !isOnboardingRoute) {
+    return NextResponse.redirect(new URL("/onboarding", request.url));
+  }
+
+  if ((initialized !== false && !needsBusinessType) && isOnboardingRoute) {
     return NextResponse.redirect(
       new URL(refreshToken ? "/" : "/auth", request.url),
     );
@@ -67,6 +75,7 @@ export default async function proxy(request) {
   }
 
   let businessType = null;
+  let shouldClearBusinessTypeCookie = false;
   try {
     const headers = { cookie: request.headers.get("cookie") || "" };
     const configUrl = new URL("/api/config", request.url);
@@ -76,6 +85,8 @@ export default async function proxy(request) {
       const bt = data?.businessType;
       if (bt === "store" || bt === "restaurant") {
         businessType = bt;
+      } else {
+        shouldClearBusinessTypeCookie = true;
       }
     }
   } catch (error) {
@@ -86,6 +97,8 @@ export default async function proxy(request) {
   if (businessType) {
     next.headers.set("x-business-type", businessType);
     next.cookies.set("businessType", businessType, { path: "/" });
+  } else if (shouldClearBusinessTypeCookie) {
+    next.cookies.set("businessType", "", { path: "/", maxAge: 0 });
   }
   return next;
 }

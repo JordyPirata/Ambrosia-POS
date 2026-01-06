@@ -22,7 +22,10 @@ export function ConfigurationsProvider({ children }) {
   };
 
   const businessType = useMemo(() => {
-    return config?.businessType || readBusinessTypeFromCookie() || null;
+    const isValidBusinessType = (value) => value === "store" || value === "restaurant";
+    return isValidBusinessType(config?.businessType)
+      ? config.businessType
+      : readBusinessTypeFromCookie();
   }, [config]);
 
   const fetchConfig = async () => {
